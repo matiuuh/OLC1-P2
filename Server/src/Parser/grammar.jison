@@ -7,8 +7,6 @@
 %}
 
 %lex
-
-
 %options case-sensitive
 %x stringss
 %x caracter
@@ -211,7 +209,7 @@ instruccion : declaraciones
             | ciclo_para
             | ciclo_mientras
             | ciclo_repetir_hasta
-            //| sentencias_de_transferencia
+            | sentencias_de_transferencia
             | funciones
             | procedimientos
             | llamada_funcion
@@ -235,6 +233,10 @@ declaraciones : declaracion_simple
 ;
 
 declaracion_simple : INGRESAR IDENTIFICADOR COMO tipo_dato declaracion_valor_simple
+;
+
+lista_variables_declarar : lista_expresiones COMA expresion
+                | expresion
 ;
 
 declaracion_valor_simple : CON_VALOR expresion
@@ -305,7 +307,7 @@ opciones : opciones seleccion
         | seleccion
 ;
 
-seleccion : expresion HACER EN_CASO_DE_SER expresion ENTONCES instrucciones sentencias_de_transferencia
+seleccion : expresion HACER EN_CASO_DE_SER expresion ENTONCES instrucciones
 ;
 
 //**************************FOR/ CICLO PARA**************************
@@ -411,33 +413,6 @@ tipo_dato : ENTERO
 
 //**************************EXPRESIONES**************************
 //---------------------EXPRESIONES--------------------------
-/*expresion:
-    '-' expresion %prec UMENOS
-    | '!' expresion
-    | expresion '||' expresion
-    | expresion '&&' expresion
-    | expresion '==' expresion
-    | expresion '!=' expresion
-    | expresion '>=' expresion
-    | expresion '<=' expresion
-    | expresion '<' expresion
-    | expresion '>' expresion
-    | expresion '+' expresion
-    | expresion '-' expresion
-    | expresion '*' expresion
-    | expresion '/' expresion
-    | expresion '%' expresion
-    | expresion '^' expresion
-    | ENTERO_VALOR
-    | DECIMAL_VALOR
-    | CADENAS_VALOR
-    | CARACTER_VALOR
-    | TRUE
-    | FALSE
-    | IDENTIFICADOR
-    | PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
-;*/
-
 expresion_binaria:
     expresion_unaria
     | expresion_binaria '||' expresion_binaria
