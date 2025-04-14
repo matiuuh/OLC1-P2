@@ -22,6 +22,7 @@
 "caracter"                      return 'CARACTER';
 "boolean"                       return 'BOOLEANO';
 "cadena"                        return 'CADENA';
+"null"                          return 'NULL';
 
 //-----------------SIGNOS-----------------
 "->"                        return 'ARROW';
@@ -409,6 +410,7 @@ tipo_dato : ENTERO
             | CARACTER
             | BOOLEANO
             | CADENA
+            | NULL
 ;
 
 //**************************EXPRESIONES**************************
