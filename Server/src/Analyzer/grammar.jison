@@ -1,5 +1,10 @@
 %{
 // Aquí se incluyen las acciones semánticas de JavaScript necesarias.
+const Aritmeticas = require('./expresiones/Aritmeticas')
+const Nativo = require('./Expresiones/Nativo')
+const Tipo = require('./Simbolo/Tipo')
+
+const Declaracion = require('./Instrucciones/Declaracion')
 
 //variables para la cadena:
     let cadena="";
@@ -26,12 +31,12 @@
 
 //-----------------SIGNOS-----------------
 "->"                        return 'ARROW';
-"‘"                         return 'TILDE_IZQUIERDA';
-"’"                         return 'TILDE_DERECHA';
+//"‘"                         return 'TILDE_IZQUIERDA';
+//"’"                         return 'TILDE_DERECHA';
 "\""                        return 'COMILLAS';
 "("                         return 'PARENTESIS_ABRIR';
 ")"                         return 'PARENTESIS_CERRAR';
-":"                         return 'DOSPUNTOS';
+//":"                         return 'DOSPUNTOS';
 ","                         return 'COMA';
 "++"                        return '++';
 "--"                        return '--';
@@ -55,6 +60,9 @@
 "!"                             return '!';
 "&&"                            return '&&';
 "||"                            return '||';
+
+"["                             return 'CORCHIN';
+"]"                             return 'CORCHFIN';
 
 //-------------------PALABRAS RESERVADAS-----------------
 "ingresar"                      return 'INGRESAR';
@@ -192,81 +200,58 @@
 
 %%
 
-inicio : instrucciones EOF
+inicio : instrucciones EOF { return $1; }
 ;
 
-instrucciones : instrucciones instruccion
-                | instruccion
+instrucciones : instrucciones instruccion   { if($2 != false) $1.push($2); $$ = $1 }
+                | instruccion               { $$ = ($1!= false) ? [$1] : []}
 ;
 
-instruccion : declaraciones
-            | asignacion
-            | casteo
-            | incrementar
-            | decrementar
-            | listas
-            | condicion_si
-            | seleccion_multiple
-            | ciclo_para
-            | ciclo_mientras
-            | ciclo_repetir_hasta
-            | sentencias_de_transferencia
-            | funciones
-            | procedimientos
-            | llamada_funcion
-            | objetos
-            | metodo_objeto
-            | instanciacion_objetos
-            | objetos_accesos_metodos
-            | impresion
-            | hacer_minuscula
-            | hacer_mayuscula
-            | hacer_longitud
-            | hacer_truncar
-            | hacer_redondear
-            | averiguar_tipo
+instruccion : declaraciones                 {$$ = $1;}
+            | asignacion                    {$$ = $1;}
+            | casteo                        {$$ = $1;}
+            | incrementar                   {$$ = $1;}
+            | decrementar                   {$$ = $1;}
+            | tipo_de_lista_para_listas     {$$ = $1;}
+            | acceso_a_listas               {$$ = $1;}
+            | condicion_si                  {$$ = $1;}
+            | seleccion_multiple            {$$ = $1;}
+            | ciclo_para                    {$$ = $1;}
+            | ciclo_mientras                {$$ = $1;}
+            | ciclo_repetir_hasta           {$$ = $1;}
+            | sentencias_de_transferencia   {$$ = $1;}
+            | funciones                     {$$ = $1;}
+            | procedimientos                {$$ = $1;}
+            | llamada_funcion               {$$ = $1;}
+            | objetos                       {$$ = $1;}
+            | metodo_objeto                 {$$ = $1;}
+            | instanciacion_objetos         {$$ = $1;}
+            | objetos_accesos_metodos       {$$ = $1;}
+            | impresion                     {$$ = $1;}
+            | hacer_minuscula               {$$ = $1;}
+            | hacer_mayuscula               {$$ = $1;}
+            | hacer_longitud                {$$ = $1;}
+            | hacer_truncar                 {$$ = $1;}
+            | hacer_redondear               {$$ = $1;}
+            | averiguar_tipo                {$$ = $1;}
             | error
 ;
 
 //**************************DECLARACIONES**************************
-declaraciones : declaracion_simple
-            | declaracion_multiple
+
+declaraciones : INGRESAR identificadores_multiples COMO tipo_dato con_valor_o_sin_valor
 ;
 
-declaracion_simple : INGRESAR IDENTIFICADOR COMO tipo_dato declaracion_valor_simple
-;
-
-lista_variables_declarar : lista_expresiones COMA expresion
-                | expresion
-;
-
-declaracion_valor_simple : CON_VALOR expresion
-                         | /* vacío */
-;
-
-declaracion_multiple : INGRESAR identificadores_multiples COMO tipo_dato declaracion_valor_multiple
-;
-
-declaracion_valor_multiple : CON_VALOR lista_expresiones
-                           | /* vacío */
+con_valor_o_sin_valor : CON_VALOR lista_expresiones
+                | /* nada */
 ;
 
 //**************************ASIGNACION DE VARIABLES**************************
-asignacion : asignacion_simple
-        | asignacion_multiple
+asignacion : identificadores_multiples ARROW lista_expresiones
 ;
 
-asignacion_simple : IDENTIFICADOR ARROW expresion
-;
-
-asignacion_multiple : identificadores_multiples ARROW lista_expresiones
-;
-
-identificadores_multiples : IDENTIFICADOR COMA IDENTIFICADOR resto_identificadores
-;
-
-resto_identificadores : COMA IDENTIFICADOR resto_identificadores
-                      | /* vacío */
+identificadores_multiples : identificadores_multiples COMA IDENTIFICADOR
+                | IDENTIFICADOR
 ;
 
 //**************************CASTEOS**************************
@@ -280,8 +265,45 @@ incrementar : INCREMENTO PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
 decrementar : DECREMENTO PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
 ;
 
-//**************************LISTAS**************************
-listas : INGRESAR LISTA PARENTESIS_ABRIR expresion COMA tipo_dato PARENTESIS_CERRAR IDENTIFICADOR ARROW PARENTESIS_ABRIR lista_valores PARENTESIS_CERRAR
+//*******************DECLARACION LISTAS**************************
+//---------------------DECLARCION LISTA UNIDIMENSIONAL---------------------
+declaracion_listas : INGRESAR LISTA PARENTESIS_ABRIR expresion COMA tipo_dato PARENTESIS_CERRAR IDENTIFICADOR ARROW tipo_de_lista_para_listas
+;
+
+//---------------------DECLARCION TIPO DE LISTAS---------------------
+tipo_de_lista_para_listas : lista_ud
+                | lista_bd
+                | lista_td
+;
+
+//---------------------LISTA PARA LISTAS UNIDIMENSIONAL---------------------
+lista_ud : PARENTESIS_ABRIR lista_expresiones PARENTESIS_CERRAR
+;
+
+//---------------------LISTA PARA LISTAS BIDIMENSIONAL---------------------
+lista_bd : lista_para_listas_bd COMA lista_para_listas_ud
+        | lista_para_listas_ud
+;
+
+//---------------------LISTA PARA LISTAS TRIDIMENSIONAL---------------------
+lista_td : lista_para_listas_td COMA lista_para_listas_bd
+        | lista_para_listas_bd
+;
+
+//*******************ACCESO A LISTAS**************************
+acceso_a_listas : IDENTIFICADOR indices_de_listas modificar_lista
+;
+
+indices_de_listas : indices_de_listas indice_lista
+                | indice_lista
+;
+
+indice_lista : CORCHIN expresion CORCHFIN
+;
+
+//----------------------MODIFICACION DE LISTAS---------------------
+modificar_lista : '=' expresion
+                | /* nada */
 ;
 
 //**************************CONDICIONALES**************************
@@ -295,20 +317,24 @@ condicion_si : SI expresion ENTONCES instrucciones FIN_SI
             | SI expresion ENTONCES instrucciones fin_condicion_si
 ;
 
+aux : fin_condicion_si
+    | FIN_SI
+;
+
 fin_condicion_si : DE_LO_CONTRARIO instrucciones FIN_SI
-    | O_SI instrucciones fin_condicion_si
+                | O_SI instrucciones fin_condicion_si
 ;
 
 //**************************SELECCION MULTIPLE**************************
 //---------------------SWITCH CASE/ SELECCION MULTIPLE---------------------
-seleccion_multiple : SEGUN expresion opciones FIN_SEGUN
+seleccion_multiple : SEGUN expresion opciones DE_LO_CONTRARIO_ENTONCES instrucciones FIN_SEGUN
 ;
 
 opciones : opciones seleccion
         | seleccion
 ;
 
-seleccion : expresion HACER EN_CASO_DE_SER expresion ENTONCES instrucciones
+seleccion : HACER EN_CASO_DE_SER expresion ENTONCES instrucciones
 ;
 
 //**************************FOR/ CICLO PARA**************************
@@ -364,13 +390,13 @@ metodo_objeto : IDENTIFICADOR ARROW METODO IDENTIFICADOR instrucciones FIN_METOD
 ;
 
 //---------------------INSTANCIACION---------------------
-instanciacion_objetos : INGRESAR OBJETO IDENTIFICADOR IDENTIFICADOR ARROW IDENTIFICADOR PARENTESIS_ABRIR lista_valores PARENTESIS_CERRAR
+instanciacion_objetos : INGRESAR OBJETO IDENTIFICADOR IDENTIFICADOR ARROW IDENTIFICADOR PARENTESIS_ABRIR lista_expresiones PARENTESIS_CERRAR
 ;
 
 //---------------------ACCESO A ATRIBUTOS Y METODOS DE OBJETOS---------------------
 objetos_accesos_metodos : IDENTIFICADOR PUNTO IDENTIFICADOR
                         | EJECUTAR IDENTIFICADOR PUNTO IDENTIFICADOR PARENTESIS_ABRIR PARENTESIS_CERRAR
-                        | EJECUTAR IDENTIFICADOR PUNTO IDENTIFICADOR PARENTESIS_ABRIR lista_valores PARENTESIS_CERRAR
+                        | EJECUTAR IDENTIFICADOR PUNTO IDENTIFICADOR PARENTESIS_ABRIR lista_expresiones PARENTESIS_CERRAR
 ;
 
 //******************IMPRIMIR**************************
@@ -405,57 +431,44 @@ averiguar_tipo : TIPO PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
 
 //**************************TIPOS DE DATOS**************************
 //---------------------TIPOS DE DATOS---------------------
-tipo_dato : ENTERO
-            | DECIMAL
-            | CARACTER
-            | BOOLEANO
-            | CADENA
-            | NULL
+tipo_dato : ENTERO          { $$ = new Tipo.default(Tipo.tipo_dato.ENTERO)}
+            | DECIMAL       { $$ = new Tipo.default(Tipo.tipo_dato.DECIMAL)}
+            | CARACTER      { $$ = new Tipo.default(Tipo.tipo_dato.CARACTER)}
+            | BOOLEANO      { $$ = new Tipo.default(Tipo.tipo_dato.BOOLEANO)}
+            | CADENA        { $$ = new Tipo.default(Tipo.tipo_dato.CADENA)}
+            //| NULL
 ;
 
 //**************************EXPRESIONES**************************
 //---------------------EXPRESIONES--------------------------
-expresion_binaria:
-    expresion_unaria
-    | expresion_binaria '||' expresion_binaria
-    | expresion_binaria '&&' expresion_binaria
-    | expresion_binaria '==' expresion_binaria
-    | expresion_binaria '!=' expresion_binaria
-    | expresion_binaria '>=' expresion_binaria
-    | expresion_binaria '<=' expresion_binaria
-    | expresion_binaria '<' expresion_binaria
-    | expresion_binaria '>' expresion_binaria
-    | expresion_binaria '+' expresion_binaria
-    | expresion_binaria '-' expresion_binaria
-    | expresion_binaria '*' expresion_binaria
-    | expresion_binaria '/' expresion_binaria
-    | expresion_binaria '%' expresion_binaria
-    | expresion_binaria '^' expresion_binaria
-;
-
-expresion_unaria:
-    factor
-    | '-' expresion_unaria %prec UMENOS
-    | '!' expresion_unaria
-;
-
-factor:
-    ENTERO_VALOR
-    | DECIMAL_VALOR
-    | CADENAS_VALOR
-    | CARACTER_VALOR
-    | TRUE
-    | FALSE
+expresion: '-' expresion %prec UMENOS
+    | '!' expresion
+    | expresion '||' expresion
+    | expresion '&&' expresion
+    | expresion '==' expresion
+    | expresion '!=' expresion
+    | expresion '>=' expresion
+    | expresion '<=' expresion
+    | expresion '<' expresion
+    | expresion '>' expresion
+    | expresion '+' expresion   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.SUMA, @1.first_line, @1.first_column, $1, $3) }
+    | expresion '-' expresion
+    | expresion '*' expresion
+    | expresion '/' expresion
+    | expresion '%' expresion
+    | expresion '^' expresion
+    | ENTERO_VALOR              { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.ENTERO), $1, @1.first_line, @1.first_column) }
+    | DECIMAL_VALOR             { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.DECIMAL), $1, @1.first_line, @1.first_column) }
+    | CADENAS_VALOR             { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.CADENA), $1, @1.first_line, @1.first_column) }
+    | CARACTER_VALOR            { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.CARACTER), $1, @1.first_line, @1.first_column) }
+    | TRUE                      { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.BOOLEANO), $1, @1.first_line, @1.first_column) }
+    | FALSE                     { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.BOOLEANO), $1, @1.first_line, @1.first_column) }
     | IDENTIFICADOR
-    | PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
+    | PARENTESIS_ABRIR expresion PARENTESIS_CERRAR  { $$ = $2 }
+    | casteo
 ;
 
 //**********************LISTAS**************************
-//---------------------LISTA VALORES---------------------
-lista_valores : lista_valores COMA TILDE_IZQUIERDA expresion TILDE_DERECHA
-            | TILDE_IZQUIERDA expresion TILDE_DERECHA
-;
-
 //---------------------LISTA PARAMETROS---------------------
 lista_parametros : lista_parametros COMA IDENTIFICADOR tipo_dato
                 | IDENTIFICADOR tipo_dato

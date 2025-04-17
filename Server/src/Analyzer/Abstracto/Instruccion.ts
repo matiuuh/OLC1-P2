@@ -13,6 +13,14 @@ export abstract class Instruccion {
         this.columna = columna
     }
 
+    //tenemos un metodo abstracto que recibe un arbol y una tabla, que nos puedes retornoar cualquier cosa
     abstract interpretar(arbol: Arbol, tabla: TablaSimbolos): any
-    abstract nodo(anterior: string): string
+    /*
+    El metodo interpretar la instruccion, lo que hara es procesar, recibe y devuelve la informacion procesada
+
+    y lo tendremos en todas las clases del proyecto, porque eso nos va a permitir movilizarnos por todo
+    el codigo
+    */
+
+    //abstract nodo(anterior: string): string //recordar descomentar esto y revisar la clase nativo, en general revisar los metodos comentados de la clase de instruccion
 }

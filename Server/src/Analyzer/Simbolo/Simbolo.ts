@@ -7,12 +7,10 @@ export default class Simbolo {
     private fila: number
     private columna: number
 
-    constructor(tipo: Tipo, id: string, fila: number, columna: number, valor?: any) {
+    constructor(tipo: Tipo, id: string, valor?: any) {
         this.tipo = tipo
         this.id = id.toLocaleLowerCase()
         this.valor = valor
-        this.fila = fila
-        this.columna = columna
     }
 
     public getTipo(): Tipo {
@@ -37,13 +35,5 @@ export default class Simbolo {
 
     public setValor(valor: any) {
         this.valor = valor
-    }
-
-    public getFila(): number {
-        return this.fila
-    }
-
-    public getColumna(): number {
-        return this.columna
     }
 }

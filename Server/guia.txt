@@ -1,0 +1,11 @@
+index.ts -> aqui es donde vamos a mandar a llamar todo, es la parte principal del bakend, funciona como el main.
+
+
+Tipo.ts -> se crea el tipo de dato que van a tener las instrucciones
+
+Simbolo -> creamos una clase simbolo que nos servira para crear nuestra tabla de simbolos.
+
+TablaSimbolo -> Es la tabla que contendra los simbolos que posea la entrada.
+
+Instruccion.ts -> Esta clase es el molde de todo lo que se trabaja en el proyecto.
+todas las instrucciones del lenguaje tienen que tener un tipo de dato.

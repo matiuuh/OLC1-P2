@@ -1,5 +1,5 @@
-import { Request, Response } from "express"
-import Errores from "../Analyzer/Errors/Errors"
+import { Request, Response } from "express";
+import Errores from "../Analyzer/Errors/Errors";
 /*import Metodo from "../Analyzer/instrucciones/metodo"
 import Declaracion from "../Analyzer/instrucciones/declaracion"
 import Execute from "../Analyzer/instrucciones/execute"
@@ -10,8 +10,8 @@ import Creacion from "../Analyzer/instrucciones/creacion.var"
 import ModificarVector1D from "../Analyzer/instrucciones/modificar.vectorud"
 import ModificarVector2D from "../Analyzer/instrucciones/modificar.vectordd"
 import Funcion from "../Analyzer/instrucciones/funcion"*/
-import { Reporte } from "../Analyzer/Simbolo/Report"
-import { parse } from '../Analyzer/grammar'
+import { Reporte } from "../Analyzer/Simbolo/Report";
+//import { parser } from '../Analyzer/grammar'
 
 export let lista_errores: Array<Errores> = []
 export let dot: string = ""
@@ -20,34 +20,48 @@ tablaS = new Array<Reporte>
 
 class Controller {
 
-    public analizarPrueba(req: Request, res: Response) {
-        console.log("REQ.BODY:", req.body)
-
-        lista_errores = []
+    /*public interpretar(req: Request, res: Response) {
         try {
-            const entrada: string = req.body.entrada
+            let parser = require('./analizador/analizador')
+            let ast = new Arbol(parser.parse(req.body.entrada))
+            let tabla = new tablaSimbolo()
+            tabla.setNombre("Ejemplo")
+            ast.setTablaGlobal(tabla)
+            ast.setConsola("")
 
-            if (!entrada || entrada.trim() === "") {
-                return res.status(400).json({ message: "Entrada vacía." })
+            // primer recorrido del arbol -> almacenar funcion o metodos (structs y clases)
+            for (let i of ast.getInstrucciones()) {
+                if (i instanceof Metodo) {
+                    ast.addFunciones(i);
+                }
             }
 
-            // Intentar parsear
-            const resultado = parse(entrada)
+            // segundo recorrido del arbol -> declaracion de variables o vectores (asignacion)
+            for (let i of ast.getInstrucciones()) {
+                if (i instanceof Declaracion) {
+                    let resDeclaracion = i.interpretar(ast, tabla)
+                    if (resDeclaracion instanceof Errores) ast.addErrores(resDeclaracion)
+                }
+                //IF ASIGNACION....
+            }
 
-            // Si el parseo devuelve algo, asumimos que fue exitoso
-            res.json({
-                message: "Análisis sintáctico exitoso.",
-                ast: resultado // esto puede ser un array o una raíz de nodos, depende de tu grammar
-            })
+            // tercer recorrido del arbol (ejecutar funcion principal RUN o EJECUTAR en su proyecto)
+            for (let i of ast.getInstrucciones()) {
+                if (i instanceof Run) {
+                    let res = i.interpretar(ast, tabla)
+                    if (res instanceof Errores) ast.addErrores(res)
+                    break;
+                }
+            }
 
-        } catch (error: any) {
-            console.log("Error en análisis sintáctico:", error.message)
-            res.status(500).json({
-                message: "Error durante el análisis sintáctico.",
-                error: error.message
-            })
+            console.log(tabla)
+            res.status(200).send({ "consola": ast.getConsola() })
+        } catch (err: any) {
+            console.log(err)
+            res.status(400).send({ "Error": "Ya no sale compi1" })
         }
-    }
+    }*/
+    
 
     /*public analizar(req: Request, res: Response) {
         lista_errores = new Array<Errores>

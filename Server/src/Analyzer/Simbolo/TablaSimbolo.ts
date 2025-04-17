@@ -1,5 +1,14 @@
 import Simbolo from "./Simbolo";
 
+/*
+el map funciona como un json, esta es su estructura basica:
+
+{
+    "variable1": Simbolo1,
+    "variable2": Simbolo2,
+}
+*/
+
 export default class TablaSimbolo {
     private tabla_anterior: TablaSimbolo | any
     private tabla_actual: Map<string, Simbolo>
@@ -35,6 +44,9 @@ export default class TablaSimbolo {
         }
         return null
     }
+    /*
+    Si dentro de nuestra tabla actual existe el simbolo nos lo devolvera, de lo contrario devolvera null
+    */
 
     public setVariable(simbolo: Simbolo) {
         let busqueda: Simbolo = <Simbolo>this.getTabla().get(simbolo.getId().toLocaleLowerCase())
@@ -44,6 +56,10 @@ export default class TablaSimbolo {
         }
         return false
     }
+    /*
+    Si la busqueda es null quiere decir que la busqueda no existe, por lo tanto se puede agregar
+    */
+
     //--------------------------------------------------------------------------------------------------------------
 
 
@@ -54,4 +70,5 @@ export default class TablaSimbolo {
     public setNombre(nombre: string): void {
         this.nombre = nombre
     }
+    
 }

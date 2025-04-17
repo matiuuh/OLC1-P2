@@ -1,19 +1,21 @@
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import express, { Application } from 'express';
+import { Application } from 'express';
 //import morgan from 'morgan';
-import indexRouter from './Routes/Routes';
+import Errores from './Analyzer/Errors/Errors';
+import Arbol from './Analyzer/Simbolo/Arbol';
+import tablaSimbolo from './Analyzer/Simbolo/TablaSimbolo';
 
 class Servidor {
     public aplicacion: Application;
 
-    constructor() {
+    /*constructor() {
         this.aplicacion = express();
         this.configuracion();
         this.rutas();
-    }
+    }/*
 
-    configuracion(): any {
+
+    
+    /*configuracion(): any {
         this.aplicacion.set('port', process.env.PORT || 4000);
         //this.aplicacion.use(morgan('dev'));
         this.aplicacion.use(express.urlencoded({ extended: true }));
@@ -34,9 +36,27 @@ class Servidor {
             console.log('Server on port:', this.aplicacion.get('port'));
         }
         )
+    }*/
+
+        start():any{
+            try{
+                let parser = require('./Analyzer/grammar.js')
+                let ast = new Arbol(parser.parse('ingresar jola como Entero con valor 6'))
+                let tabla = new tablaSimbolo()
+                ast.setTablaGlobal(tabla)
+                ast.setConsola("")
+                for(let i of ast.getInstrucciones()){
+                    console.log(i)
+                    var resultado = i.interpretar(ast, tabla)
+                    if(resultado instanceof Errores) console.log(resultado)
+                }
+            }catch(e:any){
+                console.log(e)
+            }
+        }
     }
 
-}
+//}
 
 export const server = new Servidor();
 server.start();

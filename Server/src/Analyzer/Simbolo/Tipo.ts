@@ -32,6 +32,11 @@ export default class Tipo {
     }
 }
 
+/*
+Usamos una clase enum para definir un conjunto de valores constantes con nombre,
+que están relacionados entre sí y permiten trabajar con opciones predefinidas
+de manera clara y segura.
+*/
 export enum tipo_dato {
     ENTERO,
     DECIMAL,

@@ -4,24 +4,23 @@ import { Instruccion } from "../Abstracto/Instruccion";
 import Errores from "../Errors/Errors";
 //import Metodo from "../instrucciones/metodo";
 //import Funcion from "../instrucciones/funcion";
-import { Reporte } from "./Report";
 //import Tipo, { tipo_dato } from "./Tipo";
 
 export default class Arbol {
     private instrucciones: Array<Instruccion>
     private consola: string
-    private tablaGlobal: TablaSimbolos
+    private tablaGlobal: TablaSimbolos      //funciona para los entornos, considerar tablas globales y locales
     private errores: Array<Errores>
-    private funciones: Array<Instruccion>
-    public simbolos: Array<Reporte>
+    //private funciones: Array<Instruccion>
+    //public simbolos: Array<Reporte>
 
     constructor(instrucciones: Array<Instruccion>) {
         this.instrucciones = instrucciones
         this.consola = ""
         this.tablaGlobal = new TablaSimbolos()
         this.errores = new Array<Errores>
-        this.funciones = new Array<Instruccion>
-        this.simbolos = new Array<Reporte>
+        //this.funciones = new Array<Instruccion>
+        //this.simbolos = new Array<Reporte>
     }
 
     public getConsola(): string {
@@ -60,7 +59,7 @@ export default class Arbol {
         this.consola = `${this.consola}\n${contenido}\n`
     }
 
-    public getFunciones() {
+    /*public getFunciones() {
         return this.funciones
     }
 
@@ -70,11 +69,11 @@ export default class Arbol {
 
     public addFuncion(funcion: Instruccion) {
         this.funciones.push(funcion)
-    }
+    }*/
 
     public getFuncion(id: string) {
         
-        for(let i of this.instrucciones) {
+        /*for(let i of this.instrucciones) {
             if(i instanceof Metodo) {
                 if(i.id.toLocaleLowerCase() == id.toLocaleLowerCase()) {
                     if(!this.tablaSimbolos(i.id.toString(), '', i.linea.toString(), "Global", i.columna.toString())){
@@ -94,11 +93,11 @@ export default class Arbol {
                     return i
                 }
             }
-        }
+        }*/
         return null
     }
 
-    public tablaSimbolos(id: string, valor: string, linea: string, entorno: string, columna: string) : boolean{
+    /*public tablaSimbolos(id: string, valor: string, linea: string, entorno: string, columna: string) : boolean{
         for(let ele of this.simbolos){
             if(ele.getId().toString() == id.toLocaleLowerCase() && ele.getEntorno().toString() == entorno.toString()){
 
@@ -114,6 +113,6 @@ export default class Arbol {
 
     public getSimbolos(): Array<Reporte> {
         return this.simbolos
-    }
+    }*/
 
 }

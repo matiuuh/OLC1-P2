@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { indexController } from '../Controllers/Controllers';
 
 class router {
     public router: Router = Router();;
@@ -9,7 +8,7 @@ class router {
 
     //se definen las rutas(metodos) que se van a utilizar
     config(): void {
-        this.router.post('/analizarPrueba', indexController.analizarPrueba.bind(indexController));
+        //this.router.post('/analizarPrueba', indexController.analizarPrueba.bind(indexController));
         /*this.router.post('/analizar', indexController.analizar)
         this.router.get('/obtenerErrores', indexController.getErrores)
         this.router.get('/getAST', indexController.getAST)*/
