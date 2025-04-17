@@ -38,8 +38,8 @@ const Declaracion = require('./Instrucciones/Declaracion')
 ")"                         return 'PARENTESIS_CERRAR';
 //":"                         return 'DOSPUNTOS';
 ","                         return 'COMA';
-"++"                        return '++';
-"--"                        return '--';
+"++"                        return 'INCREMEENTO';
+"--"                        return 'DECREMEENTO';
 "."                         return 'PUNTO';
 "false"                     return 'FALSE';
 "true"                      return 'TRUE';
@@ -186,6 +186,7 @@ const Declaracion = require('./Instrucciones/Declaracion')
     //Aca tambien puedo agregar codigo en javascript
 %}
 
+%right CASTEO
 %left '||'
 %left '&&'
 %right '!'
@@ -208,7 +209,7 @@ instrucciones : instrucciones instruccion   { if($2 != false) $1.push($2); $$ = 
 ;
 
 instruccion : declaraciones                 {$$ = $1;}
-            | asignacion                    {$$ = $1;}
+            | asignacion_o_metodo_objeto    {$$ = $1;}
             | casteo                        {$$ = $1;}
             | incrementar                   {$$ = $1;}
             | decrementar                   {$$ = $1;}
@@ -224,7 +225,6 @@ instruccion : declaraciones                 {$$ = $1;}
             | procedimientos                {$$ = $1;}
             | llamada_funcion               {$$ = $1;}
             | objetos                       {$$ = $1;}
-            | metodo_objeto                 {$$ = $1;}
             | instanciacion_objetos         {$$ = $1;}
             | objetos_accesos_metodos       {$$ = $1;}
             | impresion                     {$$ = $1;}
@@ -246,16 +246,24 @@ con_valor_o_sin_valor : CON_VALOR lista_expresiones
                 | /* nada */
 ;
 
-//**************************ASIGNACION DE VARIABLES**************************
-asignacion : identificadores_multiples ARROW lista_expresiones
-;
-
 identificadores_multiples : identificadores_multiples COMA IDENTIFICADOR
                 | IDENTIFICADOR
 ;
 
+//**************************ASIGNACION DE VARIABLES/METODOS DE OBJETOS**************************
+asignacion_o_metodo_objeto : IDENTIFICADOR ids_list ARROW continuacion_arrow
+;
+
+ids_list : /* vacío */
+        | COMA IDENTIFICADOR ids_list
+;
+
+continuacion_arrow : METODO IDENTIFICADOR fin_con_parametros_o_sin  // Para método de objeto
+                   | lista_expresiones                             // Para asignación
+;
+
 //**************************CASTEOS**************************
-casteo : PARENTESIS_ABRIR tipo_dato PARENTESIS_CERRAR expresion
+casteo : PARENTESIS_ABRIR tipo_dato PARENTESIS_CERRAR expresion %prec CASTEO
 ;
 
 //**************************INCREMENTO Y DECREMENTO**************************
@@ -313,12 +321,10 @@ else if -> o si
 else -> de lo contrario
 */
 //---------------------IF/SI---------------------
-condicion_si : SI expresion ENTONCES instrucciones FIN_SI
-            | SI expresion ENTONCES instrucciones fin_condicion_si
-;
+condicion_si : SI expresion ENTONCES instrucciones fin_o_condicion;
 
-aux : fin_condicion_si
-    | FIN_SI
+fin_o_condicion : fin_condicion_si
+                | FIN_SI
 ;
 
 fin_condicion_si : DE_LO_CONTRARIO instrucciones FIN_SI
@@ -327,19 +333,22 @@ fin_condicion_si : DE_LO_CONTRARIO instrucciones FIN_SI
 
 //**************************SELECCION MULTIPLE**************************
 //---------------------SWITCH CASE/ SELECCION MULTIPLE---------------------
-seleccion_multiple : SEGUN expresion opciones DE_LO_CONTRARIO_ENTONCES instrucciones FIN_SEGUN
+seleccion_multiple : SEGUN expresion HACER opciones DE_LO_CONTRARIO_ENTONCES instrucciones FIN_SEGUN
 ;
 
 opciones : opciones seleccion
         | seleccion
 ;
 
-seleccion : HACER EN_CASO_DE_SER expresion ENTONCES instrucciones
+seleccion : EN_CASO_DE_SER expresion ENTONCES instrucciones
 ;
 
 //**************************FOR/ CICLO PARA**************************
-ciclo_para : PARA IDENTIFICADOR ARROW expresion HASTA expresion CON_INCREMENTO IDENTIFICADOR ++ HACER instrucciones FIN_PARA
-        | PARA IDENTIFICADOR ARROW expresion HASTA expresion CON_DECREMENTO IDENTIFICADOR -- HACER instrucciones FIN_PARA
+ciclo_para : PARA IDENTIFICADOR ARROW expresion HASTA expresion incremento_decremento HACER instrucciones FIN_PARA
+;
+
+incremento_decremento : CON_INCREMENTO aumentos
+                    | CON_DECREMENTO aumentos
 ;
 
 //**************************MIENTRAS/ WHILE**************************
@@ -358,17 +367,22 @@ sentencias_de_transferencia : DETENER
 
 //**************************FUCNIONES**************************
 //---------------------FUNCIONES/ METODOS CON RETORNO---------------------
-funciones : FUNCION IDENTIFICADOR tipo_dato CON_PARAMETROS PARENTESIS_ABRIR lista_parametros PARENTESIS_CERRAR instrucciones FIN_FUNCION
-    | FUNCION IDENTIFICADOR tipo_dato instrucciones FIN_FUNCION
+funciones : FUNCION IDENTIFICADOR tipo_dato proce_o_func_con_parametros_o_sin FIN_FUNCION
 ;
 
-procedimientos : PROCEDIMIENTO IDENTIFICADOR CON_PARAMETROS PARENTESIS_ABRIR lista_parametros PARENTESIS_CERRAR instrucciones FIN_PROCEDIMIENTO
-    | PROCEDIMIENTO IDENTIFICADOR instrucciones FIN_PROCEDIMIENTO
+procedimientos : PROCEDIMIENTO IDENTIFICADOR proce_o_func_con_parametros_o_sin FIN_PROCEDIMIENTO
+;
+
+proce_o_func_con_parametros_o_sin : CON_PARAMETROS PARENTESIS_ABRIR lista_parametros PARENTESIS_CERRAR instrucciones
+                                    | instrucciones
 ;
 
 //---------------------LLAMADA DE FUNCIONES/ PROCEDIMIENTOS---------------------
-llamada_funcion : EJECUTAR IDENTIFICADOR PARENTESIS_ABRIR lista_expresiones PARENTESIS_CERRAR
-                | EJECUTAR IDENTIFICADOR PARENTESIS_ABRIR PARENTESIS_CERRAR
+llamada_funcion : EJECUTAR IDENTIFICADOR PARENTESIS_ABRIR lista_expresiones_o_no PARENTESIS_CERRAR
+;
+
+lista_expresiones_o_no : lista_expresiones
+                | /* nada */
 ;
 
 //**************************OBJETOS**************************
@@ -385,8 +399,8 @@ atributo : IDENTIFICADOR tipo_dato
 ;
 
 //---------------------METODOS---------------------
-metodo_objeto : IDENTIFICADOR ARROW METODO IDENTIFICADOR instrucciones FIN_METODO
-            | IDENTIFICADOR ARROW METODO IDENTIFICADOR CON_PARAMETROS PARENTESIS_ABRIR lista_parametros PARENTESIS_CERRAR instrucciones FIN_PROCEDIMIENTO
+fin_con_parametros_o_sin : instrucciones FIN_METODO
+                | CON_PARAMETROS PARENTESIS_ABRIR lista_parametros PARENTESIS_CERRAR instrucciones FIN_PROCEDIMIENTO
 ;
 
 //---------------------INSTANCIACION---------------------
@@ -395,8 +409,11 @@ instanciacion_objetos : INGRESAR OBJETO IDENTIFICADOR IDENTIFICADOR ARROW IDENTI
 
 //---------------------ACCESO A ATRIBUTOS Y METODOS DE OBJETOS---------------------
 objetos_accesos_metodos : IDENTIFICADOR PUNTO IDENTIFICADOR
-                        | EJECUTAR IDENTIFICADOR PUNTO IDENTIFICADOR PARENTESIS_ABRIR PARENTESIS_CERRAR
-                        | EJECUTAR IDENTIFICADOR PUNTO IDENTIFICADOR PARENTESIS_ABRIR lista_expresiones PARENTESIS_CERRAR
+                        | EJECUTAR IDENTIFICADOR PUNTO IDENTIFICADOR PARENTESIS_ABRIR con_lista_o_sin PARENTESIS_CERRAR
+;
+
+con_lista_o_sin : lista_expresiones
+                | /* nada */
 ;
 
 //******************IMPRIMIR**************************
@@ -466,6 +483,7 @@ expresion: '-' expresion %prec UMENOS
     | IDENTIFICADOR
     | PARENTESIS_ABRIR expresion PARENTESIS_CERRAR  { $$ = $2 }
     | casteo
+    | aumentos
 ;
 
 //**********************LISTAS**************************
@@ -477,6 +495,11 @@ lista_parametros : lista_parametros COMA IDENTIFICADOR tipo_dato
 //---------------------LISTA EXPRESIONES---------------------
 lista_expresiones : lista_expresiones COMA expresion
                 | expresion
+;
+
+//**********************EXTRAS**************************
+aumentos : IDENTIFICADOR INCREMEENTO
+            | IDENTIFICADOR DECREMEENTO
 ;
 
 %%
