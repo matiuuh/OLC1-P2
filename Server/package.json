@@ -13,9 +13,10 @@
     "nodemon": "^3.1.9",
     "typescript": "^5.8.3"
   },
-
   "scripts": {
-    "build": "tsc --outDir dist",
+    "build": "tsc -w",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "jison": "jison src/Analyzer/grammar.jison && move grammar.js src/Analyzer/grammar.ts",
     "dev": "concurrently \"tsc -w --outDir dist\" \"nodemon -q dist/index.js\"",
     "start": "node dist/index.js",
     "compile": "ts -jison src/grammar.jison -o src/grammar.ts"
