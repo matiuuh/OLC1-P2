@@ -11,7 +11,7 @@ class Tipo {
     getTipo() {
         return this.tipo;
     }
-    getNombreTipo() {
+    getNombreTipo(tipo) {
         switch (this.tipo) {
             case tipo_dato.ENTERO:
                 return "ENTERO";

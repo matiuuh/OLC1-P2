@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const Controllers_1 = require("../controllers/Controllers");
 class router {
     ;
     constructor() {
@@ -9,10 +10,9 @@ class router {
     }
     //se definen las rutas(metodos) que se van a utilizar
     config() {
-        //this.router.post('/analizarPrueba', indexController.analizarPrueba.bind(indexController));
-        /*this.router.post('/analizar', indexController.analizar)
-        this.router.get('/obtenerErrores', indexController.getErrores)
-        this.router.get('/getAST', indexController.getAST)*/
+        this.router.get("/", Controllers_1.indexController.prueba);
+        this.router.post("/posteando", Controllers_1.indexController.pruebaPost);
+        this.router.post("/interpretar", Controllers_1.indexController.interpretar);
     }
 }
 const indexRouter = new router();

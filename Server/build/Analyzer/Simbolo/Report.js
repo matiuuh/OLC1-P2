@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Reporte = void 0;
 class Reporte {
     constructor(id, valor, tipo, entorno, linea, columna) {
-        this.id = id.toLocaleLowerCase();
+        this.id = id;
         this.valor = valor;
         this.tipo = tipo;
         this.entorno = entorno;

@@ -5,6 +5,7 @@ import Errores from "../Errors/Errors";
 //import Metodo from "../instrucciones/metodo";
 //import Funcion from "../instrucciones/funcion";
 //import Tipo, { tipo_dato } from "./Tipo";
+import { Reporte } from "./Report";
 
 export default class Arbol {
     private instrucciones: Array<Instruccion>
@@ -12,7 +13,7 @@ export default class Arbol {
     private tablaGlobal: TablaSimbolos      //funciona para los entornos, considerar tablas globales y locales
     private errores: Array<Errores>
     //private funciones: Array<Instruccion>
-    //public simbolos: Array<Reporte>
+    public simbolos: Array<Reporte>
 
     constructor(instrucciones: Array<Instruccion>) {
         this.instrucciones = instrucciones
@@ -97,7 +98,7 @@ export default class Arbol {
         return null
     }
 
-    /*public tablaSimbolos(id: string, valor: string, linea: string, entorno: string, columna: string) : boolean{
+    public tablaSimbolos(id: string, valor: string, linea: string, entorno: string, columna: string) : boolean{
         for(let ele of this.simbolos){
             if(ele.getId().toString() == id.toLocaleLowerCase() && ele.getEntorno().toString() == entorno.toString()){
 
@@ -111,7 +112,7 @@ export default class Arbol {
         return false
     }
 
-    public getSimbolos(): Array<Reporte> {
+    /*public getSimbolos(): Array<Reporte> {
         return this.simbolos
     }*/
 

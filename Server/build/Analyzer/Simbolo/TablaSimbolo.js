@@ -29,7 +29,7 @@ class TablaSimbolo {
     //--------------------------------------------------------------------------------------------------------------
     getVariable(id) {
         for (let i = this; i != null; i = i.getAnterior()) {
-            let busqueda = i.getTabla().get(id.toLocaleLowerCase());
+            let busqueda = i.getTabla().get(id);
             if (busqueda != null)
                 return busqueda;
         }
@@ -39,9 +39,9 @@ class TablaSimbolo {
     Si dentro de nuestra tabla actual existe el simbolo nos lo devolvera, de lo contrario devolvera null
     */
     setVariable(simbolo) {
-        let busqueda = this.getTabla().get(simbolo.getId().toLocaleLowerCase());
+        let busqueda = this.getTabla().get(simbolo.getId());
         if (busqueda == null) {
-            this.tabla_actual.set(simbolo.getId().toLocaleLowerCase(), simbolo);
+            this.tabla_actual.set(simbolo.getId(), simbolo);
             return true;
         }
         return false;

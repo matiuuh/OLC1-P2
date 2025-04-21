@@ -14,7 +14,7 @@ export default class Tipo {
         return this.tipo
     }
     
-    public getNombreTipo(): string {
+    public getNombreTipo(tipo: any): any {
         switch (this.tipo) {
             case tipo_dato.ENTERO:
                 return "ENTERO"

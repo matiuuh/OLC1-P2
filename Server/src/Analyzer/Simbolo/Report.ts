@@ -7,7 +7,7 @@ export class Reporte {
     private columna: string
 
     constructor(id: string, valor: string, tipo: string, entorno: string, linea: string, columna: string) {
-        this.id = id.toLocaleLowerCase()
+        this.id = id
         this.valor = valor
         this.tipo = tipo
         this.entorno = entorno

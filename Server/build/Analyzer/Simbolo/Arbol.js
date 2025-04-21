@@ -4,12 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const TablaSimbolo_1 = __importDefault(require("./TablaSimbolo"));
-//import Metodo from "../instrucciones/metodo";
-//import Funcion from "../instrucciones/funcion";
-//import Tipo, { tipo_dato } from "./Tipo";
 class Arbol {
-    //private funciones: Array<Instruccion>
-    //public simbolos: Array<Reporte>
     constructor(instrucciones) {
         this.instrucciones = instrucciones;
         this.consola = "";
@@ -79,6 +74,17 @@ class Arbol {
             }
         }*/
         return null;
+    }
+    tablaSimbolos(id, valor, linea, entorno, columna) {
+        for (let ele of this.simbolos) {
+            if (ele.getId().toString() == id.toLocaleLowerCase() && ele.getEntorno().toString() == entorno.toString()) {
+                ele.setValor(valor);
+                ele.setLinea(linea);
+                ele.setValor(columna);
+                return true;
+            }
+        }
+        return false;
     }
 }
 exports.default = Arbol;

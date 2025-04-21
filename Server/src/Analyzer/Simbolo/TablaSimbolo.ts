@@ -39,7 +39,7 @@ export default class TablaSimbolo {
     //--------------------------------------------------------------------------------------------------------------
     public getVariable(id: string) {
         for (let i: TablaSimbolo = this; i != null; i = i.getAnterior()) {
-            let busqueda: Simbolo = <Simbolo>i.getTabla().get(id.toLocaleLowerCase())
+            let busqueda: Simbolo = <Simbolo>i.getTabla().get(id)
             if (busqueda != null) return busqueda
         }
         return null
@@ -49,9 +49,9 @@ export default class TablaSimbolo {
     */
 
     public setVariable(simbolo: Simbolo) {
-        let busqueda: Simbolo = <Simbolo>this.getTabla().get(simbolo.getId().toLocaleLowerCase())
+        let busqueda: Simbolo = <Simbolo>this.getTabla().get(simbolo.getId())
         if (busqueda == null) {
-            this.tabla_actual.set(simbolo.getId().toLocaleLowerCase(), simbolo)
+            this.tabla_actual.set(simbolo.getId(), simbolo)
             return true
         }
         return false

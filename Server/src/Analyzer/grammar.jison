@@ -328,7 +328,7 @@ fin_o_condicion : fin_condicion_si
 ;
 
 fin_condicion_si : DE_LO_CONTRARIO instrucciones FIN_SI
-                | O_SI instrucciones fin_condicion_si
+                | O_SI instrucciones fin_o_condicion
 ;
 
 //**************************SELECCION MULTIPLE**************************

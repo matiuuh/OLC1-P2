@@ -38,7 +38,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Instruccion_1 = require("../Abstracto/Instruccion");
 const Errors_1 = __importDefault(require("../Errors/Errors"));
-const Singleton_1 = __importDefault(require("../Simbolo/Singleton"));
 const Tipo_1 = __importStar(require("../Simbolo/Tipo"));
 class AccesoVariable extends Instruccion_1.Instruccion {
     constructor(id, linea, columna) {
@@ -52,17 +51,6 @@ class AccesoVariable extends Instruccion_1.Instruccion {
         this.tipo_dato = valorV.getTipo();
         this.valor = valorV.getValor();
         return valorV.getValor();
-    }
-    nodo(anterior) {
-        let cont = Singleton_1.default.getInstancia();
-        let resultado = "";
-        let nodoD = `n${cont.getContador()}`;
-        let nodoID = `n${cont.getContador()}`;
-        resultado += `${nodoID}[label="${this.id}"]\n`;
-        resultado += `${nodoD}[label="${this.valor}"]\n`;
-        resultado += `${anterior}->${nodoID}\n`;
-        resultado += `${nodoID}->${nodoD}\n`;
-        return resultado;
     }
 }
 exports.default = AccesoVariable;

@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
+
 import Errores from "../Analyzer/Errors/Errors";
+import Arbol from "../Analyzer/Simbolo/Arbol";
+import tablaSimbolo from "../Analyzer/Simbolo/TablaSimbolo";
 /*import Metodo from "../Analyzer/instrucciones/metodo"
 import Declaracion from "../Analyzer/instrucciones/declaracion"
 import Execute from "../Analyzer/instrucciones/execute"
@@ -20,7 +23,17 @@ tablaS = new Array<Reporte>
 
 class Controller {
 
-    /*public interpretar(req: Request, res: Response) {
+    public prueba(req: Request, res: Response) {
+        res.json({ "funciona": "la api" });
+    }
+
+    public pruebaPost(req: Request, res: Response) {
+        console.log(req.body)
+        console.log(req.body.parametro1)
+        res.json({ "funciona": "la api" });
+    }
+
+    public interpretar(req: Request, res: Response) {
         try {
             let parser = require('./analizador/analizador')
             let ast = new Arbol(parser.parse(req.body.entrada))
@@ -28,39 +41,18 @@ class Controller {
             tabla.setNombre("Ejemplo")
             ast.setTablaGlobal(tabla)
             ast.setConsola("")
-
-            // primer recorrido del arbol -> almacenar funcion o metodos (structs y clases)
             for (let i of ast.getInstrucciones()) {
-                if (i instanceof Metodo) {
-                    ast.addFunciones(i);
-                }
+                var resultado = i.interpretar(ast, tabla)
+                if (resultado instanceof Errores) console.log(resultado)
             }
-
-            // segundo recorrido del arbol -> declaracion de variables o vectores (asignacion)
-            for (let i of ast.getInstrucciones()) {
-                if (i instanceof Declaracion) {
-                    let resDeclaracion = i.interpretar(ast, tabla)
-                    if (resDeclaracion instanceof Errores) ast.addErrores(resDeclaracion)
-                }
-                //IF ASIGNACION....
-            }
-
-            // tercer recorrido del arbol (ejecutar funcion principal RUN o EJECUTAR en su proyecto)
-            for (let i of ast.getInstrucciones()) {
-                if (i instanceof Run) {
-                    let res = i.interpretar(ast, tabla)
-                    if (res instanceof Errores) ast.addErrores(res)
-                    break;
-                }
-            }
-
             console.log(tabla)
-            res.status(200).send({ "consola": ast.getConsola() })
+            res.status(200).send({ "consola": "" })
         } catch (err: any) {
             console.log(err)
             res.status(400).send({ "Error": "Ya no sale compi1" })
         }
-    }*/
+    }
+}
     
 
     /*public analizar(req: Request, res: Response) {
@@ -143,7 +135,7 @@ class Controller {
         }
     }*/
 
-    public getErrores(req: Request, res: Response) {
+    /*public getErrores(req: Request, res: Response) {
         console.log(lista_errores)
         // return res.send({
         //     "lista_errores": lista_errores
@@ -166,6 +158,6 @@ class Controller {
             res.json({ message: "Ya no sale" })
         }
     }
-}
+}*/
 
 export const indexController = new Controller()
