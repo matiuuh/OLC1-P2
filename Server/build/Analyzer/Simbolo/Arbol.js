@@ -35,7 +35,7 @@ class Arbol {
         return this.errores;
     }
     Imprimir(contenido) {
-        console.log("[IMPRIMIR]:", contenido); // <- visible en consola
+        //console.log("[IMPRIMIR]:", contenido); // <- visible en consola
         this.consola = `${this.consola}${contenido}`;
     }
     actualizarConsola(contenido) {

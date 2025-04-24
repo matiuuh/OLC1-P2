@@ -52,7 +52,7 @@ export default class Arbol {
     }
 
     public Imprimir(contenido: any) {
-        console.log("[IMPRIMIR]:", contenido); // <- visible en consola
+        //console.log("[IMPRIMIR]:", contenido); // <- visible en consola
         this.consola = `${this.consola}${contenido}`
     }
     

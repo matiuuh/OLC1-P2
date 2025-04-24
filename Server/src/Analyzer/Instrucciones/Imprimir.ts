@@ -19,7 +19,7 @@ export default class Imprimir extends Instruccion {
         let valor = this.expresion.interpretar(arbol, tabla)
         if (valor instanceof Errores) return valor
 
-        console.log("[DEBUG Imprimir] =>", valor + this.salto);
+        //console.log("[DEBUG Imprimir] =>", valor + this.salto);
         arbol.Imprimir(valor+this.salto)
     }
 

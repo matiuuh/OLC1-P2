@@ -23,26 +23,38 @@ class Controller {
     interpretar(req, res) {
         var _a;
         try {
-            let parser = require('../Analyzer/grammar');
-            let ast = new Arbol_1.default(parser.parse(req.body.entrada));
-            let tabla = new TablaSimbolo_1.default();
+            const parser = require('../Analyzer/grammar');
+            const instrucciones = parser.parse(req.body.entrada);
+            // Validación básica de parseo
+            if (!Array.isArray(instrucciones)) {
+                throw new Error("El parser no devolvió un arreglo de instrucciones");
+            }
+            const ast = new Arbol_1.default(instrucciones);
+            const tabla = new TablaSimbolo_1.default();
             tabla.setNombre("Global");
             ast.setTablaGlobal(tabla);
             ast.setConsola("");
-            for (let i of ast.getInstrucciones()) {
-                var resultado = i.interpretar(ast, tabla);
-                if (resultado instanceof Errors_1.default)
-                    console.log(resultado);
+            for (let i = 0; i < instrucciones.length; i++) {
+                const instruccion = instrucciones[i];
+                if (!instruccion || typeof instruccion.interpretar !== "function") {
+                    console.warn(`[WARN] Instrucción inválida en posición ${i}:`, instruccion);
+                    continue;
+                }
+                const resultado = instruccion.interpretar(ast, tabla);
+                if (resultado instanceof Errors_1.default) {
+                    console.error(`[ERROR]`, resultado);
+                    ast.actualizarConsola(resultado.obtenerError());
+                }
             }
-            console.log(tabla);
-            //res.status(200).send({ "consola": "" })
+            console.log("[DEBUG] Tabla de símbolos:", tabla);
             res.status(200).send({ consola: ast.getConsola() });
         }
         catch (err) {
-            //console.log(err)
-            //res.status(400).send({ "Error": "Ya no sale compi1" })
             console.error("[ERROR AL INTERPRETAR]", err);
-            res.status(400).send({ "Error": (_a = err.message) !== null && _a !== void 0 ? _a : "Error desconocido", "detalles": err });
+            res.status(400).send({
+                Error: (_a = err.message) !== null && _a !== void 0 ? _a : "Error desconocido",
+                detalles: err
+            });
         }
     }
 }

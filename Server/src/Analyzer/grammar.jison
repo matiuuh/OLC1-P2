@@ -8,9 +8,10 @@ const CreacionVariable = require('./Instrucciones/CreacionVariable')
 const Declaracion = require('./Instrucciones/Declaracion')
 const Imprimir = require('./Instrucciones/Imprimir')
 const AccesoVariable = require('./Expresiones/AccesoVariable')
+const Asignacion = require('./Instrucciones/AsignacionVariable')
 
 //variables para la cadena:
-    let cadena="";
+    var cadenaa="";
     let caracter ="";
 %}
 
@@ -36,7 +37,7 @@ const AccesoVariable = require('./Expresiones/AccesoVariable')
 "->"                        return 'ARROW';
 //"‘"                         return 'TILDE_IZQUIERDA';
 //"’"                         return 'TILDE_DERECHA';
-"\""                        return 'COMILLAS';
+//"\""                        return 'COMILLAS';
 "("                         return 'PARENTESIS_ABRIR';
 ")"                         return 'PARENTESIS_CERRAR';
 //":"                         return 'DOSPUNTOS';
@@ -151,15 +152,17 @@ const AccesoVariable = require('./Expresiones/AccesoVariable')
 
 
 //Texto con o sin secuancias de escape
-["]                               { cadena=""; this.begin("stringss"); }
-<stringss>[^"\\]+                 { cadena+=yytext; }
-<stringss>"\\\""                  { cadena+="\""; }
-<stringss>"\\n"                   { cadena+="\n"; }
-<stringss>\s                      { cadena+=" ";  }
-<stringss>"\\t"                   { cadena+="\t"; }
-<stringss>"\\\\"                  { cadena+="\\"; }
-<stringss>"\\'"                   { cadena+="\'"; }
-<stringss>["]                     { yytext=cadena; this.popState(); return 'CADENAS_VALOR'; }
+["]                             { cadenaa=""; this.begin("stringss"); }
+<stringss>[^"\\]+                 { cadenaa+=yytext; }
+<stringss>"\\\""                  { cadenaa+="\""; }
+<stringss>"\\n"                   { cadenaa+="\n"; }
+<stringss>\s                      { cadenaa+=" ";  }
+<stringss>"\\t"                   { cadenaa+="\t"; }
+<stringss>"\\\\"                  { cadenaa+="\\"; }
+<stringss>"\\'"                   { cadenaa+="\'"; } //le quite un \ recoradat
+<stringss>[^"\\]+                 { console.log("Agregando a cadena:", yytext); cadenaa+=yytext; }
+<stringss>["]                     { yytext=cadenaa; this.popState(); return 'CADENAS_VALOR'; }
+
 
 //----------------char con o sin secuancias de escape----------------
 [']                             { caracter=""; this.begin("caracter"); }
@@ -266,15 +269,30 @@ identificadores_multiples : identificadores_multiples COMA IDENTIFICADOR        
 ;
 
 //**************************ASIGNACION DE VARIABLES/METODOS DE OBJETOS**************************
-asignacion_o_metodo_objeto : IDENTIFICADOR ids_list ARROW continuacion_arrow
+asignacion_o_metodo_objeto : identificadores_multiples ARROW continuacion_arrow
+{
+        if ($3.tipo === 'asignacion') {
+            $$ = new Asignacion.default($1, $3.valores, @1.first_line, @1.first_column);
+        } else if ($3.tipo === 'metodo') {
+          // $$ = new LlamadaMetodo.default($1, $3.nombreMetodo, $3.instrucciones, @1.first_line, @1.first_column);
+        }
+}
 ;
 
-ids_list : /* vacío */
-        | COMA IDENTIFICADOR ids_list
-;
-
-continuacion_arrow : METODO IDENTIFICADOR fin_con_parametros_o_sin  // Para método de objeto
+continuacion_arrow : METODO IDENTIFICADOR fin_con_parametros_o_sin FIN_METODO // Para método de objeto
+{        $$ = {
+            tipo: 'metodo',
+            nombreMetodo: $2,
+            instrucciones: $3
+        };
+}
                    | lista_expresiones                             // Para asignación
+{
+        $$ = {
+            tipo: 'asignacion',
+            valores: $1
+        };
+}
 ;
 
 //**************************CASTEOS**************************
@@ -414,8 +432,8 @@ atributo : IDENTIFICADOR tipo_dato
 ;
 
 //---------------------METODOS---------------------
-fin_con_parametros_o_sin : instrucciones FIN_METODO
-                | CON_PARAMETROS PARENTESIS_ABRIR lista_parametros PARENTESIS_CERRAR instrucciones FIN_PROCEDIMIENTO
+fin_con_parametros_o_sin : instrucciones
+                | CON_PARAMETROS PARENTESIS_ABRIR lista_parametros PARENTESIS_CERRAR instrucciones
 ;
 
 //---------------------INSTANCIACION---------------------
@@ -477,7 +495,7 @@ tipo_dato : ENTERO          { $$ = new Tipo.default(Tipo.tipo_dato.ENTERO)}
 
 //**************************EXPRESIONES**************************
 //---------------------EXPRESIONES--------------------------
-expresion: '-' expresion %prec UMENOS
+expresion: '-' expresion %prec UMENOS   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.NEGACION, @1.first_line, @1.first_column, $2) }
     | '!' expresion
     | expresion '||' expresion
     | expresion '&&' expresion

@@ -35,8 +35,60 @@ class Controller {
 
     public interpretar(req: Request, res: Response) {
         try {
+            const parser = require('../Analyzer/grammar');
+            const instrucciones = parser.parse(req.body.entrada);
+    
+            // Validación básica de parseo
+            if (!Array.isArray(instrucciones)) {
+                throw new Error("El parser no devolvió un arreglo de instrucciones");
+            }
+    
+            const ast = new Arbol(instrucciones);
+            const tabla = new tablaSimbolo();
+            tabla.setNombre("Global");
+    
+            ast.setTablaGlobal(tabla);
+            ast.setConsola("");
+    
+            for (let i = 0; i < instrucciones.length; i++) {
+                const instruccion = instrucciones[i];
+    
+                if (!instruccion || typeof instruccion.interpretar !== "function") {
+                    console.warn(`[WARN] Instrucción inválida en posición ${i}:`, instruccion);
+                    continue;
+                }
+    
+                const resultado = instruccion.interpretar(ast, tabla);
+    
+                if (resultado instanceof Errores) {
+                    console.error(`[ERROR]`, resultado);
+                    ast.actualizarConsola(resultado.obtenerError());
+                }
+            }
+    
+            console.log("[DEBUG] Tabla de símbolos:", tabla);
+            res.status(200).send({ consola: ast.getConsola() });
+    
+        } catch (err: any) {
+            console.error("[ERROR AL INTERPRETAR]", err);
+            res.status(400).send({
+                Error: err.message ?? "Error desconocido",
+                detalles: err
+            });
+        }
+    }
+    
+
+    /*public interpretar(req: Request, res: Response) {
+        try {
             let parser = require('../Analyzer/grammar')
             let ast = new Arbol(parser.parse(req.body.entrada))
+
+            // Validación básica de parseo
+            if (!Array.isArray(ast)) {
+                throw new Error("El parser no devolvió un arreglo de instrucciones");
+            }
+
             let tabla = new tablaSimbolo()
             tabla.setNombre("Global")
             ast.setTablaGlobal(tabla)
@@ -54,7 +106,7 @@ class Controller {
             console.error("[ERROR AL INTERPRETAR]", err);
             res.status(400).send({ "Error": err.message ?? "Error desconocido", "detalles": err });
         }
-    }
+    }*/
 }
     
 
