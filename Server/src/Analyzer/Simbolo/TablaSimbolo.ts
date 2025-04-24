@@ -10,7 +10,7 @@ el map funciona como un json, esta es su estructura basica:
 */
 
 export default class TablaSimbolo {
-    private tabla_anterior: TablaSimbolo | any
+    private tabla_anterior: TablaSimbolo
     private tabla_actual: Map<string, Simbolo>
     private nombre: string
 
@@ -61,8 +61,6 @@ export default class TablaSimbolo {
     */
 
     //--------------------------------------------------------------------------------------------------------------
-
-
     public getNombre(): string {
         return this.nombre
     }

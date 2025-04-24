@@ -1,17 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Reporte = void 0;
-class Reporte {
-    constructor(id, valor, tipo, entorno, linea, columna) {
+exports.Report = void 0;
+class Report {
+    constructor(id, valor, tipo, entorno, linea, columna, tipoS) {
         this.id = id;
         this.valor = valor;
         this.tipo = tipo;
         this.entorno = entorno;
         this.linea = linea;
         this.columna = columna;
+        this.tipo = tipoS;
     }
     getId() {
         return this.id;
+    }
+    getTipoS() {
+        return this.tipoS;
     }
     getEntorno() {
         return this.entorno;
@@ -41,4 +45,4 @@ class Reporte {
         this.valor = valor;
     }
 }
-exports.Reporte = Reporte;
+exports.Report = Report;

@@ -21,11 +21,12 @@ class Controller {
         res.json({ "funciona": "la api" });
     }
     interpretar(req, res) {
+        var _a;
         try {
-            let parser = require('./analizador/analizador');
+            let parser = require('../Analyzer/grammar');
             let ast = new Arbol_1.default(parser.parse(req.body.entrada));
             let tabla = new TablaSimbolo_1.default();
-            tabla.setNombre("Ejemplo");
+            tabla.setNombre("Global");
             ast.setTablaGlobal(tabla);
             ast.setConsola("");
             for (let i of ast.getInstrucciones()) {
@@ -34,11 +35,14 @@ class Controller {
                     console.log(resultado);
             }
             console.log(tabla);
-            res.status(200).send({ "consola": "" });
+            //res.status(200).send({ "consola": "" })
+            res.status(200).send({ consola: ast.getConsola() });
         }
         catch (err) {
-            console.log(err);
-            res.status(400).send({ "Error": "Ya no sale compi1" });
+            //console.log(err)
+            //res.status(400).send({ "Error": "Ya no sale compi1" })
+            console.error("[ERROR AL INTERPRETAR]", err);
+            res.status(400).send({ "Error": (_a = err.message) !== null && _a !== void 0 ? _a : "Error desconocido", "detalles": err });
         }
     }
 }

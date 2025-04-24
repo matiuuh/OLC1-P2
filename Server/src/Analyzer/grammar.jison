@@ -4,7 +4,10 @@ const Aritmeticas = require('./expresiones/Aritmeticas')
 const Nativo = require('./Expresiones/Nativo')
 const Tipo = require('./Simbolo/Tipo')
 
+const CreacionVariable = require('./Instrucciones/CreacionVariable')
 const Declaracion = require('./Instrucciones/Declaracion')
+const Imprimir = require('./Instrucciones/Imprimir')
+const AccesoVariable = require('./Expresiones/AccesoVariable')
 
 //variables para la cadena:
     let cadena="";
@@ -240,14 +243,26 @@ instruccion : declaraciones                 {$$ = $1;}
 //**************************DECLARACIONES**************************
 
 declaraciones : INGRESAR identificadores_multiples COMO tipo_dato con_valor_o_sin_valor
+{
+        if ($5 == null || $5 == false) {
+            $$ = new CreacionVariable.default($4, @1.first_line, @1.first_column, $2);
+        } else {
+            if ($2.length != $5.length) {
+                yyerror("Error: la cantidad de variables y valores no coincide (línea " + @1.first_line + ")");
+                $$ = false;
+            } else {
+                $$ = new Declaracion.default($4, @1.first_line, @1.first_column, $2, $5);
+            }
+        }
+    }
 ;
 
-con_valor_o_sin_valor : CON_VALOR lista_expresiones
-                | /* nada */
+con_valor_o_sin_valor : CON_VALOR lista_expresiones     {$$ = $2;}
+                    | /* nada */                       {$$ = false;}
 ;
 
-identificadores_multiples : identificadores_multiples COMA IDENTIFICADOR
-                | IDENTIFICADOR
+identificadores_multiples : identificadores_multiples COMA IDENTIFICADOR        { $$ = [...$1, $3]; }
+                | IDENTIFICADOR                                                 { $$ = [$1]; }
 ;
 
 //**************************ASIGNACION DE VARIABLES/METODOS DE OBJETOS**************************
@@ -417,8 +432,12 @@ con_lista_o_sin : lista_expresiones
 ;
 
 //******************IMPRIMIR**************************
-impresion : IMPRIMIR expresion
-            | IMPRIMIR NUEVALINEA expresion
+impresion : IMPRIMIR expresion {
+        $$ = new Imprimir.default($2, @1.first_line, @1.first_column, "");
+    }
+            | IMPRIMIR NUEVALINEA expresion {
+        $$ = new Imprimir.default($3, @1.first_line, @1.first_column, "\n");
+    }
 ;
 
 //*******************FUNCIONES NATIVAS**************************
@@ -474,13 +493,13 @@ expresion: '-' expresion %prec UMENOS
     | expresion '/' expresion
     | expresion '%' expresion
     | expresion '^' expresion
-    | ENTERO_VALOR              { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.ENTERO), $1, @1.first_line, @1.first_column) }
-    | DECIMAL_VALOR             { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.DECIMAL), $1, @1.first_line, @1.first_column) }
-    | CADENAS_VALOR             { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.CADENA), $1, @1.first_line, @1.first_column) }
-    | CARACTER_VALOR            { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.CARACTER), $1, @1.first_line, @1.first_column) }
-    | TRUE                      { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.BOOLEANO), $1, @1.first_line, @1.first_column) }
-    | FALSE                     { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.BOOLEANO), $1, @1.first_line, @1.first_column) }
-    | IDENTIFICADOR
+    | ENTERO_VALOR              { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.ENTERO), $1, @1.first_line, @1.first_column)}
+    | DECIMAL_VALOR             { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.DECIMAL), $1, @1.first_line, @1.first_column)}
+    | CADENAS_VALOR             { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.CADENA), $1, @1.first_line, @1.first_column)}
+    | CARACTER_VALOR            { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.CARACTER), $1, @1.first_line, @1.first_column)}
+    | TRUE                      { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.BOOLEANO), $1, @1.first_line, @1.first_column)}
+    | FALSE                     { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.BOOLEANO), $1, @1.first_line, @1.first_column)}
+    | IDENTIFICADOR             { $$ = new AccesoVariable.default($1, @1.first_line, @1.first_column)}
     | PARENTESIS_ABRIR expresion PARENTESIS_CERRAR  { $$ = $2 }
     | casteo
     | aumentos
@@ -493,8 +512,8 @@ lista_parametros : lista_parametros COMA IDENTIFICADOR tipo_dato
 ;
 
 //---------------------LISTA EXPRESIONES---------------------
-lista_expresiones : lista_expresiones COMA expresion
-                | expresion
+lista_expresiones : lista_expresiones COMA expresion    { $$ = [...$1, $3]; }
+                | expresion                             { $$ = [$1]; }
 ;
 
 //**********************EXTRAS**************************

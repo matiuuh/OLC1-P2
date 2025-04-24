@@ -13,13 +13,13 @@ import Creacion from "../Analyzer/instrucciones/creacion.var"
 import ModificarVector1D from "../Analyzer/instrucciones/modificar.vectorud"
 import ModificarVector2D from "../Analyzer/instrucciones/modificar.vectordd"
 import Funcion from "../Analyzer/instrucciones/funcion"*/
-import { Reporte } from "../Analyzer/Simbolo/Report";
+import { Report } from "../Analyzer/Simbolo/Report";
 //import { parser } from '../Analyzer/grammar'
 
 export let lista_errores: Array<Errores> = []
 export let dot: string = ""
-export let tablaS: Array<Reporte>
-tablaS = new Array<Reporte>
+export let tablaS: Array<Report>
+tablaS = new Array<Report>
 
 class Controller {
 
@@ -35,10 +35,10 @@ class Controller {
 
     public interpretar(req: Request, res: Response) {
         try {
-            let parser = require('./analizador/analizador')
+            let parser = require('../Analyzer/grammar')
             let ast = new Arbol(parser.parse(req.body.entrada))
             let tabla = new tablaSimbolo()
-            tabla.setNombre("Ejemplo")
+            tabla.setNombre("Global")
             ast.setTablaGlobal(tabla)
             ast.setConsola("")
             for (let i of ast.getInstrucciones()) {
@@ -46,10 +46,13 @@ class Controller {
                 if (resultado instanceof Errores) console.log(resultado)
             }
             console.log(tabla)
-            res.status(200).send({ "consola": "" })
+            //res.status(200).send({ "consola": "" })
+            res.status(200).send({ consola: ast.getConsola() });
         } catch (err: any) {
-            console.log(err)
-            res.status(400).send({ "Error": "Ya no sale compi1" })
+            //console.log(err)
+            //res.status(400).send({ "Error": "Ya no sale compi1" })
+            console.error("[ERROR AL INTERPRETAR]", err);
+            res.status(400).send({ "Error": err.message ?? "Error desconocido", "detalles": err });
         }
     }
 }

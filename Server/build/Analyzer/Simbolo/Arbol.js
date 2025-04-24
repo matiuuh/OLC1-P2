@@ -11,7 +11,7 @@ class Arbol {
         this.tablaGlobal = new TablaSimbolo_1.default();
         this.errores = new Array;
         //this.funciones = new Array<Instruccion>
-        //this.simbolos = new Array<Reporte>
+        this.simbolos = new Array;
     }
     getConsola() {
         return this.consola;
@@ -34,7 +34,8 @@ class Arbol {
     getErrores() {
         return this.errores;
     }
-    Cout(contenido) {
+    Imprimir(contenido) {
+        console.log("[IMPRIMIR]:", contenido); // <- visible en consola
         this.consola = `${this.consola}${contenido}`;
     }
     actualizarConsola(contenido) {
@@ -77,7 +78,7 @@ class Arbol {
     }
     tablaSimbolos(id, valor, linea, entorno, columna) {
         for (let ele of this.simbolos) {
-            if (ele.getId().toString() == id.toLocaleLowerCase() && ele.getEntorno().toString() == entorno.toString()) {
+            if (ele.getId().toString() == id && ele.getEntorno().toString() == entorno.toString()) {
                 ele.setValor(valor);
                 ele.setLinea(linea);
                 ele.setValor(columna);
@@ -85,6 +86,14 @@ class Arbol {
             }
         }
         return false;
+    }
+    getTipoS(id) {
+        for (let ele of this.simbolos) {
+            if (ele.getId().toString() == id) {
+                return ele.getTipoS().toString();
+            }
+        }
+        return "none";
     }
 }
 exports.default = Arbol;

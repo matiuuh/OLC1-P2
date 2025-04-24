@@ -1,12 +1,12 @@
 import { Instruccion } from "../Abstracto/Instruccion";
 import Errors from "../Errors/Errors";
 import Arbol from "../Simbolo/Arbol";
+//import Singleton from "../Simbolo/Singleton";
+//import Simbolo from "../Simbolo/Simbolo";
 import TablaSimbolo from "../Simbolo/TablaSimbolo";
-//import Tipo from "../Simbolo/Tipo";
 import Tipo, { tipo_dato } from "../Simbolo/Tipo";
-//import Tipo, {tipo_dato} from "../Simbolo/Tipo";
 
-export default class Asignacion extends Instruccion {
+export default class AsignacionVariable extends Instruccion {
     private id: string
     private expresion : Instruccion
 

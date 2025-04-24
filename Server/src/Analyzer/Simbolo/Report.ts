@@ -1,22 +1,28 @@
-export class Reporte {
+export class Report {
     private id: string
     private valor: string
     private tipo: string
     private entorno: string
     private linea: string
     private columna: string
+    private tipoS: string
 
-    constructor(id: string, valor: string, tipo: string, entorno: string, linea: string, columna: string) {
+    constructor(id: string, valor: string, tipo: string, entorno: string, linea: string, columna: string, tipoS: string) {
         this.id = id
         this.valor = valor
         this.tipo = tipo
         this.entorno = entorno
         this.linea = linea
         this.columna = columna
+        this.tipo = tipoS
     }
 
     public getId():string{
         return this.id
+    }
+
+    public getTipoS():string{
+        return this.tipoS
     }
 
     public getEntorno():string{

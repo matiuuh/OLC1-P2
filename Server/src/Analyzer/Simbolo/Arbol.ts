@@ -4,8 +4,7 @@ import { Instruccion } from "../Abstracto/Instruccion";
 import Errores from "../Errors/Errors";
 //import Metodo from "../instrucciones/metodo";
 //import Funcion from "../instrucciones/funcion";
-//import Tipo, { tipo_dato } from "./Tipo";
-import { Reporte } from "./Report";
+import { Report } from "./Report";
 
 export default class Arbol {
     private instrucciones: Array<Instruccion>
@@ -13,7 +12,7 @@ export default class Arbol {
     private tablaGlobal: TablaSimbolos      //funciona para los entornos, considerar tablas globales y locales
     private errores: Array<Errores>
     //private funciones: Array<Instruccion>
-    public simbolos: Array<Reporte>
+    public simbolos: Array<Report>
 
     constructor(instrucciones: Array<Instruccion>) {
         this.instrucciones = instrucciones
@@ -21,7 +20,7 @@ export default class Arbol {
         this.tablaGlobal = new TablaSimbolos()
         this.errores = new Array<Errores>
         //this.funciones = new Array<Instruccion>
-        //this.simbolos = new Array<Reporte>
+        this.simbolos = new Array<Report>
     }
 
     public getConsola(): string {
@@ -52,7 +51,8 @@ export default class Arbol {
         return this.errores
     }
 
-    public Cout(contenido: any) {
+    public Imprimir(contenido: any) {
+        console.log("[IMPRIMIR]:", contenido); // <- visible en consola
         this.consola = `${this.consola}${contenido}`
     }
     
@@ -100,7 +100,7 @@ export default class Arbol {
 
     public tablaSimbolos(id: string, valor: string, linea: string, entorno: string, columna: string) : boolean{
         for(let ele of this.simbolos){
-            if(ele.getId().toString() == id.toLocaleLowerCase() && ele.getEntorno().toString() == entorno.toString()){
+            if(ele.getId().toString() == id && ele.getEntorno().toString() == entorno.toString()){
 
                 ele.setValor(valor)
                 ele.setLinea(linea)
@@ -110,6 +110,15 @@ export default class Arbol {
         }
 
         return false
+    }
+
+    public getTipoS(id:string): string{
+        for(let ele of this.simbolos){
+            if(ele.getId().toString() == id){
+                return ele.getTipoS().toString()
+            }
+        }
+        return "none"
     }
 
     /*public getSimbolos(): Array<Reporte> {

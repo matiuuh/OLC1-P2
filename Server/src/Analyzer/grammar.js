@@ -98,7 +98,7 @@ break;
 case 31:
 
         if ($$[$0] == null || $$[$0] == false) {
-            this.$ = new CreacionVariable.default($$[$0-1], _$[$0-4].first_line, _$[$0-4].first_column, $$[$0-3]);
+            this.$ = new CreacionVariabl;e.default($$[$0-1], _$[$0-4].first_line, _$[$0-4].first_column, $$[$0-3]);
         } else {
             if ($$[$0-3].length != $$[$0].length) {
                 yyerror("Error: la cantidad de variables y valores no coincide (línea " + _$[$0-4].first_line + ")");
@@ -147,22 +147,19 @@ case 117:
  this.$ = new Aritmeticas.default(Aritmeticas.Operadores.SUMA, _$[$0-2].first_line, _$[$0-2].first_column, $$[$0-2], $$[$0]) 
 break;
 case 123:
- this.$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.ENTERO), $$[$0], _$[$0].first_line, _$[$0].first_column)
+ this.$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.ENTERO), $$[$0], _$[$0].first_line, _$[$0].first_column) 
 break;
 case 124:
- this.$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.DECIMAL), $$[$0], _$[$0].first_line, _$[$0].first_column)
+ this.$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.DECIMAL), $$[$0], _$[$0].first_line, _$[$0].first_column) 
 break;
 case 125:
- this.$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.CADENA), $$[$0], _$[$0].first_line, _$[$0].first_column)
+ this.$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.CADENA), $$[$0], _$[$0].first_line, _$[$0].first_column) 
 break;
 case 126:
- this.$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.CARACTER), $$[$0], _$[$0].first_line, _$[$0].first_column)
+ this.$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.CARACTER), $$[$0], _$[$0].first_line, _$[$0].first_column) 
 break;
 case 127: case 128:
- this.$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.BOOLEANO), $$[$0], _$[$0].first_line, _$[$0].first_column)
-break;
-case 129:
- this.$ = new AccesoVariable.default($$[$0], _$[$0].first_line, _$[$0].first_column)
+ this.$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.BOOLEANO), $$[$0], _$[$0].first_line, _$[$0].first_column) 
 break;
 case 130:
  this.$ = $$[$0-1] 
@@ -427,7 +424,6 @@ const Tipo = require('./Simbolo/Tipo')
 const CreacionVariable = require('./Instrucciones/CreacionVariable')
 const Declaracion = require('./Instrucciones/Declaracion')
 const Imprimir = require('./Instrucciones/Imprimir')
-const AccesoVariable = require('./Expresiones/AccesoVariable')
 
 //variables para la cadena:
     let cadena="";
