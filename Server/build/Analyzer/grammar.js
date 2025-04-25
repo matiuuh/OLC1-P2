@@ -143,6 +143,9 @@ case 38:
         };
 
 break;
+case 39:
+ this.$ = new Casteo.default($$[$0], $$[$0-2], _$[$0-3].first_line, _$[$0-3].first_column); 
+break;
 case 92:
 
         this.$ = new Imprimir.default($$[$0], _$[$0-1].first_line, _$[$0-1].first_column, "");
@@ -457,6 +460,7 @@ const Declaracion = require('./Instrucciones/Declaracion')
 const Imprimir = require('./Instrucciones/Imprimir')
 const AccesoVariable = require('./Expresiones/AccesoVariable')
 const Asignacion = require('./Instrucciones/AsignacionVariable')
+const Casteo = require('./Instrucciones/Casteo')
 
 //variables para la cadena:
     var cadenaa="";

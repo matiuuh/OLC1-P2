@@ -19,8 +19,15 @@ export default class Imprimir extends Instruccion {
         let valor = this.expresion.interpretar(arbol, tabla)
         if (valor instanceof Errores) return valor
 
+        let salida = valor;
+
+        if (typeof valor === "number" && this.expresion.tipo_dato.getTipo() === tipo_dato.DECIMAL) {
+            // Si ya es número, forzamos el decimal visible
+            salida = valor % 1 === 0 ? valor.toFixed(1) : valor;
+        }
+
         //console.log("[DEBUG Imprimir] =>", valor + this.salto);
-        arbol.Imprimir(valor+this.salto)
+        arbol.Imprimir(salida+this.salto)
     }
 
     /*nodo(anterior: string): string {

@@ -77,36 +77,6 @@ class Controller {
             });
         }
     }
-    
-
-    /*public interpretar(req: Request, res: Response) {
-        try {
-            let parser = require('../Analyzer/grammar')
-            let ast = new Arbol(parser.parse(req.body.entrada))
-
-            // Validación básica de parseo
-            if (!Array.isArray(ast)) {
-                throw new Error("El parser no devolvió un arreglo de instrucciones");
-            }
-
-            let tabla = new tablaSimbolo()
-            tabla.setNombre("Global")
-            ast.setTablaGlobal(tabla)
-            ast.setConsola("")
-            for (let i of ast.getInstrucciones()) {
-                var resultado = i.interpretar(ast, tabla)
-                if (resultado instanceof Errores) console.log(resultado)
-            }
-            console.log(tabla)
-            //res.status(200).send({ "consola": "" })
-            res.status(200).send({ consola: ast.getConsola() });
-        } catch (err: any) {
-            //console.log(err)
-            //res.status(400).send({ "Error": "Ya no sale compi1" })
-            console.error("[ERROR AL INTERPRETAR]", err);
-            res.status(400).send({ "Error": err.message ?? "Error desconocido", "detalles": err });
-        }
-    }*/
 }
     
 

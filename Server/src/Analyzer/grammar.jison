@@ -9,6 +9,7 @@ const Declaracion = require('./Instrucciones/Declaracion')
 const Imprimir = require('./Instrucciones/Imprimir')
 const AccesoVariable = require('./Expresiones/AccesoVariable')
 const Asignacion = require('./Instrucciones/AsignacionVariable')
+const Casteo = require('./Instrucciones/Casteo')
 
 //variables para la cadena:
     var cadenaa="";
@@ -297,6 +298,7 @@ continuacion_arrow : METODO IDENTIFICADOR fin_con_parametros_o_sin FIN_METODO //
 
 //**************************CASTEOS**************************
 casteo : PARENTESIS_ABRIR tipo_dato PARENTESIS_CERRAR expresion %prec CASTEO
+{ $$ = new Casteo.default($4, $2, @1.first_line, @1.first_column); }
 ;
 
 //**************************INCREMENTO Y DECREMENTO**************************
