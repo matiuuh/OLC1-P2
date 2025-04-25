@@ -14,6 +14,7 @@ import ModificarVector1D from "../Analyzer/instrucciones/modificar.vectorud"
 import ModificarVector2D from "../Analyzer/instrucciones/modificar.vectordd"
 import Funcion from "../Analyzer/instrucciones/funcion"*/
 import { Report } from "../Analyzer/Simbolo/Report";
+
 //import { parser } from '../Analyzer/grammar'
 
 export let lista_errores: Array<Errores> = []
@@ -78,7 +79,7 @@ class Controller {
         }
     }
 }
-    
+
 
     /*public analizar(req: Request, res: Response) {
         lista_errores = new Array<Errores>
@@ -161,28 +162,7 @@ class Controller {
     }*/
 
     /*public getErrores(req: Request, res: Response) {
-        console.log(lista_errores)
-        // return res.send({
-        //     "lista_errores": lista_errores
-        // })
 
-        try {
-            res.json({ "lista_errores": lista_errores })
-        } catch (error) {
-            console.log(error)
-            res.json({ message: "Ya no sale" })
-        }
-    }
-
-    public getAST(req: Request, res: Response) {
-
-        try {
-            res.json({ "ast": dot })
-        } catch (error) {
-            console.log(error)
-            res.json({ message: "Ya no sale" })
-        }
-    }
 }*/
 
 export const indexController = new Controller()

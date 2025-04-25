@@ -10,7 +10,11 @@ el map funciona como un json, esta es su estructura basica:
 */
 
 export default class TablaSimbolo {
+<<<<<<< HEAD
     private tabla_anterior: TablaSimbolo
+=======
+    private tabla_anterior: TablaSimbolo | any
+>>>>>>> origin/main
     private tabla_actual: Map<string, Simbolo>
     private nombre: string
 
@@ -39,7 +43,11 @@ export default class TablaSimbolo {
     //--------------------------------------------------------------------------------------------------------------
     public getVariable(id: string) {
         for (let i: TablaSimbolo = this; i != null; i = i.getAnterior()) {
+<<<<<<< HEAD
             let busqueda: Simbolo = <Simbolo>i.getTabla().get(id)
+=======
+            let busqueda: Simbolo = <Simbolo>i.getTabla().get(id.toLocaleLowerCase())
+>>>>>>> origin/main
             if (busqueda != null) return busqueda
         }
         return null
@@ -49,9 +57,15 @@ export default class TablaSimbolo {
     */
 
     public setVariable(simbolo: Simbolo) {
+<<<<<<< HEAD
         let busqueda: Simbolo = <Simbolo>this.getTabla().get(simbolo.getId())
         if (busqueda == null) {
             this.tabla_actual.set(simbolo.getId(), simbolo)
+=======
+        let busqueda: Simbolo = <Simbolo>this.getTabla().get(simbolo.getId().toLocaleLowerCase())
+        if (busqueda == null) {
+            this.tabla_actual.set(simbolo.getId().toLocaleLowerCase(), simbolo)
+>>>>>>> origin/main
             return true
         }
         return false
@@ -61,6 +75,11 @@ export default class TablaSimbolo {
     */
 
     //--------------------------------------------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/main
     public getNombre(): string {
         return this.nombre
     }
