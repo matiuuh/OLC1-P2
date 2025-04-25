@@ -23,6 +23,11 @@ export default class AccesoVariable extends Instruccion {
         return valorV.getValor()
     }
 
+    //este get id es usado en incremento y decremento para poder modificar las variables
+    /*public getId(): string {
+        return this.id;
+    }*/
+    
     /*nodo(anterior: string): string {
         let cont = Cont.getInstancia()
         let resultado = ""

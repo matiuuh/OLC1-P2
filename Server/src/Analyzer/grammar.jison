@@ -10,6 +10,7 @@ const Imprimir = require('./Instrucciones/Imprimir')
 const AccesoVariable = require('./Expresiones/AccesoVariable')
 const Asignacion = require('./Instrucciones/AsignacionVariable')
 const Casteo = require('./Instrucciones/Casteo')
+const IncrementoDecremento = require('./Instrucciones/IncrementoDecremento')
 
 //variables para la cadena:
     var cadenaa="";
@@ -160,7 +161,7 @@ const Casteo = require('./Instrucciones/Casteo')
 <stringss>\s                      { cadenaa+=" ";  }
 <stringss>"\\t"                   { cadenaa+="\t"; }
 <stringss>"\\\\"                  { cadenaa+="\\"; }
-<stringss>"\\'"                   { cadenaa+="\'"; } //le quite un \ recoradat
+<stringss>"\\'"                   { cadenaa+="\'"; }
 <stringss>[^"\\]+                 { console.log("Agregando a cadena:", yytext); cadenaa+=yytext; }
 <stringss>["]                     { yytext=cadenaa; this.popState(); return 'CADENAS_VALOR'; }
 
@@ -218,8 +219,7 @@ instrucciones : instrucciones instruccion   { if($2 != false) $1.push($2); $$ = 
 instruccion : declaraciones                 {$$ = $1;}
             | asignacion_o_metodo_objeto    {$$ = $1;}
             | casteo                        {$$ = $1;}
-            | incrementar                   {$$ = $1;}
-            | decrementar                   {$$ = $1;}
+            | incrementar_o_decrementar     {$$ = $1;}
             | tipo_de_lista_para_listas     {$$ = $1;}
             | acceso_a_listas               {$$ = $1;}
             | condicion_si                  {$$ = $1;}
@@ -302,10 +302,25 @@ casteo : PARENTESIS_ABRIR tipo_dato PARENTESIS_CERRAR expresion %prec CASTEO
 ;
 
 //**************************INCREMENTO Y DECREMENTO**************************
-incrementar : INCREMENTO PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
+incrementar_o_decrementar : increment_or_decrement PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
+{
+    if (!$3 || typeof $3.interpretar !== "function") {
+        return new Errores("Semántico", "La expresión dentro de inc/dec debe ser una variable válida", @1.first_line, @1.first_column);
+    }
+
+    // Aseguramos que sea un acceso directo a una variable, no una operación
+    if (!$3.id) {
+        return new Errores("Semántico", "Solo se puede aplicar inc/dec a una variable directamente", @1.first_line, @1.first_column);
+    }
+
+    const id = $3.id;
+    const accion = $1; // ya es 'mas' o 'menos'
+    $$ = new IncrementoDecremento.default(id, @1.first_line, @1.first_column, accion);
+}
 ;
 
-decrementar : DECREMENTO PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
+increment_or_decrement : INCREMENTO     { $$ = "mas" }
+                    | DECREMENTO        { $$ = "menos" }
 ;
 
 //*******************DECLARACION LISTAS**************************
