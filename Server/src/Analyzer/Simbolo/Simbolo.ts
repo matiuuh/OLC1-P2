@@ -9,11 +9,7 @@ export default class Simbolo {
 
     constructor(tipo: Tipo, id: string, valor?: any) {
         this.tipo = tipo
-<<<<<<< HEAD
         this.id = id
-=======
-        this.id = id.toLocaleLowerCase()
->>>>>>> origin/main
         this.valor = valor
     }
 

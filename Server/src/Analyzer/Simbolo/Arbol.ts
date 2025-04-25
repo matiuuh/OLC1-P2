@@ -4,11 +4,7 @@ import { Instruccion } from "../Abstracto/Instruccion";
 import Errores from "../Errors/Errors";
 //import Metodo from "../instrucciones/metodo";
 //import Funcion from "../instrucciones/funcion";
-<<<<<<< HEAD
 import { Report } from "./Report";
-=======
-//import Tipo, { tipo_dato } from "./Tipo";
->>>>>>> origin/main
 
 export default class Arbol {
     private instrucciones: Array<Instruccion>
@@ -16,11 +12,7 @@ export default class Arbol {
     private tablaGlobal: TablaSimbolos      //funciona para los entornos, considerar tablas globales y locales
     private errores: Array<Errores>
     //private funciones: Array<Instruccion>
-<<<<<<< HEAD
     public simbolos: Array<Report>
-=======
-    //public simbolos: Array<Reporte>
->>>>>>> origin/main
 
     constructor(instrucciones: Array<Instruccion>) {
         this.instrucciones = instrucciones
@@ -28,11 +20,7 @@ export default class Arbol {
         this.tablaGlobal = new TablaSimbolos()
         this.errores = new Array<Errores>
         //this.funciones = new Array<Instruccion>
-<<<<<<< HEAD
         this.simbolos = new Array<Report>
-=======
-        //this.simbolos = new Array<Reporte>
->>>>>>> origin/main
     }
 
     public getConsola(): string {
@@ -63,12 +51,8 @@ export default class Arbol {
         return this.errores
     }
 
-<<<<<<< HEAD
     public Imprimir(contenido: any) {
         //console.log("[IMPRIMIR]:", contenido); // <- visible en consola
-=======
-    public Cout(contenido: any) {
->>>>>>> origin/main
         this.consola = `${this.consola}${contenido}`
     }
     
@@ -114,15 +98,9 @@ export default class Arbol {
         return null
     }
 
-<<<<<<< HEAD
     public tablaSimbolos(id: string, valor: string, linea: string, entorno: string, columna: string) : boolean{
         for(let ele of this.simbolos){
             if(ele.getId().toString() == id && ele.getEntorno().toString() == entorno.toString()){
-=======
-    /*public tablaSimbolos(id: string, valor: string, linea: string, entorno: string, columna: string) : boolean{
-        for(let ele of this.simbolos){
-            if(ele.getId().toString() == id.toLocaleLowerCase() && ele.getEntorno().toString() == entorno.toString()){
->>>>>>> origin/main
 
                 ele.setValor(valor)
                 ele.setLinea(linea)
@@ -134,7 +112,6 @@ export default class Arbol {
         return false
     }
 
-<<<<<<< HEAD
     public getTipoS(id:string): string{
         for(let ele of this.simbolos){
             if(ele.getId().toString() == id){
@@ -145,9 +122,6 @@ export default class Arbol {
     }
 
     /*public getSimbolos(): Array<Reporte> {
-=======
-    public getSimbolos(): Array<Reporte> {
->>>>>>> origin/main
         return this.simbolos
     }*/
 

@@ -2,11 +2,8 @@ import { Instruccion } from "../Abstracto/Instruccion";
 import Errores from "../Errors/Errors";
 import Arbol from "../Simbolo/Arbol";
 import Simbolo from "../Simbolo/Simbolo";
-<<<<<<< HEAD
 //import Cont from "../Simbolo/Singleton";
-=======
-import Cont from "../Simbolo/Singleton";
->>>>>>> origin/main
+
 import TablaSimbolos from "../Simbolo/TablaSimbolo";
 import Tipo, { tipo_dato } from "../Simbolo/Tipo";
 
@@ -27,16 +24,12 @@ export default class AccesoVariable extends Instruccion {
         return valorV.getValor()
     }
 
-<<<<<<< HEAD
     //este get id es usado en incremento y decremento para poder modificar las variables
     /*public getId(): string {
         return this.id;
     }*/
     
     /*nodo(anterior: string): string {
-=======
-    nodo(anterior: string): string {
->>>>>>> origin/main
         let cont = Cont.getInstancia()
         let resultado = ""
 
@@ -49,9 +42,6 @@ export default class AccesoVariable extends Instruccion {
         resultado += `${nodoID}->${nodoD}\n`
 
         return resultado
-<<<<<<< HEAD
     }*/
-=======
+
     }
->>>>>>> origin/main
-}
