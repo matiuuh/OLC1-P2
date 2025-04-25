@@ -11,6 +11,7 @@ const AccesoVariable = require('./Expresiones/AccesoVariable')
 const Asignacion = require('./Instrucciones/AsignacionVariable')
 const Casteo = require('./Instrucciones/Casteo')
 const IncrementoDecremento = require('./Instrucciones/IncrementoDecremento')
+const ListaUnidimensional = require('./Instrucciones/ListaUnidimensional')
 
 //variables para la cadena:
     var cadenaa="";
@@ -220,7 +221,8 @@ instruccion : declaraciones                 {$$ = $1;}
             | asignacion_o_metodo_objeto    {$$ = $1;}
             | casteo                        {$$ = $1;}
             | incrementar_o_decrementar     {$$ = $1;}
-            | tipo_de_lista_para_listas     {$$ = $1;}
+            | declaracion_listas            {$$ = $1;}
+            //| PARENTESIS_ABRIR tipo_de_lista_para_listas PARENTESIS_CERRAR     {$$ = $1;} //comentado temporariamente
             | acceso_a_listas               {$$ = $1;}
             | condicion_si                  {$$ = $1;}
             | seleccion_multiple            {$$ = $1;}
@@ -326,27 +328,64 @@ increment_or_decrement : INCREMENTO     { $$ = "mas" }
 //*******************DECLARACION LISTAS**************************
 //---------------------DECLARCION LISTA UNIDIMENSIONAL---------------------
 declaracion_listas : INGRESAR LISTA PARENTESIS_ABRIR expresion COMA tipo_dato PARENTESIS_CERRAR IDENTIFICADOR ARROW tipo_de_lista_para_listas
+{
+    const contenidoLista = $10.valor;
+    switch ($10.tipo) {
+        case 'unidimensional':
+            $$ = new ListaUnidimensional.default($8, $6, contenidoLista, @1.first_line, @1.first_column);
+            break;
+        case 'bidimensional':
+            //$$ = new ListaBidimensional.default(id, tipo, contenidoLista, @1.first_line, @1.first_column);
+            break;
+        case 'tridimensional':
+            //$$ = new ListaTridimensional.default(id, tipo, contenidoLista, @1.first_line, @1.first_column);
+            break;
+        default:
+            $$ = new Errores("Semántico", "Tipo de lista desconocido", @1.first_line, @1.first_column);
+    }
+}
 ;
 
 //---------------------DECLARCION TIPO DE LISTAS---------------------
 tipo_de_lista_para_listas : lista_ud
-                | lista_bd
-                | lista_td
+{       $$ = {
+            tipo: 'unidimensional',
+            valor: $1
+            }
+;}
+                | lista_bd_aux
+                | lista_td_aux
 ;
 
 //---------------------LISTA PARA LISTAS UNIDIMENSIONAL---------------------
 lista_ud : PARENTESIS_ABRIR lista_expresiones PARENTESIS_CERRAR
+{
+    $$ = $1;
+}
 ;
 
 //---------------------LISTA PARA LISTAS BIDIMENSIONAL---------------------
-lista_bd : lista_para_listas_bd COMA lista_para_listas_ud
-        | lista_para_listas_ud
-;
+lista_bd_contenido : lista_bd_contenido COMA lista_ud
+                    | lista_ud;
 
+lista_bd_aux : PARENTESIS_ABRIR lista_bd_contenido PARENTESIS_CERRAR
+{
+    $$ = {
+        tipo: 'bidimensional',
+        valor: $2
+    };
+};
 //---------------------LISTA PARA LISTAS TRIDIMENSIONAL---------------------
-lista_td : lista_para_listas_td COMA lista_para_listas_bd
-        | lista_para_listas_bd
-;
+lista_td_contenido : lista_td_contenido COMA lista_bd_aux
+                    | lista_bd_aux;
+
+lista_td_aux : PARENTESIS_ABRIR lista_td_contenido PARENTESIS_CERRAR
+{
+    $$ = {
+        tipo: 'tridimensional',
+        valor: $2
+    };
+};
 
 //*******************ACCESO A LISTAS**************************
 acceso_a_listas : IDENTIFICADOR indices_de_listas modificar_lista
