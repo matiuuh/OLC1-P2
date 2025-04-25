@@ -12,6 +12,8 @@ const Asignacion = require('./Instrucciones/AsignacionVariable')
 const Casteo = require('./Instrucciones/Casteo')
 const IncrementoDecremento = require('./Instrucciones/IncrementoDecremento')
 const ListaUnidimensional = require('./Instrucciones/ListaUnidimensional')
+const ListaBidimensional = require('./Instrucciones/ListaBidimensional')
+const ListaTridimensional = require('./Instrucciones/ListaTridimensional')
 
 //variables para la cadena:
     var cadenaa="";
@@ -330,15 +332,28 @@ increment_or_decrement : INCREMENTO     { $$ = "mas" }
 declaracion_listas : INGRESAR LISTA PARENTESIS_ABRIR expresion COMA tipo_dato PARENTESIS_CERRAR IDENTIFICADOR ARROW tipo_de_lista_para_listas
 {
     const contenidoLista = $10.valor;
+    const dimension = $4.valor;
+
+if (
+    ($10.tipo == 'unidimensional' && dimension !== 1) ||
+    ($10.tipo == 'bidimensional' && dimension !== 2) ||
+    ($10.tipo == 'tridimensional' && dimension !== 3)
+) {
+    console.log("Error: Dimensión no coincide con tipo de lista");
+    //$$ = new Errores("Semántico", `Dimensión no coincide con tipo de lista: se declaró ${dimension} dimensiones pero se obtuvo tipo ${$10.tipo}`, @1.first_line, @1.first_column);
+    return;
+}
+
+
     switch ($10.tipo) {
         case 'unidimensional':
             $$ = new ListaUnidimensional.default($8, $6, contenidoLista, @1.first_line, @1.first_column);
             break;
         case 'bidimensional':
-            //$$ = new ListaBidimensional.default(id, tipo, contenidoLista, @1.first_line, @1.first_column);
+            $$ = new ListaBidimensional.default($8, $6, contenidoLista, @1.first_line, @1.first_column);
             break;
         case 'tridimensional':
-            //$$ = new ListaTridimensional.default(id, tipo, contenidoLista, @1.first_line, @1.first_column);
+            $$ = new ListaTridimensional.default($8, $6, contenidoLista, @1.first_line, @1.first_column);
             break;
         default:
             $$ = new Errores("Semántico", "Tipo de lista desconocido", @1.first_line, @1.first_column);
@@ -354,38 +369,57 @@ tipo_de_lista_para_listas : lista_ud
             }
 ;}
                 | lista_bd_aux
+{       $$ = {
+            tipo: 'bidimensional',
+            valor: $1
+            }
+;}
                 | lista_td_aux
+{       $$ = {
+            tipo: 'tridimensional',
+            valor: $1
+            }
+;}
 ;
 
 //---------------------LISTA PARA LISTAS UNIDIMENSIONAL---------------------
 lista_ud : PARENTESIS_ABRIR lista_expresiones PARENTESIS_CERRAR
 {
-    $$ = $1;
+    $$ = $2;
 }
 ;
 
 //---------------------LISTA PARA LISTAS BIDIMENSIONAL---------------------
 lista_bd_contenido : lista_bd_contenido COMA lista_ud
-                    | lista_ud;
+{
+    $$ = [...$1, $3]; // agregamos otra fila (lista unidimensional) a las filas ya existentes
+}
+                    | lista_ud
+{
+    $$ = [$1]; // primera fila
+}
+;
 
 lista_bd_aux : PARENTESIS_ABRIR lista_bd_contenido PARENTESIS_CERRAR
 {
-    $$ = {
-        tipo: 'bidimensional',
-        valor: $2
-    };
+    $$ = $2; // simplemente pasamos el arreglo de filas
 };
 //---------------------LISTA PARA LISTAS TRIDIMENSIONAL---------------------
 lista_td_contenido : lista_td_contenido COMA lista_bd_aux
-                    | lista_bd_aux;
+{
+    $$ = [...$1, $3]; // agregamos otra "matriz" (otra lista de listas) a las existentes
+}
+                    | lista_bd_aux
+{
+    $$ = [$1]; // primera "matriz" (una lista bidimensional)
+}
+;
 
 lista_td_aux : PARENTESIS_ABRIR lista_td_contenido PARENTESIS_CERRAR
 {
-    $$ = {
-        tipo: 'tridimensional',
-        valor: $2
-    };
-};
+    $$ = $2; // pasamos arreglo de matrices
+}
+;
 
 //*******************ACCESO A LISTAS**************************
 acceso_a_listas : IDENTIFICADOR indices_de_listas modificar_lista

@@ -171,15 +171,28 @@ break;
 case 42:
 
     const contenidoLista = $$[$0].valor;
+    const dimension = $$[$0-6].valor;
+
+if (
+    ($$[$0].tipo == 'unidimensional' && dimension !== 1) ||
+    ($$[$0].tipo == 'bidimensional' && dimension !== 2) ||
+    ($$[$0].tipo == 'tridimensional' && dimension !== 3)
+) {
+    console.log("Error: Dimensión no coincide con tipo de lista");
+    //this.$ = new Errores("Semántico", `Dimensión no coincide con tipo de lista: se declaró ${dimension} dimensiones pero se obtuvo tipo ${$$[$0].tipo}`, _$[$0-9].first_line, _$[$0-9].first_column);
+    return;
+}
+
+
     switch ($$[$0].tipo) {
         case 'unidimensional':
             this.$ = new ListaUnidimensional.default($$[$0-2], $$[$0-4], contenidoLista, _$[$0-9].first_line, _$[$0-9].first_column);
             break;
         case 'bidimensional':
-            //this.$ = new ListaBidimensional.default(id, tipo, contenidoLista, _$[$0-9].first_line, _$[$0-9].first_column);
+            this.$ = new ListaBidimensional.default($$[$0-2], $$[$0-4], contenidoLista, _$[$0-9].first_line, _$[$0-9].first_column);
             break;
         case 'tridimensional':
-            //this.$ = new ListaTridimensional.default(id, tipo, contenidoLista, _$[$0-9].first_line, _$[$0-9].first_column);
+            this.$ = new ListaTridimensional.default($$[$0-2], $$[$0-4], contenidoLista, _$[$0-9].first_line, _$[$0-9].first_column);
             break;
         default:
             this.$ = new Errores("Semántico", "Tipo de lista desconocido", _$[$0-9].first_line, _$[$0-9].first_column);
@@ -193,25 +206,53 @@ case 43:
             }
 ;
 break;
+case 44:
+       this.$ = {
+            tipo: 'bidimensional',
+            valor: $$[$0]
+            }
+;
+break;
+case 45:
+       this.$ = {
+            tipo: 'tridimensional',
+            valor: $$[$0]
+            }
+;
+break;
 case 46:
 
-    this.$ = $$[$0-2];
+    this.$ = $$[$0-1];
+
+break;
+case 47:
+
+    this.$ = [...$$[$0-2], $$[$0]]; // agregamos otra fila (lista unidimensional) a las filas ya existentes
+
+break;
+case 48:
+
+    this.$ = [$$[$0]]; // primera fila
 
 break;
 case 49:
 
-  this.$ = {
-    tipo: 'bidimensional',
-    valor: $$[$0-1]
-  };
+    this.$ = $$[$0-1]; // simplemente pasamos el arreglo de filas
+
+break;
+case 50:
+
+    this.$ = [...$$[$0-2], $$[$0]]; // agregamos otra "matriz" (otra lista de listas) a las existentes
+
+break;
+case 51:
+
+    this.$ = [$$[$0]]; // primera "matriz" (una lista bidimensional)
 
 break;
 case 52:
 
-  this.$ = {
-    tipo: 'tridimensional',
-    valor: $$[$0-1]
-  };
+    this.$ = $$[$0-1]; // pasamos arreglo de matrices
 
 break;
 case 94:
@@ -531,6 +572,8 @@ const Asignacion = require('./Instrucciones/AsignacionVariable')
 const Casteo = require('./Instrucciones/Casteo')
 const IncrementoDecremento = require('./Instrucciones/IncrementoDecremento')
 const ListaUnidimensional = require('./Instrucciones/ListaUnidimensional')
+const ListaBidimensional = require('./Instrucciones/ListaBidimensional')
+const ListaTridimensional = require('./Instrucciones/ListaTridimensional')
 
 //variables para la cadena:
     var cadenaa="";
