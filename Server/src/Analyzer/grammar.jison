@@ -332,31 +332,27 @@ increment_or_decrement : INCREMENTO     { $$ = "mas" }
 declaracion_listas : INGRESAR LISTA PARENTESIS_ABRIR expresion COMA tipo_dato PARENTESIS_CERRAR IDENTIFICADOR ARROW tipo_de_lista_para_listas
 {
     const contenidoLista = $10.valor;
-    const dimension = $4.valor;
+    const dimension = ($4 instanceof Nativo.default) ? parseInt($4.valor) : null;
 
-if (
-    ($10.tipo == 'unidimensional' && dimension !== 1) ||
-    ($10.tipo == 'bidimensional' && dimension !== 2) ||
-    ($10.tipo == 'tridimensional' && dimension !== 3)
-) {
-    console.log("Error: Dimensión no coincide con tipo de lista");
-    //$$ = new Errores("Semántico", `Dimensión no coincide con tipo de lista: se declaró ${dimension} dimensiones pero se obtuvo tipo ${$10.tipo}`, @1.first_line, @1.first_column);
-    return;
-}
-
-
-    switch ($10.tipo) {
-        case 'unidimensional':
-            $$ = new ListaUnidimensional.default($8, $6, contenidoLista, @1.first_line, @1.first_column);
-            break;
-        case 'bidimensional':
-            $$ = new ListaBidimensional.default($8, $6, contenidoLista, @1.first_line, @1.first_column);
-            break;
-        case 'tridimensional':
-            $$ = new ListaTridimensional.default($8, $6, contenidoLista, @1.first_line, @1.first_column);
-            break;
-        default:
-            $$ = new Errores("Semántico", "Tipo de lista desconocido", @1.first_line, @1.first_column);
+    if (
+        ($10.tipo == 'unidimensional' && dimension !== 1) ||
+        ($10.tipo == 'bidimensional' && dimension !== 2) ||
+        ($10.tipo == 'tridimensional' && dimension !== 3)
+    ) {
+        console.log("Error de dimensiones: Se declaró (" + dimension + ") dimensiones, pero el tipo de lista es " + $10.tipo);
+        //$$ = new Errores("Semántico", `Error de dimensiones: Se declaró (${dimension}) dimensiones, pero el tipo de lista es ${$10.tipo}`, @1.first_line, @1.first_column);
+    } else {
+        switch ($10.tipo) {
+            case 'unidimensional':
+                $$ = new ListaUnidimensional.default($8, $6, contenidoLista, @1.first_line, @1.first_column);
+                break;
+            case 'bidimensional':
+                $$ = new ListaBidimensional.default($8, $6, contenidoLista, @1.first_line, @1.first_column);
+                break;
+            case 'tridimensional':
+                $$ = new ListaTridimensional.default($8, $6, contenidoLista, @1.first_line, @1.first_column);
+                break;
+        }
     }
 }
 ;

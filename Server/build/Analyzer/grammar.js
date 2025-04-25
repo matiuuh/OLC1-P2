@@ -171,31 +171,27 @@ break;
 case 42:
 
     const contenidoLista = $$[$0].valor;
-    const dimension = $$[$0-6].valor;
+    const dimension = ($$[$0-6] instanceof Nativo.default) ? parseInt($$[$0-6].valor) : null;
 
-if (
-    ($$[$0].tipo == 'unidimensional' && dimension !== 1) ||
-    ($$[$0].tipo == 'bidimensional' && dimension !== 2) ||
-    ($$[$0].tipo == 'tridimensional' && dimension !== 3)
-) {
-    console.log("Error: Dimensión no coincide con tipo de lista");
-    //this.$ = new Errores("Semántico", `Dimensión no coincide con tipo de lista: se declaró ${dimension} dimensiones pero se obtuvo tipo ${$$[$0].tipo}`, _$[$0-9].first_line, _$[$0-9].first_column);
-    return;
-}
-
-
-    switch ($$[$0].tipo) {
-        case 'unidimensional':
-            this.$ = new ListaUnidimensional.default($$[$0-2], $$[$0-4], contenidoLista, _$[$0-9].first_line, _$[$0-9].first_column);
-            break;
-        case 'bidimensional':
-            this.$ = new ListaBidimensional.default($$[$0-2], $$[$0-4], contenidoLista, _$[$0-9].first_line, _$[$0-9].first_column);
-            break;
-        case 'tridimensional':
-            this.$ = new ListaTridimensional.default($$[$0-2], $$[$0-4], contenidoLista, _$[$0-9].first_line, _$[$0-9].first_column);
-            break;
-        default:
-            this.$ = new Errores("Semántico", "Tipo de lista desconocido", _$[$0-9].first_line, _$[$0-9].first_column);
+    if (
+        ($$[$0].tipo == 'unidimensional' && dimension !== 1) ||
+        ($$[$0].tipo == 'bidimensional' && dimension !== 2) ||
+        ($$[$0].tipo == 'tridimensional' && dimension !== 3)
+    ) {
+        console.log("Error de dimensiones: Se declaró (" + dimension + ") dimensiones, pero el tipo de lista es " + $$[$0].tipo);
+        //this.$ = new Errores("Semántico", `Error de dimensiones: Se declaró (${dimension}) dimensiones, pero el tipo de lista es ${$$[$0].tipo}`, _$[$0-9].first_line, _$[$0-9].first_column);
+    } else {
+        switch ($$[$0].tipo) {
+            case 'unidimensional':
+                this.$ = new ListaUnidimensional.default($$[$0-2], $$[$0-4], contenidoLista, _$[$0-9].first_line, _$[$0-9].first_column);
+                break;
+            case 'bidimensional':
+                this.$ = new ListaBidimensional.default($$[$0-2], $$[$0-4], contenidoLista, _$[$0-9].first_line, _$[$0-9].first_column);
+                break;
+            case 'tridimensional':
+                this.$ = new ListaTridimensional.default($$[$0-2], $$[$0-4], contenidoLista, _$[$0-9].first_line, _$[$0-9].first_column);
+                break;
+        }
     }
 
 break;
