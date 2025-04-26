@@ -1,13 +1,16 @@
 %{
 // Aquí se incluyen las acciones semánticas de JavaScript necesarias.
-const Aritmeticas = require('./expresiones/Aritmeticas')
+const Aritmeticas = require('./Expresiones/Aritmeticas')
 const Nativo = require('./Expresiones/Nativo')
+const AccesoLista = require('./Expresiones/AccesoLista')
+const AccesoVariable = require('./Expresiones/AccesoVariable')
+const ModificarLista = require('./Expresiones/ModificarLista')
+
 const Tipo = require('./Simbolo/Tipo')
 
 const CreacionVariable = require('./Instrucciones/CreacionVariable')
 const Declaracion = require('./Instrucciones/Declaracion')
 const Imprimir = require('./Instrucciones/Imprimir')
-const AccesoVariable = require('./Expresiones/AccesoVariable')
 const Asignacion = require('./Instrucciones/AsignacionVariable')
 const Casteo = require('./Instrucciones/Casteo')
 const IncrementoDecremento = require('./Instrucciones/IncrementoDecremento')
@@ -52,6 +55,7 @@ const ListaTridimensional = require('./Instrucciones/ListaTridimensional')
 "."                         return 'PUNTO';
 "false"                     return 'FALSE';
 "true"                      return 'TRUE';
+"="                         return 'IGUAL_SIMPLE';
 
 //-----------------OPERACIONES-----------------
 "=="                            return '==';
@@ -419,18 +423,46 @@ lista_td_aux : PARENTESIS_ABRIR lista_td_contenido PARENTESIS_CERRAR
 
 //*******************ACCESO A LISTAS**************************
 acceso_a_listas : IDENTIFICADOR indices_de_listas modificar_lista
+{
+    if ($3.tipo === 'sin_modificacion') {
+        $$ = new AccesoLista.default($1, $2, @1.first_line, @1.first_column);
+    } else {
+        $$ = new ModificarLista.default($1, $2, $3.valor, @1.first_line, @1.first_column);
+    }
+}
 ;
 
 indices_de_listas : indices_de_listas indice_lista
+{
+    $$ = [...$1, $2]; // Acumulamos los índices
+}
                 | indice_lista
+{
+    $$ = [$1]; // Primer índice
+}
 ;
 
 indice_lista : CORCHIN expresion CORCHFIN
+{
+    $$ = $2;
+}
 ;
 
 //----------------------MODIFICACION DE LISTAS---------------------
-modificar_lista : '=' expresion
+modificar_lista : IGUAL_SIMPLE expresion
+{
+    $$ = {
+        tipo: 'modificacion',
+        valor: $2
+    };
+}
                 | /* nada */
+{
+    $$ = {
+        tipo: 'sin_modificacion',
+        valor: null
+    };
+}
 ;
 
 //**************************CONDICIONALES**************************
@@ -607,6 +639,7 @@ expresion: '-' expresion %prec UMENOS   { $$ = new Aritmeticas.default(Aritmetic
     | PARENTESIS_ABRIR expresion PARENTESIS_CERRAR  { $$ = $2 }
     | casteo
     | aumentos
+    | acceso_a_listas
 ;
 
 //**********************LISTAS**************************
