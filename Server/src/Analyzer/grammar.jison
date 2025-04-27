@@ -5,6 +5,7 @@ const Nativo = require('./Expresiones/Nativo')
 const AccesoLista = require('./Expresiones/AccesoLista')
 const AccesoVariable = require('./Expresiones/AccesoVariable')
 const ModificarLista = require('./Expresiones/ModificarLista')
+const Relacionales = require('./Expresiones/Relacionales')
 
 const Tipo = require('./Simbolo/Tipo')
 
@@ -17,6 +18,8 @@ const IncrementoDecremento = require('./Instrucciones/IncrementoDecremento')
 const ListaUnidimensional = require('./Instrucciones/ListaUnidimensional')
 const ListaBidimensional = require('./Instrucciones/ListaBidimensional')
 const ListaTridimensional = require('./Instrucciones/ListaTridimensional')
+const Minuscula = require('./Instrucciones/Minuscula')
+const Mayuscula = require('./Instrucciones/Mayuscula')
 
 //variables para la cadena:
     var cadenaa="";
@@ -243,8 +246,8 @@ instruccion : declaraciones                 {$$ = $1;}
             | instanciacion_objetos         {$$ = $1;}
             | objetos_accesos_metodos       {$$ = $1;}
             | impresion                     {$$ = $1;}
-            | hacer_minuscula               {$$ = $1;}
-            | hacer_mayuscula               {$$ = $1;}
+            //| hacer_minuscula               {$$ = $1;}
+            //| hacer_mayuscula               {$$ = $1;}
             | hacer_longitud                {$$ = $1;}
             | hacer_truncar                 {$$ = $1;}
             | hacer_redondear               {$$ = $1;}
@@ -301,6 +304,20 @@ continuacion_arrow : METODO IDENTIFICADOR fin_con_parametros_o_sin FIN_METODO //
             tipo: 'asignacion',
             valores: $1
         };
+}
+                    | hacer_minuscula
+{
+    $$ = {
+        tipo: 'asignacion',
+        valores: [$1] // OJO: debe ser arreglo porque Asignacion espera un arreglo de valores
+    };
+}
+                    | hacer_mayuscula
+{
+    $$ = {
+        tipo: 'asignacion',
+        valores: [$1]
+    };
 }
 ;
 
@@ -579,10 +596,16 @@ impresion : IMPRIMIR expresion {
 //*******************FUNCIONES NATIVAS**************************
 //---------------------MINUSCULA---------------------
 hacer_minuscula : MINUSCULA PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
+{
+    $$ = new Minuscula.default($3, @1.first_line, @1.first_column);
+}
 ;
 
 //---------------------MAYUSCULA---------------------
 hacer_mayuscula : MAYUSCULA PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
+{
+    $$ = new Mayuscula.default($3, @1.first_line, @1.first_column);
+}
 ;
 
 //---------------------LONGITUD---------------------
@@ -617,18 +640,18 @@ expresion: '-' expresion %prec UMENOS   { $$ = new Aritmeticas.default(Aritmetic
     | '!' expresion
     | expresion '||' expresion
     | expresion '&&' expresion
-    | expresion '==' expresion
-    | expresion '!=' expresion
-    | expresion '>=' expresion
-    | expresion '<=' expresion
-    | expresion '<' expresion
-    | expresion '>' expresion
-    | expresion '+' expresion   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.SUMA, @1.first_line, @1.first_column, $1, $3) }
-    | expresion '-' expresion
-    | expresion '*' expresion
-    | expresion '/' expresion
-    | expresion '%' expresion
-    | expresion '^' expresion
+    | expresion '==' expresion  { $$ = new Relacionales.default(Relacionales.Operadores.IGUAL, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '!=' expresion  { $$ = new Relacionales.default(Relacionales.Operadores.DIF, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '>=' expresion  { $$ = new Relacionales.default(Relacionales.Operadores.MAYORI, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '<=' expresion  { $$ = new Relacionales.default(Relacionales.Operadores.MENORI, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '<' expresion   { $$ = new Relacionales.default(Relacionales.Operadores.MENOR, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '>' expresion   { $$ = new Relacionales.default(Relacionales.Operadores.MAYOR, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '+' expresion   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.SUMA, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '-' expresion   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.RESTA, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '*' expresion   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.MUL, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '/' expresion   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.DIV, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '%' expresion   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.MOD, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '^' expresion   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.POW, @1.first_line, @1.first_column, $1, $3)}
     | ENTERO_VALOR              { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.ENTERO), $1, @1.first_line, @1.first_column)}
     | DECIMAL_VALOR             { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.DECIMAL), $1, @1.first_line, @1.first_column)}
     | CADENAS_VALOR             { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.CADENA), $1, @1.first_line, @1.first_column)}
@@ -637,9 +660,11 @@ expresion: '-' expresion %prec UMENOS   { $$ = new Aritmeticas.default(Aritmetic
     | FALSE                     { $$ = new Nativo.default(new Tipo.default(Tipo.tipo_dato.BOOLEANO), $1, @1.first_line, @1.first_column)}
     | IDENTIFICADOR             { $$ = new AccesoVariable.default($1, @1.first_line, @1.first_column)}
     | PARENTESIS_ABRIR expresion PARENTESIS_CERRAR  { $$ = $2 }
-    | casteo
-    | aumentos
-    | acceso_a_listas
+    | casteo                    { $$ = $1 }
+    | aumentos                  { $$ = $1 }
+    | acceso_a_listas           { $$ = $1 } // Acceso a listas
+    | hacer_minuscula           { $$ = $1 } // Llamada a función minuscula
+    | hacer_mayuscula           { $$ = $1 } // Llamada a función mayuscula
 ;
 
 //**********************LISTAS**************************
