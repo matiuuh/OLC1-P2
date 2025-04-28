@@ -305,62 +305,6 @@ continuacion_arrow : METODO IDENTIFICADOR fin_con_parametros_o_sin FIN_METODO //
             valores: $1
         };
 }
-                    | hacer_minuscula
-{
-    $$ = {
-        tipo: 'asignacion',
-        valores: [$1] // OJO: debe ser arreglo porque Asignacion espera un arreglo de valores
-    };
-}
-                    | hacer_mayuscula
-{
-    $$ = {
-        tipo: 'asignacion',
-        valores: [$1]
-    };
-}
-                    | hacer_minuscula
-{
-    $$ = {
-        tipo: 'asignacion',
-        valores: [$1]
-    };
-}
-                    | hacer_mayuscula
-{
-    $$ = {
-        tipo: 'asignacion',
-        valores: [$1]
-    };
-}
-                    | hacer_longitud
-{
-    $$ = {
-        tipo: 'asignacion',
-        valores: [$1]
-    };
-}
-                    | hacer_truncar
-{
-    $$ = {
-        tipo: 'asignacion',
-        valores: [$1]
-    };
-}
-                    | hacer_redondear
-{
-    $$ = {
-        tipo: 'asignacion',
-        valores: [$1]
-    };
-}
-                    | averiguar_tipo
-{
-    $$ = {
-        tipo: 'asignacion',
-        valores: [$1]
-    };
-}
 ;
 
 //**************************CASTEOS**************************
