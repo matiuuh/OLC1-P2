@@ -6,6 +6,8 @@ const AccesoLista = require('./Expresiones/AccesoLista')
 const AccesoVariable = require('./Expresiones/AccesoVariable')
 const ModificarLista = require('./Expresiones/ModificarLista')
 const Relacionales = require('./Expresiones/Relacionales')
+const FuncionesNativas = require('./Instrucciones/FuncionesNativas')
+const Logicas = require('./Expresiones/Logicas')
 
 const Tipo = require('./Simbolo/Tipo')
 
@@ -18,8 +20,6 @@ const IncrementoDecremento = require('./Instrucciones/IncrementoDecremento')
 const ListaUnidimensional = require('./Instrucciones/ListaUnidimensional')
 const ListaBidimensional = require('./Instrucciones/ListaBidimensional')
 const ListaTridimensional = require('./Instrucciones/ListaTridimensional')
-const Minuscula = require('./Instrucciones/Minuscula')
-const Mayuscula = require('./Instrucciones/Mayuscula')
 
 //variables para la cadena:
     var cadenaa="";
@@ -246,8 +246,8 @@ instruccion : declaraciones                 {$$ = $1;}
             | instanciacion_objetos         {$$ = $1;}
             | objetos_accesos_metodos       {$$ = $1;}
             | impresion                     {$$ = $1;}
-            //| hacer_minuscula               {$$ = $1;}
-            //| hacer_mayuscula               {$$ = $1;}
+            | hacer_minuscula               {$$ = $1;}
+            | hacer_mayuscula               {$$ = $1;}
             | hacer_longitud                {$$ = $1;}
             | hacer_truncar                 {$$ = $1;}
             | hacer_redondear               {$$ = $1;}
@@ -313,6 +313,48 @@ continuacion_arrow : METODO IDENTIFICADOR fin_con_parametros_o_sin FIN_METODO //
     };
 }
                     | hacer_mayuscula
+{
+    $$ = {
+        tipo: 'asignacion',
+        valores: [$1]
+    };
+}
+                    | hacer_minuscula
+{
+    $$ = {
+        tipo: 'asignacion',
+        valores: [$1]
+    };
+}
+                    | hacer_mayuscula
+{
+    $$ = {
+        tipo: 'asignacion',
+        valores: [$1]
+    };
+}
+                    | hacer_longitud
+{
+    $$ = {
+        tipo: 'asignacion',
+        valores: [$1]
+    };
+}
+                    | hacer_truncar
+{
+    $$ = {
+        tipo: 'asignacion',
+        valores: [$1]
+    };
+}
+                    | hacer_redondear
+{
+    $$ = {
+        tipo: 'asignacion',
+        valores: [$1]
+    };
+}
+                    | averiguar_tipo
 {
     $$ = {
         tipo: 'asignacion',
@@ -597,31 +639,43 @@ impresion : IMPRIMIR expresion {
 //---------------------MINUSCULA---------------------
 hacer_minuscula : MINUSCULA PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
 {
-    $$ = new Minuscula.default($3, @1.first_line, @1.first_column);
+    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.LOWER, @1.first_line, @1.first_column, $3);
 }
 ;
 
 //---------------------MAYUSCULA---------------------
 hacer_mayuscula : MAYUSCULA PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
 {
-    $$ = new Mayuscula.default($3, @1.first_line, @1.first_column);
+    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.UPPER, @1.first_line, @1.first_column, $3);
 }
 ;
 
 //---------------------LONGITUD---------------------
 hacer_longitud : LONGITUD PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
+{
+    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.LENGTH, @1.first_line, @1.first_column, $3);
+}
 ;
 
 //---------------------TRUNCAR---------------------
 hacer_truncar : TRUNCAR PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
+{
+    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.TRUNCAR, @1.first_line, @1.first_column, $3);
+}
 ;
 
 //---------------------REDONDEAR---------------------
 hacer_redondear : REDONDEAR PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
+{
+    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.ROUND, @1.first_line, @1.first_column, $3);
+}
 ;
 
 //---------------------TIPO---------------------
 averiguar_tipo : TIPO PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
+{
+    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.TIPODATO, @1.first_line, @1.first_column, $3);
+}
 ;
 
 //**************************TIPOS DE DATOS**************************
@@ -637,9 +691,9 @@ tipo_dato : ENTERO          { $$ = new Tipo.default(Tipo.tipo_dato.ENTERO)}
 //**************************EXPRESIONES**************************
 //---------------------EXPRESIONES--------------------------
 expresion: '-' expresion %prec UMENOS   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.NEGACION, @1.first_line, @1.first_column, $2) }
-    | '!' expresion
-    | expresion '||' expresion
-    | expresion '&&' expresion
+    | '!' expresion             { $$ = new Logicas.default(Logicas.Logico.NOT, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '||' expresion  { $$ = new Logicas.default(Logicas.Logico.OR, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '&&' expresion  { $$ = new Logicas.default(Logicas.Logico.AND, @1.first_line, @1.first_column, $1, $3)}
     | expresion '==' expresion  { $$ = new Relacionales.default(Relacionales.Operadores.IGUAL, @1.first_line, @1.first_column, $1, $3)}
     | expresion '!=' expresion  { $$ = new Relacionales.default(Relacionales.Operadores.DIF, @1.first_line, @1.first_column, $1, $3)}
     | expresion '>=' expresion  { $$ = new Relacionales.default(Relacionales.Operadores.MAYORI, @1.first_line, @1.first_column, $1, $3)}
@@ -665,6 +719,10 @@ expresion: '-' expresion %prec UMENOS   { $$ = new Aritmeticas.default(Aritmetic
     | acceso_a_listas           { $$ = $1 } // Acceso a listas
     | hacer_minuscula           { $$ = $1 } // Llamada a función minuscula
     | hacer_mayuscula           { $$ = $1 } // Llamada a función mayuscula
+    | hacer_longitud            { $$ = $1 } // Llamada a función longitud
+    | hacer_truncar             { $$ = $1 } // Llamada a función truncar
+    | hacer_redondear           { $$ = $1 } // Llamada a función redondear
+    | averiguar_tipo            { $$ = $1 } // Llamada a función tipo
 ;
 
 //**********************LISTAS**************************
