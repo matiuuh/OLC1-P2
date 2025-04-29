@@ -8,6 +8,8 @@ const ModificarLista = require('./Expresiones/ModificarLista')
 const Relacionales = require('./Expresiones/Relacionales')
 const FuncionesNativas = require('./Instrucciones/FuncionesNativas')
 const Logicas = require('./Expresiones/Logicas')
+//const Errores = require('../Errors/Errors')
+const Si = require('./Instrucciones/Si')
 
 const Tipo = require('./Simbolo/Tipo')
 
@@ -20,6 +22,9 @@ const IncrementoDecremento = require('./Instrucciones/IncrementoDecremento')
 const ListaUnidimensional = require('./Instrucciones/ListaUnidimensional')
 const ListaBidimensional = require('./Instrucciones/ListaBidimensional')
 const ListaTridimensional = require('./Instrucciones/ListaTridimensional')
+const Retornar = require('./Instrucciones/Retornar')
+const Detener = require('./Instrucciones/Detener')
+const Continuar = require('./Instrucciones/Continuar')
 
 //variables para la cadena:
     var cadenaa="";
@@ -71,8 +76,8 @@ const ListaTridimensional = require('./Instrucciones/ListaTridimensional')
 "/"                             return '/';
 "%"                             return '%';
 "+"                             return '+';
-"<"                             return '<';
-">"                             return '>';
+"<"                             return 'MENOR';
+">"                             return 'MAYOR';
 "!"                             return '!';
 "&&"                            return '&&';
 "||"                            return '||';
@@ -118,7 +123,7 @@ const ListaTridimensional = require('./Instrucciones/ListaTridimensional')
 //*****************SENTENCIAS DE TRANSFERENCIA******************
 "detener"                       return 'DETENER';
 "continuar"                     return 'CONTINUAR';
-"retonar"                       return 'RETORNAR';
+"retornar"                       return 'RETORNAR';
 
 //*******************************METODOS*******************************
 //--------------------FUNCIONES/ METODOS CON RETORNO--------------------
@@ -208,7 +213,7 @@ const ListaTridimensional = require('./Instrucciones/ListaTridimensional')
 %left '||'
 %left '&&'
 %right '!'
-%left '==' '!=' '<=' '>=' '<' '>'
+%left '==' '!=' '<=' '>=' 'MENOR' 'MAYOR'
 %left '+' '-'
 %left '*' '/' '%'
 %right '^'
@@ -475,14 +480,18 @@ else if -> o si
 else -> de lo contrario
 */
 //---------------------IF/SI---------------------
-condicion_si : SI expresion ENTONCES instrucciones fin_o_condicion;
-
-fin_o_condicion : fin_condicion_si
-                | FIN_SI
+condicion_si : SI expresion ENTONCES instrucciones continuacion_si
+{
+    $$ = new Si.default($2, $4, @1.first_line, @1.first_column, $5?.condicion_else, $5?.instrucciones_else);
+}
 ;
 
-fin_condicion_si : DE_LO_CONTRARIO instrucciones FIN_SI
-                | O_SI instrucciones fin_o_condicion
+continuacion_si : FIN_SI
+    { $$ = undefined; }
+        | DE_LO_CONTRARIO instrucciones FIN_SI
+    { $$ = { instrucciones_else: $2 }; }
+        | O_SI expresion ENTONCES instrucciones continuacion_si
+    { $$ = { condicion_else: new Si.default($2, $4, @1.first_line, @1.first_column, $5?.condicion_else, $5?.instrucciones_else) }; }
 ;
 
 //**************************SELECCION MULTIPLE**************************
@@ -514,9 +523,9 @@ ciclo_repetir_hasta : REPETIR instrucciones HASTA_QUE expresion
 ;
 
 //**************************SENTENCIAS DE TRANSFERENCIA/ SENTENCIAS DE ESCAPE**************************
-sentencias_de_transferencia : DETENER
-                            | CONTINUAR
-                            | RETORNAR
+sentencias_de_transferencia : DETENER       { $$ = new Detener.default(@1.first_line, @1.first_column)}
+                            | CONTINUAR     { $$ = new Continuar.default(@1.first_line, @1.first_column)}
+                            | RETORNAR      { $$ = new Retornar.default(@1.first_line, @1.first_column)}
 ;
 
 //**************************FUCNIONES**************************
@@ -638,12 +647,12 @@ expresion: '-' expresion %prec UMENOS   { $$ = new Aritmeticas.default(Aritmetic
     | '!' expresion             { $$ = new Logicas.default(Logicas.Logico.NOT, @1.first_line, @1.first_column, $1, $3)}
     | expresion '||' expresion  { $$ = new Logicas.default(Logicas.Logico.OR, @1.first_line, @1.first_column, $1, $3)}
     | expresion '&&' expresion  { $$ = new Logicas.default(Logicas.Logico.AND, @1.first_line, @1.first_column, $1, $3)}
-    | expresion '==' expresion  { $$ = new Relacionales.default(Relacionales.Operadores.IGUAL, @1.first_line, @1.first_column, $1, $3)}
-    | expresion '!=' expresion  { $$ = new Relacionales.default(Relacionales.Operadores.DIF, @1.first_line, @1.first_column, $1, $3)}
-    | expresion '>=' expresion  { $$ = new Relacionales.default(Relacionales.Operadores.MAYORI, @1.first_line, @1.first_column, $1, $3)}
-    | expresion '<=' expresion  { $$ = new Relacionales.default(Relacionales.Operadores.MENORI, @1.first_line, @1.first_column, $1, $3)}
-    | expresion '<' expresion   { $$ = new Relacionales.default(Relacionales.Operadores.MENOR, @1.first_line, @1.first_column, $1, $3)}
-    | expresion '>' expresion   { $$ = new Relacionales.default(Relacionales.Operadores.MAYOR, @1.first_line, @1.first_column, $1, $3)}
+    | expresion '==' expresion  { $$ = new Relacionales.default(Relacionales.Relacional.IGUAL, $1, $3,@1.first_line, @1.first_column)}
+    | expresion '!=' expresion  { $$ = new Relacionales.default(Relacionales.Relacional.DIF, $1, $3,@1.first_line, @1.first_column)}
+    | expresion '>=' expresion  { $$ = new Relacionales.default(Relacionales.Relacional.MAYORI, $1, $3,@1.first_line, @1.first_column)}
+    | expresion '<=' expresion  { $$ = new Relacionales.default(Relacionales.Relacional.MENORI, $1, $3,@1.first_line, @1.first_column)}
+    | expresion MENOR expresion { $$ = new Relacionales.default(Relacionales.Relacional.MENOR, $1, $3,@1.first_line, @1.first_column)}
+    | expresion MAYOR expresion { $$ = new Relacionales.default(Relacionales.Relacional.MAYOR, $1, $3,@1.first_line, @1.first_column)}
     | expresion '+' expresion   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.SUMA, @1.first_line, @1.first_column, $1, $3)}
     | expresion '-' expresion   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.RESTA, @1.first_line, @1.first_column, $1, $3)}
     | expresion '*' expresion   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.MUL, @1.first_line, @1.first_column, $1, $3)}
@@ -682,7 +691,19 @@ lista_expresiones : lista_expresiones COMA expresion    { $$ = [...$1, $3]; }
 
 //**********************EXTRAS**************************
 aumentos : IDENTIFICADOR INCREMEENTO
+{
+    $$ = new IncrementoDecremento.default($1, @1.first_line, @1.first_column, "mas");
+}
             | IDENTIFICADOR DECREMEENTO
+{
+    $$ = new IncrementoDecremento.default($1, @1.first_line, @1.first_column, "menos");
+/*
+            | IDENTIFICADOR expresion
+{
+    $$ = new AsignacionAumento.default($1, $3, @1.first_line, @1.first_column);
+}
+*/
+}
 ;
 
 %%
