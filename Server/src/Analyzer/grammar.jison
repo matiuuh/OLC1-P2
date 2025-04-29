@@ -10,6 +10,9 @@ const FuncionesNativas = require('./Instrucciones/FuncionesNativas')
 const Logicas = require('./Expresiones/Logicas')
 //const Errores = require('../Errors/Errors')
 const Si = require('./Instrucciones/Si')
+const SeleccionCaso = require('./Instrucciones/Seleccion_caso')
+const SeleccionMultiple = require('./Instrucciones/SeleccionMultiple')
+const Default = require('./Instrucciones/SeleccionDefault')
 
 const Tipo = require('./Simbolo/Tipo')
 
@@ -63,7 +66,6 @@ const Continuar = require('./Instrucciones/Continuar')
 "."                         return 'PUNTO';
 "false"                     return 'FALSE';
 "true"                      return 'TRUE';
-"="                         return 'IGUAL_SIMPLE';
 
 //-----------------OPERACIONES-----------------
 "=="                            return '==';
@@ -81,7 +83,7 @@ const Continuar = require('./Instrucciones/Continuar')
 "!"                             return '!';
 "&&"                            return '&&';
 "||"                            return '||';
-
+"="                         return 'IGUAL_SIMPLE';
 "["                             return 'CORCHIN';
 "]"                             return 'CORCHFIN';
 
@@ -491,19 +493,35 @@ continuacion_si : FIN_SI
         | DE_LO_CONTRARIO instrucciones FIN_SI
     { $$ = { instrucciones_else: $2 }; }
         | O_SI expresion ENTONCES instrucciones continuacion_si
-    { $$ = { condicion_else: new Si.default($2, $4, @1.first_line, @1.first_column, $5?.condicion_else, $5?.instrucciones_else) }; }
+    { $$ = { condicion_else: new Si.default($2, $4, @1.first_line, @1.first_column, $5?.condicion_else, $5?.instrucciones_else)};}
 ;
 
 //**************************SELECCION MULTIPLE**************************
 //---------------------SWITCH CASE/ SELECCION MULTIPLE---------------------
-seleccion_multiple : SEGUN expresion HACER opciones DE_LO_CONTRARIO_ENTONCES instrucciones FIN_SEGUN
+seleccion_multiple : SEGUN expresion HACER cases_con_default FIN_SEGUN
+        { $$ = new SeleccionMultiple.default($2, @1.first_line, @1.first_column, $4.casos, $4.defecto); }
 ;
 
-opciones : opciones seleccion
-        | seleccion
+cases_con_default : cases_list default_case
+    { $$ = { casos: $1, defecto: $2 }; }
+            | cases_list
+    { $$ = { casos: $1, defecto: undefined }; }
+            | default_case
+    { $$ = { casos: undefined, defecto: $1 }; }
 ;
 
-seleccion : EN_CASO_DE_SER expresion ENTONCES instrucciones
+cases_list : cases_list case_simple
+    { if ($2 != false) $1.push($2); $$ = $1; }
+            | case_simple
+    { $$ = ($1 != false) ? [$1] : []; }
+;
+
+case_simple : EN_CASO_DE_SER expresion ENTONCES instrucciones
+    { $$ = new SeleccionCaso.default($2, $4, @1.first_line, @1.first_column); }
+;
+
+default_case : DE_LO_CONTRARIO_ENTONCES instrucciones
+    { $$ = new Default.default($2, @1.first_line, @1.first_column); }
 ;
 
 //**************************FOR/ CICLO PARA**************************

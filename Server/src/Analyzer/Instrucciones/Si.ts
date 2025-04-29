@@ -70,7 +70,9 @@ export default class Si extends Instruccion {
                     // if(resultado instanceof Continuar) return resultado
                 }
             }else if(this.condicion_else != undefined) {
-                let a = this.condicion_else.interpretar(arbol, tabla)
+                let tablaN = new TablaSimbolos(tabla)
+                tablaN.setNombre("Sentencia O SI")
+                let a = this.condicion_else.interpretar(arbol, tablaN)
                 if( a instanceof Errores) return a
                 if(a instanceof Detener) return a;
                 if(a instanceof Continuar) return a;
