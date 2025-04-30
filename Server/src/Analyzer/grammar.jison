@@ -14,6 +14,7 @@ const SeleccionCaso = require('./Instrucciones/Seleccion_caso')
 const SeleccionMultiple = require('./Instrucciones/SeleccionMultiple')
 const Default = require('./Instrucciones/SeleccionDefault')
 const Mientras = require('./Instrucciones/Mientras')
+const RepetirHasta = require('./Instrucciones/RepetirHasta')
 
 const Tipo = require('./Simbolo/Tipo')
 
@@ -108,13 +109,6 @@ const Continuar = require('./Instrucciones/Continuar')
 "de lo contrario entonces"      return 'DE_LO_CONTRARIO_ENTONCES';
 
 //**************************CICLOS**************************
-//-----------------FOR-----------------
-"para"                          return 'PARA';
-"hasta"                         return 'HASTA';
-"con incremento"                return 'CON_INCREMENTO';
-"con decremento"                return 'CON_DECREMENTO';
-"fin para"                      return 'FIN_PARA';
-
 //-----------------WHILE-----------------
 "mientras"                      return 'MIENTRAS';
 "fin mientras"                  return 'FIN_MIENTRAS';
@@ -122,6 +116,13 @@ const Continuar = require('./Instrucciones/Continuar')
 //-----------------DO WHILE-----------------
 "repetir"                       return 'REPETIR';
 "hasta que"                     return 'HASTA_QUE';
+
+//-----------------FOR-----------------
+"para"                          return 'PARA';
+"hasta"                         return 'HASTA';
+"con incremento"                return 'CON_INCREMENTO';
+"con decremento"                return 'CON_DECREMENTO';
+"fin para"                      return 'FIN_PARA';
 
 //*****************SENTENCIAS DE TRANSFERENCIA******************
 "detener"                       return 'DETENER';
@@ -541,6 +542,7 @@ ciclo_mientras : MIENTRAS expresion HACER instrucciones FIN_MIENTRAS
 
 //**************************REPETIR HASTA/ DO WHILE**************************
 ciclo_repetir_hasta : REPETIR instrucciones HASTA_QUE expresion
+{$$ = new RepetirHasta.default($4, $2, @1.first_line, @1.first_column)}
 ;
 
 //**************************SENTENCIAS DE TRANSFERENCIA/ SENTENCIAS DE ESCAPE**************************

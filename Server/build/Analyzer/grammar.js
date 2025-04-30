@@ -327,6 +327,9 @@ break;
 case 75:
 this.$ = new Mientras.default($$[$0-3], $$[$0-1], _$[$0-4].first_line, _$[$0-4].first_column)
 break;
+case 76:
+this.$ = new RepetirHasta.default($$[$0], $$[$0-2], _$[$0-3].first_line, _$[$0-3].first_column)
+break;
 case 77:
  this.$ = new Detener.default(_$[$0].first_line, _$[$0].first_column)
 break;
@@ -740,6 +743,7 @@ const SeleccionCaso = require('./Instrucciones/Seleccion_caso')
 const SeleccionMultiple = require('./Instrucciones/SeleccionMultiple')
 const Default = require('./Instrucciones/SeleccionDefault')
 const Mientras = require('./Instrucciones/Mientras')
+const RepetirHasta = require('./Instrucciones/RepetirHasta')
 
 const Tipo = require('./Simbolo/Tipo')
 
@@ -1190,23 +1194,23 @@ case 48:return 75;
 break;
 case 49:return 80;
 break;
-case 50:return 81;
+case 50:return 87;
 break;
-case 51:return 82;
+case 51:return 88;
 break;
-case 52:return 85;
+case 52:return 89;
 break;
-case 53:return 86;
+case 53:return 90;
 break;
-case 54:return 84;
+case 54:return 81;
 break;
-case 55:return 87;
+case 55:return 82;
 break;
-case 56:return 88;
+case 56:return 85;
 break;
-case 57:return 89;
+case 57:return 86;
 break;
-case 58:return 90;
+case 58:return 84;
 break;
 case 59:return 91;
 break;
@@ -1306,7 +1310,7 @@ case 106:return 5;
 break;
 }
 },
-rules: [/^(?:\s+)/,/^(?:\/\/.*)/,/^(?:[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/])/,/^(?:entero\b)/,/^(?:decimal\b)/,/^(?:caracter\b)/,/^(?:boolean\b)/,/^(?:cadena\b)/,/^(?:null\b)/,/^(?:->)/,/^(?:\()/,/^(?:\))/,/^(?:,)/,/^(?:\+\+)/,/^(?:--)/,/^(?:\.)/,/^(?:false\b)/,/^(?:true\b)/,/^(?:==)/,/^(?:!=)/,/^(?:<=)/,/^(?:>=)/,/^(?:-)/,/^(?:\^)/,/^(?:\*)/,/^(?:\/)/,/^(?:%)/,/^(?:\+)/,/^(?:<)/,/^(?:>)/,/^(?:!)/,/^(?:&&)/,/^(?:\|\|)/,/^(?:=)/,/^(?:\[)/,/^(?:\])/,/^(?:ingresar\b)/,/^(?:como\b)/,/^(?:con valor\b)/,/^(?:si\b)/,/^(?:entonces\b)/,/^(?:fin si\b)/,/^(?:de lo contrario\b)/,/^(?:o si\b)/,/^(?:segun\b)/,/^(?:hacer\b)/,/^(?:en caso de ser\b)/,/^(?:detener\b)/,/^(?:fin segun\b)/,/^(?:de lo contrario entonces\b)/,/^(?:para\b)/,/^(?:hasta\b)/,/^(?:con incremento\b)/,/^(?:con decremento\b)/,/^(?:fin para\b)/,/^(?:mientras\b)/,/^(?:fin mientras\b)/,/^(?:repetir\b)/,/^(?:hasta que\b)/,/^(?:detener\b)/,/^(?:continuar\b)/,/^(?:retornar\b)/,/^(?:funcion\b)/,/^(?:fin funcion\b)/,/^(?:con parametros\b)/,/^(?:procedimiento\b)/,/^(?:fin procedimiento\b)/,/^(?:ejecutar\b)/,/^(?:objeto\b)/,/^(?:metodo\b)/,/^(?:fin metodo\b)/,/^(?:imprimir\b)/,/^(?:minuscula\b)/,/^(?:mayuscula\b)/,/^(?:longitud\b)/,/^(?:truncar\b)/,/^(?:redondear\b)/,/^(?:tipo\b)/,/^(?:inc\b)/,/^(?:dec\b)/,/^(?:Lista\b)/,/^(?:nl\b)/,/^(?:[0-9]+\.[0-9]+)/,/^(?:[0-9]+)/,/^(?:["])/,/^(?:[^"\\]+)/,/^(?:\\")/,/^(?:\\n)/,/^(?:\s)/,/^(?:\\t)/,/^(?:\\\\)/,/^(?:\\')/,/^(?:[^"\\]+)/,/^(?:["])/,/^(?:['])/,/^(?:[^'\\]+)/,/^(?:\\")/,/^(?:\\n)/,/^(?:\s)/,/^(?:\\t)/,/^(?:\\\\)/,/^(?:\\')/,/^(?:['])/,/^(?:[a-zA-Z][a-zA-Z0-9_]*)/,/^(?:[\ \r\t\f\n]+)/,/^(?:.)/,/^(?:$)/],
+rules: [/^(?:\s+)/,/^(?:\/\/.*)/,/^(?:[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/])/,/^(?:entero\b)/,/^(?:decimal\b)/,/^(?:caracter\b)/,/^(?:boolean\b)/,/^(?:cadena\b)/,/^(?:null\b)/,/^(?:->)/,/^(?:\()/,/^(?:\))/,/^(?:,)/,/^(?:\+\+)/,/^(?:--)/,/^(?:\.)/,/^(?:false\b)/,/^(?:true\b)/,/^(?:==)/,/^(?:!=)/,/^(?:<=)/,/^(?:>=)/,/^(?:-)/,/^(?:\^)/,/^(?:\*)/,/^(?:\/)/,/^(?:%)/,/^(?:\+)/,/^(?:<)/,/^(?:>)/,/^(?:!)/,/^(?:&&)/,/^(?:\|\|)/,/^(?:=)/,/^(?:\[)/,/^(?:\])/,/^(?:ingresar\b)/,/^(?:como\b)/,/^(?:con valor\b)/,/^(?:si\b)/,/^(?:entonces\b)/,/^(?:fin si\b)/,/^(?:de lo contrario\b)/,/^(?:o si\b)/,/^(?:segun\b)/,/^(?:hacer\b)/,/^(?:en caso de ser\b)/,/^(?:detener\b)/,/^(?:fin segun\b)/,/^(?:de lo contrario entonces\b)/,/^(?:mientras\b)/,/^(?:fin mientras\b)/,/^(?:repetir\b)/,/^(?:hasta que\b)/,/^(?:para\b)/,/^(?:hasta\b)/,/^(?:con incremento\b)/,/^(?:con decremento\b)/,/^(?:fin para\b)/,/^(?:detener\b)/,/^(?:continuar\b)/,/^(?:retornar\b)/,/^(?:funcion\b)/,/^(?:fin funcion\b)/,/^(?:con parametros\b)/,/^(?:procedimiento\b)/,/^(?:fin procedimiento\b)/,/^(?:ejecutar\b)/,/^(?:objeto\b)/,/^(?:metodo\b)/,/^(?:fin metodo\b)/,/^(?:imprimir\b)/,/^(?:minuscula\b)/,/^(?:mayuscula\b)/,/^(?:longitud\b)/,/^(?:truncar\b)/,/^(?:redondear\b)/,/^(?:tipo\b)/,/^(?:inc\b)/,/^(?:dec\b)/,/^(?:Lista\b)/,/^(?:nl\b)/,/^(?:[0-9]+\.[0-9]+)/,/^(?:[0-9]+)/,/^(?:["])/,/^(?:[^"\\]+)/,/^(?:\\")/,/^(?:\\n)/,/^(?:\s)/,/^(?:\\t)/,/^(?:\\\\)/,/^(?:\\')/,/^(?:[^"\\]+)/,/^(?:["])/,/^(?:['])/,/^(?:[^'\\]+)/,/^(?:\\")/,/^(?:\\n)/,/^(?:\s)/,/^(?:\\t)/,/^(?:\\\\)/,/^(?:\\')/,/^(?:['])/,/^(?:[a-zA-Z][a-zA-Z0-9_]*)/,/^(?:[\ \r\t\f\n]+)/,/^(?:.)/,/^(?:$)/],
 conditions: {"caracter":{"rules":[95,96,97,98,99,100,101,102],"inclusive":false},"stringss":{"rules":[85,86,87,88,89,90,91,92,93],"inclusive":false},"INITIAL":{"rules":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,94,103,104,105,106],"inclusive":true}}
 });
 return lexer;
