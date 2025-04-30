@@ -13,6 +13,7 @@ const Si = require('./Instrucciones/Si')
 const SeleccionCaso = require('./Instrucciones/Seleccion_caso')
 const SeleccionMultiple = require('./Instrucciones/SeleccionMultiple')
 const Default = require('./Instrucciones/SeleccionDefault')
+const Mientras = require('./Instrucciones/Mientras')
 
 const Tipo = require('./Simbolo/Tipo')
 
@@ -259,6 +260,7 @@ instruccion : declaraciones                 {$$ = $1;}
             | hacer_truncar                 {$$ = $1;}
             | hacer_redondear               {$$ = $1;}
             | averiguar_tipo                {$$ = $1;}
+            | aumentos                      {$$ = $1;}
             | error
 ;
 
@@ -534,6 +536,7 @@ incremento_decremento : CON_INCREMENTO aumentos
 
 //**************************MIENTRAS/ WHILE**************************
 ciclo_mientras : MIENTRAS expresion HACER instrucciones FIN_MIENTRAS
+{$$ = new Mientras.default($2, $4, @1.first_line, @1.first_column)}
 ;
 
 //**************************REPETIR HASTA/ DO WHILE**************************
@@ -715,12 +718,6 @@ aumentos : IDENTIFICADOR INCREMEENTO
             | IDENTIFICADOR DECREMEENTO
 {
     $$ = new IncrementoDecremento.default($1, @1.first_line, @1.first_column, "menos");
-/*
-            | IDENTIFICADOR expresion
-{
-    $$ = new AsignacionAumento.default($1, $3, @1.first_line, @1.first_column);
-}
-*/
 }
 ;
 
