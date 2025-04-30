@@ -65,7 +65,7 @@ export default class Relacionales extends Instruccion {
                         return parseInt(cond1) < parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1) < parseInt(cond2.charCodeAt(1))
+                        return parseInt(cond1) < parseInt(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return parseInt(cond1) < cond2
@@ -84,7 +84,7 @@ export default class Relacionales extends Instruccion {
                         return parseFloat(cond1) < parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1) < parseFloat(cond2.charCodeAt(1))
+                        return parseFloat(cond1) < parseFloat(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return parseFloat(cond1) < cond2
@@ -95,18 +95,18 @@ export default class Relacionales extends Instruccion {
                 switch (comp2) {
                     case tipo_dato.ENTERO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) < parseInt(cond2)
+                        return parseInt(cond1.charCodeAt(0)) < parseInt(cond2)
 
                     case tipo_dato.DECIMAL:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1.charCodeAt(1)) < parseFloat(cond2)
+                        return parseFloat(cond1.charCodeAt(0)) < parseFloat(cond2)
                     
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return (cond1.charCodeAt(1)) < (cond2.charCodeAt(1))
+                        return (cond1.charCodeAt(0)) < (cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) < cond2
+                        return parseInt(cond1.charCodeAt(0)) < cond2
 
                     default:
                         return new Errores("Semantico", "Relacional invalida3", this.linea, this.columna)
@@ -129,7 +129,7 @@ export default class Relacionales extends Instruccion {
                         return cond1 < parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return cond1 < parseInt(cond2.charCodeAt(1))
+                        return cond1 < parseInt(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return cond1 < cond2
@@ -157,7 +157,7 @@ export default class Relacionales extends Instruccion {
                         return parseInt(cond1) > parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1) > parseInt(cond2.charCodeAt(1))
+                        return parseInt(cond1) > parseInt(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return parseInt(cond1) > cond2
@@ -176,7 +176,7 @@ export default class Relacionales extends Instruccion {
                         return parseFloat(cond1) > parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1) > parseFloat(cond2.charCodeAt(1))
+                        return parseFloat(cond1) > parseFloat(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return parseFloat(cond1) > cond2
@@ -187,18 +187,18 @@ export default class Relacionales extends Instruccion {
                 switch (comp2) {
                     case tipo_dato.ENTERO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) > parseInt(cond2)
+                        return parseInt(cond1.charCodeAt(0)) > parseInt(cond2)
 
                     case tipo_dato.DECIMAL:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1.charCodeAt(1)) > parseFloat(cond2)
+                        return parseFloat(cond1.charCodeAt(0)) > parseFloat(cond2)
                     
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return (cond1.charCodeAt(1)) > (cond2.charCodeAt(1))
+                        return (cond1.charCodeAt(0)) > (cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) > cond2
+                        return parseInt(cond1.charCodeAt(0)) > cond2
 
                     default:
                         return new Errores("Semantico", "Relacional invalida3", this.linea, this.columna)
@@ -221,7 +221,7 @@ export default class Relacionales extends Instruccion {
                         return cond1 > parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return cond1 > parseInt(cond2.charCodeAt(1))
+                        return cond1 > parseInt(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return cond1 > cond2
@@ -249,7 +249,7 @@ export default class Relacionales extends Instruccion {
                         return parseInt(cond1) == parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1) == parseInt(cond2.charCodeAt(1))
+                        return parseInt(cond1) == parseInt(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return parseInt(cond1) == cond2
@@ -267,7 +267,7 @@ export default class Relacionales extends Instruccion {
                         return parseFloat(cond1) == parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1) == parseFloat(cond2.charCodeAt(1))
+                        return parseFloat(cond1) == parseFloat(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return parseFloat(cond1) == cond2
@@ -278,16 +278,16 @@ export default class Relacionales extends Instruccion {
                 switch (comp2) {
                     case tipo_dato.ENTERO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) == parseInt(cond2)
+                        return parseInt(cond1.charCodeAt(0)) == parseInt(cond2)
                     case tipo_dato.DECIMAL:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1.charCodeAt(1)) == parseFloat(cond2)
+                        return parseFloat(cond1.charCodeAt(0)) == parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return (cond1.charCodeAt(1)) == (cond2.charCodeAt(1))
+                        return (cond1.charCodeAt(0)) == (cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) == cond2
+                        return parseInt(cond1.charCodeAt(0)) == cond2
 
                     default:
                         return new Errores("Semantico", "Relacional invalida3", this.linea, this.columna)
@@ -312,7 +312,7 @@ export default class Relacionales extends Instruccion {
                     
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return cond1 == parseInt(cond2.charCodeAt(1))
+                        return cond1 == parseInt(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return cond1 == cond2
@@ -342,7 +342,7 @@ export default class Relacionales extends Instruccion {
                     
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1) != parseInt(cond2.charCodeAt(1))
+                        return parseInt(cond1) != parseInt(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return parseInt(cond1) != cond2
@@ -361,7 +361,7 @@ export default class Relacionales extends Instruccion {
                         return parseFloat(cond1) != parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1) != parseFloat(cond2.charCodeAt(1))
+                        return parseFloat(cond1) != parseFloat(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return parseFloat(cond1) != cond2
@@ -372,18 +372,18 @@ export default class Relacionales extends Instruccion {
                 switch (comp2) {
                     case tipo_dato.ENTERO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) != parseInt(cond2)
+                        return parseInt(cond1.charCodeAt(0)) != parseInt(cond2)
 
                     case tipo_dato.DECIMAL:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1.charCodeAt(1)) != parseFloat(cond2)
+                        return parseFloat(cond1.charCodeAt(0)) != parseFloat(cond2)
                     
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return (cond1.charCodeAt(1)) != (cond2.charCodeAt(1))
+                        return (cond1.charCodeAt(0)) != (cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) != cond2
+                        return parseInt(cond1.charCodeAt(0)) != cond2
                     default:
                         return new Errores("Semantico", "Relacional invalida3", this.linea, this.columna)
                 }
@@ -406,7 +406,7 @@ export default class Relacionales extends Instruccion {
                         return cond1 != parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return cond1 != parseInt(cond2.charCodeAt(1))
+                        return cond1 != parseInt(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return cond1 != cond2
@@ -436,7 +436,7 @@ export default class Relacionales extends Instruccion {
                     
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1) <= parseInt(cond2.charCodeAt(1))
+                        return parseInt(cond1) <= parseInt(cond2.charCodeAt(0))
 
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
@@ -455,7 +455,7 @@ export default class Relacionales extends Instruccion {
                         return parseFloat(cond1) <= parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1) <= parseFloat(cond2.charCodeAt(1))
+                        return parseFloat(cond1) <= parseFloat(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return parseFloat(cond1) <= cond2
@@ -466,18 +466,18 @@ export default class Relacionales extends Instruccion {
                 switch (comp2) {
                     case tipo_dato.ENTERO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) <= parseInt(cond2)
+                        return parseInt(cond1.charCodeAt(0)) <= parseInt(cond2)
 
                     case tipo_dato.DECIMAL:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1.charCodeAt(1)) <= parseFloat(cond2)
+                        return parseFloat(cond1.charCodeAt(0)) <= parseFloat(cond2)
                     
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return (cond1.charCodeAt(1)) <= (cond2.charCodeAt(1))
+                        return (cond1.charCodeAt(0)) <= (cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) <= cond2
+                        return parseInt(cond1.charCodeAt(0)) <= cond2
 
                     default:
                         return new Errores("Semantico", "Relacional invalida3", this.linea, this.columna)
@@ -500,7 +500,7 @@ export default class Relacionales extends Instruccion {
                         return cond1 <= parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return cond1 <= parseInt(cond2.charCodeAt(1))
+                        return cond1 <= parseInt(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return cond1 <= cond2
@@ -530,7 +530,7 @@ export default class Relacionales extends Instruccion {
                     
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1) >= parseInt(cond2.charCodeAt(1))
+                        return parseInt(cond1) >= parseInt(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return parseInt(cond1) >= cond2
@@ -549,7 +549,7 @@ export default class Relacionales extends Instruccion {
                         return parseFloat(cond1) >= parseFloat(cond2)
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1) >= parseFloat(cond2.charCodeAt(1))
+                        return parseFloat(cond1) >= parseFloat(cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
                         return parseFloat(cond1) >= cond2
@@ -560,18 +560,18 @@ export default class Relacionales extends Instruccion {
                 switch (comp2) {
                     case tipo_dato.ENTERO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) >= parseInt(cond2)
+                        return parseInt(cond1.charCodeAt(0)) >= parseInt(cond2)
 
                     case tipo_dato.DECIMAL:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseFloat(cond1.charCodeAt(1)) >= parseFloat(cond2)
+                        return parseFloat(cond1.charCodeAt(0)) >= parseFloat(cond2)
                     
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return (cond1.charCodeAt(1)) >= (cond2.charCodeAt(1))
+                        return (cond1.charCodeAt(0)) >= (cond2.charCodeAt(0))
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return parseInt(cond1.charCodeAt(1)) >= cond2
+                        return parseInt(cond1.charCodeAt(0)) >= cond2
 
                     default:
                         return new Errores("Semantico", "Relacional invalida3", this.linea, this.columna)
@@ -596,7 +596,7 @@ export default class Relacionales extends Instruccion {
                     
                     case tipo_dato.CARACTER:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)
-                        return cond1 >= parseInt(cond2.charCodeAt(1))
+                        return cond1 >= parseInt(cond2.charCodeAt(0))
 
                     case tipo_dato.BOOLEANO:
                         this.tipo_dato = new Tipo(tipo_dato.BOOLEANO)

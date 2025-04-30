@@ -21,6 +21,10 @@ export default class Imprimir extends Instruccion {
 
         let salida = valor;
 
+        if (this.expresion.tipo_dato.getTipo() === tipo_dato.BOOLEANO) {
+            salida = valor ? "Verdadero" : "Falso";
+        }
+
         if (typeof valor === "number" && this.expresion.tipo_dato.getTipo() === tipo_dato.DECIMAL) {
             // Si ya es número, forzamos el decimal visible
             salida = valor % 1 === 0 ? valor.toFixed(1) : valor;

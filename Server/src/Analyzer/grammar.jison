@@ -15,6 +15,7 @@ const SeleccionMultiple = require('./Instrucciones/SeleccionMultiple')
 const Default = require('./Instrucciones/SeleccionDefault')
 const Mientras = require('./Instrucciones/Mientras')
 const RepetirHasta = require('./Instrucciones/RepetirHasta')
+const Para = require('./Instrucciones/Para')
 
 const Tipo = require('./Simbolo/Tipo')
 
@@ -66,8 +67,8 @@ const Continuar = require('./Instrucciones/Continuar')
 "++"                        return 'INCREMEENTO';
 "--"                        return 'DECREMEENTO';
 "."                         return 'PUNTO';
-"false"                     return 'FALSE';
-"true"                      return 'TRUE';
+"Falso"                     return 'FALSE';
+"Verdadero"                      return 'TRUE';
 
 //-----------------OPERACIONES-----------------
 "=="                            return '==';
@@ -240,7 +241,6 @@ instruccion : declaraciones                 {$$ = $1;}
             | casteo                        {$$ = $1;}
             | incrementar_o_decrementar     {$$ = $1;}
             | declaracion_listas            {$$ = $1;}
-            //| PARENTESIS_ABRIR tipo_de_lista_para_listas PARENTESIS_CERRAR     {$$ = $1;} //comentado temporariamente
             | acceso_a_listas               {$$ = $1;}
             | condicion_si                  {$$ = $1;}
             | seleccion_multiple            {$$ = $1;}
@@ -528,22 +528,26 @@ default_case : DE_LO_CONTRARIO_ENTONCES instrucciones
 ;
 
 //**************************FOR/ CICLO PARA**************************
-ciclo_para : PARA IDENTIFICADOR ARROW expresion HASTA expresion incremento_decremento HACER instrucciones FIN_PARA
+//---------------------FOR/ CICLO PARA---------------------
+ciclo_para : PARA IDENTIFICADOR ARROW expresion HASTA expresion salto_para HACER instrucciones FIN_PARA
+    { $$ = new Para.default($2, $4, $6, $7, $9, @1.first_line, @1.first_column);}
 ;
 
-incremento_decremento : CON_INCREMENTO aumentos
-                    | CON_DECREMENTO aumentos
+salto_para
+  : CON_INCREMENTO incremento_op { $$ = { tipo: 'incremento', operacion: $2 }; }
+  | CON_DECREMENTO incremento_op { $$ = { tipo: 'decremento', operacion: $2 }; }
 ;
 
-//**************************MIENTRAS/ WHILE**************************
-ciclo_mientras : MIENTRAS expresion HACER instrucciones FIN_MIENTRAS
-{$$ = new Mientras.default($2, $4, @1.first_line, @1.first_column)}
+incremento_op
+  : aumentos                     { $$ = $1; }
+  | asignacion_simple            { $$ = $1; }
 ;
 
-//**************************REPETIR HASTA/ DO WHILE**************************
-ciclo_repetir_hasta : REPETIR instrucciones HASTA_QUE expresion
-{$$ = new RepetirHasta.default($4, $2, @1.first_line, @1.first_column)}
+asignacion_simple
+  : IDENTIFICADOR ARROW expresion
+    { $$ = new Asignacion.default([$1], [$3], @1.first_line, @1.first_column); }
 ;
+
 
 //**************************SENTENCIAS DE TRANSFERENCIA/ SENTENCIAS DE ESCAPE**************************
 sentencias_de_transferencia : DETENER       { $$ = new Detener.default(@1.first_line, @1.first_column)}
@@ -667,7 +671,7 @@ tipo_dato : ENTERO          { $$ = new Tipo.default(Tipo.tipo_dato.ENTERO)}
 //**************************EXPRESIONES**************************
 //---------------------EXPRESIONES--------------------------
 expresion: '-' expresion %prec UMENOS   { $$ = new Aritmeticas.default(Aritmeticas.Operadores.NEGACION, @1.first_line, @1.first_column, $2) }
-    | '!' expresion             { $$ = new Logicas.default(Logicas.Logico.NOT, @1.first_line, @1.first_column, $1, $3)}
+    | '!' expresion             { $$ = new Logicas.default(Logicas.Logico.NOT, @1.first_line, @1.first_column, $2)}
     | expresion '||' expresion  { $$ = new Logicas.default(Logicas.Logico.OR, @1.first_line, @1.first_column, $1, $3)}
     | expresion '&&' expresion  { $$ = new Logicas.default(Logicas.Logico.AND, @1.first_line, @1.first_column, $1, $3)}
     | expresion '==' expresion  { $$ = new Relacionales.default(Relacionales.Relacional.IGUAL, $1, $3,@1.first_line, @1.first_column)}
