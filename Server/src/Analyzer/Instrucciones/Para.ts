@@ -32,8 +32,7 @@ export default class Para extends Instruccion {
     interpretar(arbol: Arbol, tabla: TablaSimbolos) {
         const entorno = new TablaSimbolos(tabla)
         entorno.setNombre("Para")
-
-        // Declarar variable tipo entero implícita
+    
         const decl = new Declaracion(
             new Tipo(tipo_dato.ENTERO),
             this.linea,
@@ -43,49 +42,44 @@ export default class Para extends Instruccion {
         )
         const resDecl = decl.interpretar(arbol, entorno)
         if (resDecl instanceof Errores) return resDecl
-
-        // Evaluar una sola vez el valor final
+    
         let valorFin = this.fin.interpretar(arbol, entorno)
-        console.log("[DEBUG] ValorFin =", valorFin, typeof valorFin)
-        
         if (typeof valorFin === "string" && !isNaN(Number(valorFin))) {
             valorFin = parseFloat(valorFin)
         } else if (typeof valorFin !== "number") {
             return new Errores("Semántico", "El valor final del ciclo debe ser numérico", this.linea, this.columna)
         }
-
+    
         while (true) {
             const simbolo = entorno.getVariable(this.id)
             if (!simbolo) {
                 return new Errores("Semántico", `Variable '${this.id}' no existe`, this.linea, this.columna)
             }
-
+    
             const valorActual = simbolo.getValor()
             const actual = typeof valorActual === "string" && !isNaN(Number(valorActual))
                 ? parseFloat(valorActual)
                 : valorActual
-
+    
             if (typeof actual !== "number") {
                 return new Errores("Semántico", "El valor actual del ciclo debe ser numérico", this.linea, this.columna)
             }
-
+    
             const condicion = this.tipoSalto === 'incremento'
                 ? actual <= valorFin
                 : actual >= valorFin
-
+    
             if (!condicion) break
-
-            const local = new TablaSimbolos(entorno)
-            local.setNombre("Bloque Para")
-
+    
+            // Ejecutar instrucciones directamente en `entorno`
             for (const instr of this.instrucciones) {
-                const res = instr.interpretar(arbol, local)
+                const res = instr.interpretar(arbol, entorno)
                 if (res instanceof Errores) lista_errores.push(res)
                 if (res instanceof Detener) return
                 if (res instanceof Continuar) break
                 if (res instanceof Retornar) return res
             }
-
+    
             const actualizacion = this.salto.interpretar(arbol, entorno)
             if (actualizacion instanceof Errores) return actualizacion
         }

@@ -24,24 +24,33 @@ class Declaracion extends Instruccion_1.Instruccion {
             if (valEvaluado instanceof Errors_1.default)
                 return valEvaluado;
             let tipoValor = this.valor[i].tipo_dato.getTipo();
-            // Conversión especial: entero -> decimal
+            //Conversión especial: entero -> decimal
             if (tipoValor === Tipo_1.tipo_dato.ENTERO && this.tipo_dato.getTipo() === Tipo_1.tipo_dato.DECIMAL) {
                 valEvaluado = parseFloat(valEvaluado);
             }
-            else if (tipoValor !== this.tipo_dato.getTipo()) {
+            //Conversión especial: "Verdadero"/"Falso" como string → boolean
+            if (this.tipo_dato.getTipo() === Tipo_1.tipo_dato.BOOLEANO && typeof valEvaluado === "string") {
+                if (valEvaluado.toLowerCase() === "verdadero")
+                    valEvaluado = true;
+                else if (valEvaluado.toLowerCase() === "falso")
+                    valEvaluado = false;
+            }
+            //Verificación de tipos
+            if (tipoValor !== this.tipo_dato.getTipo()) {
                 return new Errors_1.default("Semántico", `Tipo incompatible en variable ${this.identificador[i]}`, this.linea, this.columna);
             }
-            // Declarar la variable
+            //Declarar la variable
             if (!tabla.setVariable(new Simbolo_1.default(this.tipo_dato, this.identificador[i], valEvaluado))) {
                 const err = new Errors_1.default("Semántico", `La variable ${this.identificador[i]} ya existe`, this.linea, this.columna);
                 Controllers_1.lista_errores.push(err);
                 arbol.actualizarConsola(err.obtenerError());
                 return err;
             }
-            // Reporte
+            //Reporte
             let simboloN = new Report_1.Report(this.identificador[i], valEvaluado, this.tipo_dato.getNombreTipo(this.tipo_dato.getTipo()), tabla.getNombre().toString(), this.linea.toString(), this.columna.toString(), "variable");
             arbol.simbolos.push(simboloN);
-        } //sdfasfasf
+        }
+        //sdfasfasf
         // REVISAR
         /*if (this.valor.tipo_dato.getTipo() == tipo_dato.ENTERO && this.tipo_dato.getTipo() == tipo_dato.DECIMAL) {
             this.identificador.forEach(id => {

@@ -51,7 +51,7 @@ const Continuar = require('./Instrucciones/Continuar')
 "entero"                        return 'ENTERO';
 "decimal"                       return 'DECIMAL';
 "caracter"                      return 'CARACTER';
-"boolean"                       return 'BOOLEANO';
+"booleano"                       return 'BOOLEANO';
 "cadena"                        return 'CADENA';
 "null"                          return 'NULL';
 
