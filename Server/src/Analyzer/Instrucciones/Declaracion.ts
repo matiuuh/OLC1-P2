@@ -28,23 +28,23 @@ export default class Declaracion extends Instruccion {
         
             let tipoValor = this.valor[i].tipo_dato.getTipo();
         
-            // ✅ Conversión especial: entero -> decimal
+            //Conversión especial: entero -> decimal
             if (tipoValor === tipo_dato.ENTERO && this.tipo_dato.getTipo() === tipo_dato.DECIMAL) {
                 valEvaluado = parseFloat(valEvaluado);
             }
         
-            // ✅ Conversión especial: "Verdadero"/"Falso" como string → boolean
+            //Conversión especial: "Verdadero"/"Falso" como string → boolean
             if (this.tipo_dato.getTipo() === tipo_dato.BOOLEANO && typeof valEvaluado === "string") {
                 if (valEvaluado.toLowerCase() === "verdadero") valEvaluado = true;
                 else if (valEvaluado.toLowerCase() === "falso") valEvaluado = false;
             }
         
-            // ✅ Verificación de tipos
+            //Verificación de tipos
             if (tipoValor !== this.tipo_dato.getTipo()) {
                 return new Errors("Semántico", `Tipo incompatible en variable ${this.identificador[i]}`, this.linea, this.columna);
             }
         
-            // ✅ Declarar la variable
+            //Declarar la variable
             if (!tabla.setVariable(new Simbolo(this.tipo_dato, this.identificador[i], valEvaluado))) {
                 const err = new Errors("Semántico", `La variable ${this.identificador[i]} ya existe`, this.linea, this.columna);
                 lista_errores.push(err);
@@ -52,7 +52,7 @@ export default class Declaracion extends Instruccion {
                 return err;
             }
         
-            // ✅ Reporte
+            //Reporte
             let simboloN = new Report(
                 this.identificador[i],
                 valEvaluado,
