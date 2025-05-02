@@ -30,18 +30,20 @@ class Declaracion extends Instruccion_1.Instruccion {
             }
             //Conversión especial: "Verdadero"/"Falso" como string → boolean
             if (this.tipo_dato.getTipo() === Tipo_1.tipo_dato.BOOLEANO && typeof valEvaluado === "string") {
-                if (valEvaluado.toLowerCase() === "verdadero")
+                if (valEvaluado === "Verdadero")
                     valEvaluado = true;
-                else if (valEvaluado.toLowerCase() === "falso")
+                else if (valEvaluado === "Falso")
                     valEvaluado = false;
             }
             //Verificación de tipos
             if (tipoValor !== this.tipo_dato.getTipo()) {
                 return new Errors_1.default("Semántico", `Tipo incompatible en variable ${this.identificador[i]}`, this.linea, this.columna);
+                console.log("Tipo incompatible en variable " + this.identificador[i]);
             }
             //Declarar la variable
             if (!tabla.setVariable(new Simbolo_1.default(this.tipo_dato, this.identificador[i], valEvaluado))) {
                 const err = new Errors_1.default("Semántico", `La variable ${this.identificador[i]} ya existe`, this.linea, this.columna);
+                console.log("La variable " + this.identificador[i] + " ya existe");
                 Controllers_1.lista_errores.push(err);
                 arbol.actualizarConsola(err.obtenerError());
                 return err;

@@ -23,20 +23,33 @@ export default class Funcion extends Instruccion {
         this.instrucciones = instrucciones
     }
 
-    interpretar(arbol: Arbol, tabla: TablaSimbolos) {
+    interpretar(arbol: Arbol, entorno: TablaSimbolos) {
         for (let i = 0; i < this.instrucciones.length; i++) {
-            let varN = this.instrucciones[i].interpretar(arbol, tabla)
-            if(varN instanceof Errores) return varN
-            if(varN instanceof Retornar) {
-                if(varN.valor != null){
-                    if(this.tipo_dato.getTipo() != varN.tipo_dato.getTipo()) return new Errores("Semantico", "El tipo de la funcion y del valor de retorno son diferentes", this.linea, this.columna)
-                    return varN.valor
+            const instruccion = this.instrucciones[i];
+    
+            if (!instruccion || typeof instruccion.interpretar !== "function") {
+                return new Errores("Semantico", `Nodo inválido dentro de la función '${this.id}'`, this.linea, this.columna);
+            }
+    
+            const resultado = instruccion.interpretar(arbol, entorno); // 👈 usamos el entorno con parámetros
+    
+            if (resultado instanceof Errores) return resultado;
+    
+            if (resultado instanceof Retornar) {
+                if (resultado.valor !== null) {
+                    if (this.tipo_dato.getTipo() !== resultado.tipo_dato.getTipo()) {
+                        return new Errores("Semantico", "El tipo de la función y del valor de retorno son diferentes", this.linea, this.columna);
+                    }
+                    return resultado.valor;
                 }
             }
-            if(i == this.instrucciones.length - 1) return new Errores("Semantico", "Debe de retornar un valor", this.linea, this.columna)
+    
+            if (i === this.instrucciones.length - 1) {
+                return new Errores("Semantico", "Debe de retornar un valor", this.linea, this.columna);
+            }
         }
     }
-
+    
     /*nodo(anterior: string): string {
         let cont = Cont.getInstancia()
         let resultado = ""

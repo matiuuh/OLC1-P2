@@ -20,6 +20,7 @@ const Funcion = require('./Instrucciones/Funcion')
 const Procedimiento = require('./Instrucciones/Procedimiento')
 const Tipo = require('./Simbolo/Tipo')
 const Ejecutar = require('./Instrucciones/Ejecutar')
+const LlamadaFuncion = require('./Instrucciones/LlamadaFuncion')
 
 const CreacionVariable = require('./Instrucciones/CreacionVariable')
 const Declaracion = require('./Instrucciones/Declaracion')
@@ -532,7 +533,7 @@ default_case : DE_LO_CONTRARIO_ENTONCES instrucciones
 //**************************FOR/ CICLO PARA**************************
 //---------------------FOR/ CICLO PARA---------------------
 ciclo_para : PARA IDENTIFICADOR ARROW expresion HASTA expresion salto_para HACER instrucciones FIN_PARA
-    { $$ = new Para.default($2, $4, $6, $7, $9, @1.first_line, @1.first_column);}
+{ $$ = new Para.default($2, $4, $6, $7, $9, @1.first_line, @1.first_column);}
 ;
 
 salto_para : CON_INCREMENTO incremento_op
@@ -554,28 +555,23 @@ asignacion_simple : IDENTIFICADOR ARROW expresion
 sentencias_de_transferencia : DETENER       { $$ = new Detener.default(@1.first_line, @1.first_column)}
                             | CONTINUAR     { $$ = new Continuar.default(@1.first_line, @1.first_column)}
                             | RETORNAR      { $$ = new Retornar.default(@1.first_line, @1.first_column)}
+                            | RETORNAR expresion { $$ = new Retornar.default(@1.first_line, @1.first_column, $2) }
 ;
 
 //**************************FUCNIONES**************************
 //---------------------FUNCIONES/ METODOS CON RETORNO---------------------
 funciones : FUNCION IDENTIFICADOR tipo_dato proce_o_func_con_parametros_o_sin FIN_FUNCION
-{$$ = new Funcion($2, $3, $4.instrucciones, @1.first_line, @1.first_column, $4.parametros);}
+{$$ = new Funcion.default($2, $3, $4.instrucciones, @1.first_line, @1.first_column, $4.parametros);}
 ;
 
 procedimientos : PROCEDIMIENTO IDENTIFICADOR proce_o_func_con_parametros_o_sin FIN_PROCEDIMIENTO
-{
-    $$ = new Procedimiento.default($2, new Tipo.default(Tipo.tipo_dato.VOID), $3.instrucciones, @1.first_line, @1.first_column, $3.parametros);
-}
+{$$ = new Procedimiento.default($2, new Tipo.default(Tipo.tipo_dato.VOID), $3.instrucciones, @1.first_line, @1.first_column, $3.parametros);}
 ;
 
 proce_o_func_con_parametros_o_sin : CON_PARAMETROS PARENTESIS_ABRIR lista_parametros PARENTESIS_CERRAR instrucciones
-{
-    $$ = { parametros: $3, instrucciones: $5 };
-}
+{$$ = { parametros: $3, instrucciones: $5 };}
                                     | instrucciones
-{
-    $$ = { parametros: [], instrucciones: $1 };
-}
+{$$ = { parametros: [], instrucciones: $1 };}
 ;
 
 //---------------------LLAMADA DE FUNCIONES/ PROCEDIMIENTOS---------------------
@@ -585,6 +581,10 @@ llamada_procedimiento : EJECUTAR IDENTIFICADOR PARENTESIS_ABRIR lista_expresione
 
 lista_expresiones_o_no : lista_expresiones  { $$ = $1; }
                 | /* nada */                { $$ = [] }
+;
+
+llamada_funcion : IDENTIFICADOR PARENTESIS_ABRIR lista_expresiones_o_no PARENTESIS_CERRAR
+{$$ = new LlamadaFuncion.default($1, @1.first_line, @1.first_column, $3);}
 ;
 
 //**************************OBJETOS**************************
@@ -619,55 +619,39 @@ con_lista_o_sin : lista_expresiones
 ;
 
 //******************IMPRIMIR**************************
-impresion : IMPRIMIR expresion {
-        $$ = new Imprimir.default($2, @1.first_line, @1.first_column, "");
-    }
-            | IMPRIMIR NUEVALINEA expresion {
-        $$ = new Imprimir.default($3, @1.first_line, @1.first_column, "\n");
-    }
+impresion : IMPRIMIR expresion                  {$$ = new Imprimir.default($2, @1.first_line, @1.first_column, "");}
+            | IMPRIMIR NUEVALINEA expresion     {$$ = new Imprimir.default($3, @1.first_line, @1.first_column, "\n");}
 ;
 
 //*******************FUNCIONES NATIVAS**************************
 //---------------------MINUSCULA---------------------
 hacer_minuscula : MINUSCULA PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
-{
-    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.LOWER, @1.first_line, @1.first_column, $3);
-}
+{$$ = new FuncionesNativas.default(FuncionesNativas.Operadores.LOWER, @1.first_line, @1.first_column, $3);}
 ;
 
 //---------------------MAYUSCULA---------------------
 hacer_mayuscula : MAYUSCULA PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
-{
-    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.UPPER, @1.first_line, @1.first_column, $3);
-}
+{$$ = new FuncionesNativas.default(FuncionesNativas.Operadores.UPPER, @1.first_line, @1.first_column, $3);}
 ;
 
 //---------------------LONGITUD---------------------
 hacer_longitud : LONGITUD PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
-{
-    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.LENGTH, @1.first_line, @1.first_column, $3);
-}
+{$$ = new FuncionesNativas.default(FuncionesNativas.Operadores.LENGTH, @1.first_line, @1.first_column, $3);}
 ;
 
 //---------------------TRUNCAR---------------------
 hacer_truncar : TRUNCAR PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
-{
-    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.TRUNCAR, @1.first_line, @1.first_column, $3);
-}
+{$$ = new FuncionesNativas.default(FuncionesNativas.Operadores.TRUNCAR, @1.first_line, @1.first_column, $3);}
 ;
 
 //---------------------REDONDEAR---------------------
 hacer_redondear : REDONDEAR PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
-{
-    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.ROUND, @1.first_line, @1.first_column, $3);
-}
+{$$ = new FuncionesNativas.default(FuncionesNativas.Operadores.ROUND, @1.first_line, @1.first_column, $3);}
 ;
 
 //---------------------TIPO---------------------
 averiguar_tipo : TIPO PARENTESIS_ABRIR expresion PARENTESIS_CERRAR
-{
-    $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.TIPODATO, @1.first_line, @1.first_column, $3);
-}
+{ $$ = new FuncionesNativas.default(FuncionesNativas.Operadores.TIPODATO, @1.first_line, @1.first_column, $3);}
 ;
 
 //**************************TIPOS DE DATOS**************************
@@ -715,6 +699,7 @@ expresion: '-' expresion %prec UMENOS   { $$ = new Aritmeticas.default(Aritmetic
     | hacer_truncar             { $$ = $1 } // Llamada a función truncar
     | hacer_redondear           { $$ = $1 } // Llamada a función redondear
     | averiguar_tipo            { $$ = $1 } // Llamada a función tipo
+    | llamada_funcion           { $$ = $1 } // Llamada a función
 ;
 
 //**********************LISTAS**************************
@@ -723,8 +708,7 @@ lista_parametros : lista_parametros COMA parametro_aux      { $$ = [...$1, $3]; 
                 | parametro_aux                             { $$ = [$1]; }
 ;
 
-parametro_aux : IDENTIFICADOR tipo_dato
-{ $$ = { id: [$1], tipo: $2 }; }
+parametro_aux : IDENTIFICADOR tipo_dato                 { $$ = { id: [$1], tipo: $2 }; }
 ;
 //---------------------LISTA EXPRESIONES---------------------
 lista_expresiones : lista_expresiones COMA expresion    { $$ = [...$1, $3]; }
@@ -733,13 +717,9 @@ lista_expresiones : lista_expresiones COMA expresion    { $$ = [...$1, $3]; }
 
 //**********************EXTRAS**************************
 aumentos : IDENTIFICADOR INCREMEENTO
-{
-    $$ = new IncrementoDecremento.default($1, @1.first_line, @1.first_column, "mas");
-}
+{ $$ = new IncrementoDecremento.default($1, @1.first_line, @1.first_column, "mas");}
             | IDENTIFICADOR DECREMEENTO
-{
-    $$ = new IncrementoDecremento.default($1, @1.first_line, @1.first_column, "menos");
-}
+{ $$ = new IncrementoDecremento.default($1, @1.first_line, @1.first_column, "menos");}
 ;
 
 %%

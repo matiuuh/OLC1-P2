@@ -64,21 +64,6 @@ class Controller {
                     ast.actualizarConsola(resultado.obtenerError());
                 }
             }
-            /*for (let i = 0; i < instrucciones.length; i++) {
-                const instruccion = instrucciones[i];
-    
-                if (!instruccion || typeof instruccion.interpretar !== "function") {
-                    console.warn(`[WARN] Instrucción inválida en posición ${i}:`, instruccion);
-                    continue;
-                }
-    
-                const resultado = instruccion.interpretar(ast, tabla);
-    
-                if (resultado instanceof Errores) {
-                    console.error(`[ERROR]`, resultado);
-                    ast.actualizarConsola(resultado.obtenerError());
-                }
-            }*/
             console.log("[DEBUG] Tabla de símbolos:", tabla);
             res.status(200).send({ consola: ast.getConsola() });
         }
