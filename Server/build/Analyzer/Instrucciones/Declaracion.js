@@ -50,43 +50,6 @@ class Declaracion extends Instruccion_1.Instruccion {
             let simboloN = new Report_1.Report(this.identificador[i], valEvaluado, this.tipo_dato.getNombreTipo(this.tipo_dato.getTipo()), tabla.getNombre().toString(), this.linea.toString(), this.columna.toString(), "variable");
             arbol.simbolos.push(simboloN);
         }
-        //sdfasfasf
-        // REVISAR
-        /*if (this.valor.tipo_dato.getTipo() == tipo_dato.ENTERO && this.tipo_dato.getTipo() == tipo_dato.DECIMAL) {
-            this.identificador.forEach(id => {
-                valorf = parseFloat(valorf);
-                if (!tabla.setVariable(new Simbolo(this.tipo_dato, id, valorf))) {
-                    let error = new Errors("Semantico", "No se puede declarar variable " + id + " porque ya existe", this.linea, this.columna)
-                    lista_errores.push(error)
-                    console.log("error comentado rey");
-                    arbol.actualizarConsola((<Errors>error).obtenerError())
-                    return new Errors("Semantico", "No se puede declarar variable " + id + " porque ya existe", this.linea, this.columna)
-                } else {
-                    if (!arbol.tablaSimbolos(id, valorf, this.linea.toString(), tabla.getNombre().toString(), this.columna.toString())) {
-                        let simboloN = new Reporte(id, valorf, this.tipo_dato.getNombreTipo(this.tipo_dato.getTipo()), tabla.getNombre().toString(), this.linea.toString(), this.columna.toString())
-                        arbol.simbolos.push(simboloN)
-                    }
-                }
-            })
-        } else {
-            if (this.valor.tipo_dato.getTipo() != this.tipo_dato.getTipo()) {
-                return new Errors("Semantico", "No se pueden declarar variables de diferentes tipos", this.linea, this.columna)
-            }
-            this.identificador.forEach(id => {
-                if (!tabla.setVariable(new Simbolo(this.tipo_dato, id, valorf))) {
-                    let error = new Errors("Semantico", "No se puede declarar variable " + id + " porque ya existe", this.linea, this.columna)
-                    lista_errores.push(error)
-                    arbol.actualizarConsola((<Errors>error).obtenerError())
-                    return new Errors("Semantico", "No se puede declarar variable " + id + " porque ya existe", this.linea, this.columna)
-                } else {
-                    if (!arbol.tablaSimbolos(id, valorf, this.linea.toString(), tabla.getNombre().toString(), this.columna.toString())) {
-                        console.log("accion comentada en el ultimo else de declaracion");
-                        let simboloN = new Reporte(id, valorf, this.tipo_dato.getNombreTipo(this.tipo_dato.getTipo()), tabla.getNombre().toString(), this.linea.toString(), this.columna.toString())
-                        arbol.simbolos.push(simboloN)
-                    }
-                }
-            });
-        }*/
     }
 }
 exports.default = Declaracion;

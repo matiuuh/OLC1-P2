@@ -11,11 +11,10 @@ import Vector1D from "../Analyzer/instrucciones/vectores.ud"
 import Vector2D from "../Analyzer/instrucciones/vector.dd"
 import Creacion from "../Analyzer/instrucciones/creacion.var"
 import ModificarVector1D from "../Analyzer/instrucciones/modificar.vectorud"
-import ModificarVector2D from "../Analyzer/instrucciones/modificar.vectordd"
-import Funcion from "../Analyzer/instrucciones/funcion"*/
+import ModificarVector2D from "../Analyzer/instrucciones/modificar.vectordd"*/
+import Funcion from "../Analyzer/Instrucciones/Funcion";
+import Procedimiento from "../Analyzer/Instrucciones/Procedimiento";
 import { Report } from "../Analyzer/Simbolo/Report";
-
-//import { parser } from '../Analyzer/grammar'
 
 export let lista_errores: Array<Errores> = []
 export let dot: string = ""
@@ -51,7 +50,32 @@ class Controller {
             ast.setTablaGlobal(tabla);
             ast.setConsola("");
     
-            for (let i = 0; i < instrucciones.length; i++) {
+            //registrar funciones y procedimientos
+            for (const instruccion of instrucciones) {
+                if (instruccion instanceof Funcion || instruccion instanceof Procedimiento) {
+                    ast.addFuncion(instruccion);
+                }
+            }
+
+            for (const instr of instrucciones) {
+                if (instr instanceof Funcion || instr instanceof Procedimiento) {
+                    continue; // Ya se almacenaron arriba, no ejecutar
+                }
+    
+                if (!instr || typeof instr.interpretar !== "function") {
+                    console.warn(`[WARN] Instrucción inválida`, instr);
+                    continue;
+                }
+    
+                const resultado = instr.interpretar(ast, tabla);
+    
+                if (resultado instanceof Errores) {
+                    console.error(`[ERROR]`, resultado);
+                    ast.actualizarConsola(resultado.obtenerError());
+                }
+            }
+            
+            /*for (let i = 0; i < instrucciones.length; i++) {
                 const instruccion = instrucciones[i];
     
                 if (!instruccion || typeof instruccion.interpretar !== "function") {
@@ -65,7 +89,7 @@ class Controller {
                     console.error(`[ERROR]`, resultado);
                     ast.actualizarConsola(resultado.obtenerError());
                 }
-            }
+            }*/
     
             console.log("[DEBUG] Tabla de símbolos:", tabla);
             res.status(200).send({ consola: ast.getConsola() });

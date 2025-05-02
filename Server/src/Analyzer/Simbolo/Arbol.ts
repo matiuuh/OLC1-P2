@@ -2,8 +2,8 @@ import TablaSimbolos from "./TablaSimbolo";
 
 import { Instruccion } from "../Abstracto/Instruccion";
 import Errores from "../Errors/Errors";
-//import Metodo from "../instrucciones/metodo";
-//import Funcion from "../instrucciones/funcion";
+import Funcion from "../Instrucciones/Funcion";
+import Procedimiento from "../Instrucciones/Procedimiento";
 import { Report } from "./Report";
 
 export default class Arbol {
@@ -11,7 +11,7 @@ export default class Arbol {
     private consola: string
     private tablaGlobal: TablaSimbolos      //funciona para los entornos, considerar tablas globales y locales
     private errores: Array<Errores>
-    //private funciones: Array<Instruccion>
+    private funciones: Array<Instruccion>
     public simbolos: Array<Report>
 
     constructor(instrucciones: Array<Instruccion>) {
@@ -19,7 +19,7 @@ export default class Arbol {
         this.consola = ""
         this.tablaGlobal = new TablaSimbolos()
         this.errores = new Array<Errores>
-        //this.funciones = new Array<Instruccion>
+        this.funciones = new Array<Instruccion>
         this.simbolos = new Array<Report>
     }
 
@@ -52,7 +52,6 @@ export default class Arbol {
     }
 
     public Imprimir(contenido: any) {
-        //console.log("[IMPRIMIR]:", contenido); // <- visible en consola
         this.consola = `${this.consola}${contenido}`
     }
     
@@ -60,7 +59,7 @@ export default class Arbol {
         this.consola = `${this.consola}\n${contenido}\n`
     }
 
-    /*public getFunciones() {
+    public getFunciones() {
         return this.funciones
     }
 
@@ -70,31 +69,29 @@ export default class Arbol {
 
     public addFuncion(funcion: Instruccion) {
         this.funciones.push(funcion)
-    }*/
+    }
 
     public getFuncion(id: string) {
-        
-        /*for(let i of this.instrucciones) {
-            if(i instanceof Metodo) {
+        for(let i of this.instrucciones) {
+            if(i instanceof Procedimiento) {
                 if(i.id.toLocaleLowerCase() == id.toLocaleLowerCase()) {
                     if(!this.tablaSimbolos(i.id.toString(), '', i.linea.toString(), "Global", i.columna.toString())){
-                        let simboloN = new Reporte(i.id, '', "void",  "Global", i.linea.toString(), i.columna.toString(), "Metodo")
+                        let simboloN = new Report(i.id, '', "void",  "Global", i.linea.toString(), i.columna.toString(), "Procedimiento")
                         this.simbolos.push(simboloN)
                     }
                     return i
                 }
             }
             else if(i instanceof Funcion) {
-                // const tipoo = new Tipo(tipoD.VOID)
                 if(i.id.toLocaleLowerCase() == id.toLocaleLowerCase()) {
                     if(!this.tablaSimbolos(i.id.toString(), '', i.linea.toString(), "Global", i.columna.toString())){
-                        let simboloN = new Reporte(i.id, '', i.tipoD.getTipoD(i.tipoD.getTipo()),  "Global", i.linea.toString(), i.columna.toString(), "Funcion")
+                        let simboloN = new Report(i.id, '', i.tipo_dato.getNombreTipo(i.tipo_dato.getTipo()),  "Global", i.linea.toString(), i.columna.toString(), "Funcion")
                         this.simbolos.push(simboloN)
                     }
                     return i
                 }
             }
-        }*/
+        }
         return null
     }
 
@@ -121,8 +118,8 @@ export default class Arbol {
         return "none"
     }
 
-    /*public getSimbolos(): Array<Reporte> {
+    public getSimbolos(): Array<Report> {
         return this.simbolos
-    }*/
+    }
 
 }

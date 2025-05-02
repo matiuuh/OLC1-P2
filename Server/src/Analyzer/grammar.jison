@@ -16,8 +16,10 @@ const Default = require('./Instrucciones/SeleccionDefault')
 const Mientras = require('./Instrucciones/Mientras')
 const RepetirHasta = require('./Instrucciones/RepetirHasta')
 const Para = require('./Instrucciones/Para')
-
+const Funcion = require('./Instrucciones/Funcion')
+const Procedimiento = require('./Instrucciones/Procedimiento')
 const Tipo = require('./Simbolo/Tipo')
+const Ejecutar = require('./Instrucciones/Ejecutar')
 
 const CreacionVariable = require('./Instrucciones/CreacionVariable')
 const Declaracion = require('./Instrucciones/Declaracion')
@@ -250,7 +252,7 @@ instruccion : declaraciones                 {$$ = $1;}
             | sentencias_de_transferencia   {$$ = $1;}
             | funciones                     {$$ = $1;}
             | procedimientos                {$$ = $1;}
-            | llamada_funcion               {$$ = $1;}
+            | llamada_procedimiento         {$$ = $1;}
             | objetos                       {$$ = $1;}
             | instanciacion_objetos         {$$ = $1;}
             | objetos_accesos_metodos       {$$ = $1;}
@@ -533,18 +535,17 @@ ciclo_para : PARA IDENTIFICADOR ARROW expresion HASTA expresion salto_para HACER
     { $$ = new Para.default($2, $4, $6, $7, $9, @1.first_line, @1.first_column);}
 ;
 
-salto_para
-  : CON_INCREMENTO incremento_op { $$ = { tipo: 'incremento', operacion: $2 }; }
-  | CON_DECREMENTO incremento_op { $$ = { tipo: 'decremento', operacion: $2 }; }
+salto_para : CON_INCREMENTO incremento_op
+{ $$ = { tipo: 'incremento', operacion: $2 }; }
+            | CON_DECREMENTO incremento_op
+{ $$ = { tipo: 'decremento', operacion: $2 }; }
 ;
 
-incremento_op
-  : aumentos                     { $$ = $1; }
-  | asignacion_simple            { $$ = $1; }
+incremento_op : aumentos    { $$ = $1; }
+    | asignacion_simple     { $$ = $1; }
 ;
 
-asignacion_simple
-  : IDENTIFICADOR ARROW expresion
+asignacion_simple : IDENTIFICADOR ARROW expresion
     { $$ = new Asignacion.default([$1], [$3], @1.first_line, @1.first_column); }
 ;
 
@@ -558,21 +559,32 @@ sentencias_de_transferencia : DETENER       { $$ = new Detener.default(@1.first_
 //**************************FUCNIONES**************************
 //---------------------FUNCIONES/ METODOS CON RETORNO---------------------
 funciones : FUNCION IDENTIFICADOR tipo_dato proce_o_func_con_parametros_o_sin FIN_FUNCION
+{$$ = new Funcion($2, $3, $4.instrucciones, @1.first_line, @1.first_column, $4.parametros);}
 ;
 
 procedimientos : PROCEDIMIENTO IDENTIFICADOR proce_o_func_con_parametros_o_sin FIN_PROCEDIMIENTO
+{
+    $$ = new Procedimiento.default($2, new Tipo.default(Tipo.tipo_dato.VOID), $3.instrucciones, @1.first_line, @1.first_column, $3.parametros);
+}
 ;
 
 proce_o_func_con_parametros_o_sin : CON_PARAMETROS PARENTESIS_ABRIR lista_parametros PARENTESIS_CERRAR instrucciones
+{
+    $$ = { parametros: $3, instrucciones: $5 };
+}
                                     | instrucciones
+{
+    $$ = { parametros: [], instrucciones: $1 };
+}
 ;
 
 //---------------------LLAMADA DE FUNCIONES/ PROCEDIMIENTOS---------------------
-llamada_funcion : EJECUTAR IDENTIFICADOR PARENTESIS_ABRIR lista_expresiones_o_no PARENTESIS_CERRAR
+llamada_procedimiento : EJECUTAR IDENTIFICADOR PARENTESIS_ABRIR lista_expresiones_o_no PARENTESIS_CERRAR
+{ $$ = new Ejecutar.default($2, @1.first_line, @1.first_column, $4); }
 ;
 
-lista_expresiones_o_no : lista_expresiones
-                | /* nada */
+lista_expresiones_o_no : lista_expresiones  { $$ = $1; }
+                | /* nada */                { $$ = [] }
 ;
 
 //**************************OBJETOS**************************
@@ -707,10 +719,13 @@ expresion: '-' expresion %prec UMENOS   { $$ = new Aritmeticas.default(Aritmetic
 
 //**********************LISTAS**************************
 //---------------------LISTA PARAMETROS---------------------
-lista_parametros : lista_parametros COMA IDENTIFICADOR tipo_dato
-                | IDENTIFICADOR tipo_dato
+lista_parametros : lista_parametros COMA parametro_aux      { $$ = [...$1, $3]; }
+                | parametro_aux                             { $$ = [$1]; }
 ;
 
+parametro_aux : IDENTIFICADOR tipo_dato
+{ $$ = { id: [$1], tipo: $2 }; }
+;
 //---------------------LISTA EXPRESIONES---------------------
 lista_expresiones : lista_expresiones COMA expresion    { $$ = [...$1, $3]; }
                 | expresion                             { $$ = [$1]; }

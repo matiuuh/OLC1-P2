@@ -7,7 +7,17 @@ exports.indexController = exports.tablaS = exports.dot = exports.lista_errores =
 const Errors_1 = __importDefault(require("../Analyzer/Errors/Errors"));
 const Arbol_1 = __importDefault(require("../Analyzer/Simbolo/Arbol"));
 const TablaSimbolo_1 = __importDefault(require("../Analyzer/Simbolo/TablaSimbolo"));
-//import { parser } from '../Analyzer/grammar'
+/*import Metodo from "../Analyzer/instrucciones/metodo"
+import Declaracion from "../Analyzer/instrucciones/declaracion"
+import Execute from "../Analyzer/instrucciones/execute"
+import Asignacion from "../Analyzer/instrucciones/asignacion"
+import Vector1D from "../Analyzer/instrucciones/vectores.ud"
+import Vector2D from "../Analyzer/instrucciones/vector.dd"
+import Creacion from "../Analyzer/instrucciones/creacion.var"
+import ModificarVector1D from "../Analyzer/instrucciones/modificar.vectorud"
+import ModificarVector2D from "../Analyzer/instrucciones/modificar.vectordd"*/
+const Funcion_1 = __importDefault(require("../Analyzer/Instrucciones/Funcion"));
+const Procedimiento_1 = __importDefault(require("../Analyzer/Instrucciones/Procedimiento"));
 exports.lista_errores = [];
 exports.dot = "";
 exports.tablaS = new Array;
@@ -34,18 +44,41 @@ class Controller {
             tabla.setNombre("Global");
             ast.setTablaGlobal(tabla);
             ast.setConsola("");
-            for (let i = 0; i < instrucciones.length; i++) {
-                const instruccion = instrucciones[i];
-                if (!instruccion || typeof instruccion.interpretar !== "function") {
-                    console.warn(`[WARN] Instrucción inválida en posición ${i}:`, instruccion);
+            //registrar funciones y procedimientos
+            for (const instruccion of instrucciones) {
+                if (instruccion instanceof Funcion_1.default || instruccion instanceof Procedimiento_1.default) {
+                    ast.addFuncion(instruccion);
+                }
+            }
+            for (const instr of instrucciones) {
+                if (instr instanceof Funcion_1.default || instr instanceof Procedimiento_1.default) {
+                    continue; // Ya se almacenaron arriba, no ejecutar
+                }
+                if (!instr || typeof instr.interpretar !== "function") {
+                    console.warn(`[WARN] Instrucción inválida`, instr);
                     continue;
                 }
-                const resultado = instruccion.interpretar(ast, tabla);
+                const resultado = instr.interpretar(ast, tabla);
                 if (resultado instanceof Errors_1.default) {
                     console.error(`[ERROR]`, resultado);
                     ast.actualizarConsola(resultado.obtenerError());
                 }
             }
+            /*for (let i = 0; i < instrucciones.length; i++) {
+                const instruccion = instrucciones[i];
+    
+                if (!instruccion || typeof instruccion.interpretar !== "function") {
+                    console.warn(`[WARN] Instrucción inválida en posición ${i}:`, instruccion);
+                    continue;
+                }
+    
+                const resultado = instruccion.interpretar(ast, tabla);
+    
+                if (resultado instanceof Errores) {
+                    console.error(`[ERROR]`, resultado);
+                    ast.actualizarConsola(resultado.obtenerError());
+                }
+            }*/
             console.log("[DEBUG] Tabla de símbolos:", tabla);
             res.status(200).send({ consola: ast.getConsola() });
         }
