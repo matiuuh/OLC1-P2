@@ -3,6 +3,7 @@ import './App.css';
 import { Errores } from './componentes/Errores';
 import { Menu } from './componentes/Menu';
 import { Principal } from './componentes/Principal';
+import { Simbolos } from './componentes/Simbolos';
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Route path="/reporteErrores"
           element={<Errores />} />
         <Route path="/reporteSimbolos"
-          element={<><Menu /><br></br><h1>Reporte de Simbolos</h1></>} />
+          element={<><Menu /><Simbolos /></>} />
         <Route path="/reporteAST"
           element={<><Menu /><br></br><h1>Reporte de AST</h1></>} />
       </Routes>

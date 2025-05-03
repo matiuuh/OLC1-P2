@@ -11,8 +11,8 @@ export default class Declaracion extends Instruccion {
     private identificador: Array<any>;
     private valor: Instruccion[];
 
-    constructor(tipo: Tipo, Linea: number, Columna: number, id: Array<any>, valor: Instruccion[]) {
-        super(tipo, Linea, Columna);
+    constructor(tipo: Tipo, linea: number, columna: number, id: Array<any>, valor: Instruccion[]) {
+        super(tipo, linea, columna);
         this.identificador = id;
         this.valor = valor;
     }
@@ -58,15 +58,22 @@ export default class Declaracion extends Instruccion {
                 //arbol.actualizarConsola(err.obtenerError());
                 return err;
             }
-        
+            console.log("DEBUG:", {
+                id: this.identificador[i],
+                lineaValor: this.valor[i].linea.toString(),
+                columnaValor: this.valor[i].columna,
+                tipoValor: this.valor[i].tipo_dato
+            });
+            
             //Reporte
             let simboloN = new Report(
                 this.identificador[i],
                 valEvaluado,
                 this.tipo_dato.getNombreTipo(this.tipo_dato.getTipo()),
                 tabla.getNombre().toString(),
-                this.linea.toString(),
-                this.columna.toString(), "variable"
+                this.valor[i].linea?.toString(),   // 👈 Usa la línea de la expresión si existe
+                this.valor[i].columna?.toString() ?? this.columna.toString(), // 👈 Igual para columna
+                "variable"
             );
             arbol.simbolos.push(simboloN);
         }

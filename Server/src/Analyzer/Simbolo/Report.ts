@@ -14,7 +14,7 @@ export class Report {
         this.entorno = entorno
         this.linea = linea
         this.columna = columna
-        this.tipo = tipoS
+        this.tipoS = tipoS
     }
 
     public getId():string{

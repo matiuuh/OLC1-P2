@@ -13,6 +13,7 @@ class router {
         this.router.get("/", Controllers_1.indexController.prueba);
         this.router.post("/posteando", Controllers_1.indexController.pruebaPost);
         this.router.get('/obtenerErrores', Controllers_1.indexController.getErrores);
+        this.router.get('/obtenerSimbolos', Controllers_1.indexController.getTablaSimbolos);
         this.router.post("/interpretar", Controllers_1.indexController.interpretar);
     }
 }

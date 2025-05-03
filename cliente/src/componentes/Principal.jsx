@@ -18,7 +18,13 @@ export class Principal extends React.Component {
         })
             .then((res) => res.json())
             .then((data) => {
-                this.setState({ consola: data.consola })
+                this.setState({
+                    consola: data.consola
+                });
+            
+                // Almacena en localStorage para que otros componentes lo lean
+                localStorage.setItem("tabla_simbolos", JSON.stringify(data.simbolos));
+                localStorage.setItem("lista_errores", JSON.stringify(data.lista_errores));
             }).catch((err) => {
                 alert("Algo salió mal")
                 console.log(err)

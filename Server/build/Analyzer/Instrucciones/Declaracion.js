@@ -10,12 +10,13 @@ const Report_1 = require("../Simbolo/Report");
 const Simbolo_1 = __importDefault(require("../Simbolo/Simbolo"));
 const Tipo_1 = require("../Simbolo/Tipo");
 class Declaracion extends Instruccion_1.Instruccion {
-    constructor(tipo, Linea, Columna, id, valor) {
-        super(tipo, Linea, Columna);
+    constructor(tipo, linea, columna, id, valor) {
+        super(tipo, linea, columna);
         this.identificador = id;
         this.valor = valor;
     }
     interpretar(arbol, tabla) {
+        var _a, _b, _c;
         if (this.identificador.length !== this.valor.length) {
             const err = new Errors_1.default("Semántico", "Cantidad de variables y valores no coincide", this.linea, this.columna);
             Controllers_1.lista_errores.push(err);
@@ -53,8 +54,16 @@ class Declaracion extends Instruccion_1.Instruccion {
                 //arbol.actualizarConsola(err.obtenerError());
                 return err;
             }
+            console.log("DEBUG:", {
+                id: this.identificador[i],
+                lineaValor: this.valor[i].linea.toString(),
+                columnaValor: this.valor[i].columna,
+                tipoValor: this.valor[i].tipo_dato
+            });
             //Reporte
-            let simboloN = new Report_1.Report(this.identificador[i], valEvaluado, this.tipo_dato.getNombreTipo(this.tipo_dato.getTipo()), tabla.getNombre().toString(), this.linea.toString(), this.columna.toString(), "variable");
+            let simboloN = new Report_1.Report(this.identificador[i], valEvaluado, this.tipo_dato.getNombreTipo(this.tipo_dato.getTipo()), tabla.getNombre().toString(), (_a = this.valor[i].linea) === null || _a === void 0 ? void 0 : _a.toString(), // 👈 Usa la línea de la expresión si existe
+            (_c = (_b = this.valor[i].columna) === null || _b === void 0 ? void 0 : _b.toString()) !== null && _c !== void 0 ? _c : this.columna.toString(), // 👈 Igual para columna
+            "variable");
             arbol.simbolos.push(simboloN);
         }
     }

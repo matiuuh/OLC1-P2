@@ -5,19 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.indexController = exports.tablaS = exports.dot = exports.lista_errores = void 0;
 const Errors_1 = __importDefault(require("../Analyzer/Errors/Errors"));
-const Arbol_1 = __importDefault(require("../Analyzer/Simbolo/Arbol"));
-const TablaSimbolo_1 = __importDefault(require("../Analyzer/Simbolo/TablaSimbolo"));
-/*import Metodo from "../Analyzer/instrucciones/metodo"
-import Declaracion from "../Analyzer/instrucciones/declaracion"
-import Execute from "../Analyzer/instrucciones/execute"
-import Asignacion from "../Analyzer/instrucciones/asignacion"
-import Vector1D from "../Analyzer/instrucciones/vectores.ud"
-import Vector2D from "../Analyzer/instrucciones/vector.dd"
-import Creacion from "../Analyzer/instrucciones/creacion.var"
-import ModificarVector1D from "../Analyzer/instrucciones/modificar.vectorud"
-import ModificarVector2D from "../Analyzer/instrucciones/modificar.vectordd"*/
 const Funcion_1 = __importDefault(require("../Analyzer/Instrucciones/Funcion"));
 const Procedimiento_1 = __importDefault(require("../Analyzer/Instrucciones/Procedimiento"));
+const Arbol_1 = __importDefault(require("../Analyzer/Simbolo/Arbol"));
+const TablaSimbolo_1 = __importDefault(require("../Analyzer/Simbolo/TablaSimbolo"));
 exports.lista_errores = [];
 exports.dot = "";
 exports.tablaS = new Array;
@@ -32,6 +23,7 @@ class Controller {
     }
     interpretar(req, res) {
         var _a;
+        exports.lista_errores = new Array;
         try {
             const parser = require('../Analyzer/grammar');
             const instrucciones = parser.parse(req.body.entrada);
@@ -65,7 +57,18 @@ class Controller {
                 }
             }
             console.log("[DEBUG] Tabla de símbolos:", tabla);
-            res.status(200).send({ consola: ast.getConsola() });
+            // Limpia la tabla actual
+            exports.tablaS.length = 0;
+            // Llena la tablaS con los símbolos almacenados en el árbol
+            for (const simbolo of ast.getSimbolos()) {
+                exports.tablaS.push(simbolo);
+            }
+            res.status(200).send({
+                consola: ast.getConsola(),
+                lista_errores: exports.lista_errores,
+                ast: exports.dot,
+                simbolos: exports.tablaS
+            });
         }
         catch (err) {
             console.error("[ERROR AL INTERPRETAR]", err);
@@ -75,88 +78,6 @@ class Controller {
             });
         }
     }
-    /*public analizar(req: Request, res: Response) {
-        lista_errores = new Array<Errores>
-        try {
-            let parser = require('../Analyzer/grammar.js')
-            let ast = new Arbol(parser.parse(req.body.entrada))
-            let tabla = new TablaSimbolos()
-            tabla.setNombre("Global")
-            ast.setTablaGlobal(tabla)
-            ast.setConsola("")
-            let execute = null
-
-            let contador = Cont.getInstancia()
-
-            dot = "digraph ast{\n"
-            dot += "nINICIO[label=\"INICIO\"];\n"
-            dot += "nINSTRUCCIONES[label=\"INSTRUCCIONES\"];\n"
-            dot += "nINICIO->nINSTRUCCIONES;\n"
-
-            for (let error of lista_errores) {
-                ast.actualizarConsola((<Errores>error).obtenerError())
-            }
-
-            for (let i of ast.getInstrucciones()) {
-                if (i instanceof Metodo || i instanceof Funcion) {
-                    i.id = i.id.toLocaleLowerCase()
-                    ast.addFuncion(i)
-                }
-            }
-
-            for (let i of ast.getInstrucciones()) {
-
-                if (i instanceof Errores) {
-                    lista_errores.push(i)
-                    ast.actualizarConsola((<Errores>i).obtenerError())
-                }
-                if (i instanceof Metodo || i instanceof Funcion || i instanceof Execute) continue
-
-                if (i instanceof Declaracion || i instanceof Asignacion || i instanceof Vector1D || i instanceof Vector2D
-                    || i instanceof Creacion || i instanceof ModificarVector1D || i instanceof ModificarVector2D
-                ) {
-                    let resultado = i.interpretar(ast, tabla)
-                    if (resultado instanceof Errores) {
-                        lista_errores.push(resultado)
-                        ast.actualizarConsola((<Errores>resultado).obtenerError())
-                    }
-                } else {
-                    let error = new Errores("Semantico", "Sentencia fuera de un metodo", i.linea, i.columna)
-                    lista_errores.push(error)
-                    ast.actualizarConsola((<Errores>error).obtenerError())
-                }
-            }
-            for (let i of ast.getInstrucciones()) {
-                if (i instanceof Execute) {
-                    let resultado = i.interpretar(ast, tabla)
-                    if (resultado instanceof Errores) {
-                        lista_errores.push(resultado)
-                        ast.actualizarConsola((<Errores>resultado).obtenerError())
-                    }
-                }
-
-                let nodo = `n${contador.getContador()}`
-                dot += `${nodo}[label=\"INSTRUCCION\"];\n`
-                dot += `nINSTRUCCIONES->${nodo};\n`
-                dot += i.nodo(nodo)
-            }
-            dot += "\n}"
-            tablaS.length = 0
-            for (let i = 0; i < ast.getSimbolos().length; i++) {
-                tablaS.push(ast.getSimbolos()[i])
-            }
-            console.log(tabla)
-            res.json({ "respuesta": ast.getConsola(), "lista_errores": lista_errores, "ast": dot, "simbolos": tablaS })
-            console.log(lista_errores)
-            console.log(ast.getFunciones())
-        } catch (error: any) {
-            console.log(error)
-            res.json({ message: "Ya no sale" })
-        }
-    }*/
-    /*public getErrores(req: Request, res: Response) {
-
-}*/
     getErrores(req, res) {
         console.log(exports.lista_errores);
         try {
@@ -165,6 +86,15 @@ class Controller {
         catch (error) {
             console.log(error);
             res.json({ message: "Ya no sale" });
+        }
+    }
+    getTablaSimbolos(req, res) {
+        try {
+            res.json({ tabla_simbolos: exports.tablaS });
+        }
+        catch (error) {
+            console.error(error);
+            res.status(500).json({ message: "Error al obtener tabla de símbolos" });
         }
     }
 }
