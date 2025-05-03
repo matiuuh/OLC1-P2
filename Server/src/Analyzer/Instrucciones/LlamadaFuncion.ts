@@ -31,7 +31,7 @@ export default class LlamadaFuncion extends Instruccion {
             return new Errores("Semántico", `Cantidad de parámetros inválida para función '${this.id}'.`, this.linea, this.columna);
         }
     
-        const nuevoEntorno = new TablaSimbolos(arbol.getTablaGlobal());
+        const nuevoEntorno = new TablaSimbolos(tabla);
         nuevoEntorno.setNombre("LlamadaFuncion:" + this.id);
         console.log(`[LlamadaFuncion] -> Nuevo entorno creado para función '${this.id}'`);
     

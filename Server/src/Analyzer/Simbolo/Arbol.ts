@@ -74,7 +74,7 @@ export default class Arbol {
     public getFuncion(id: string) {
         for(let i of this.instrucciones) {
             if(i instanceof Procedimiento) {
-                if(i.id.toLocaleLowerCase() == id.toLocaleLowerCase()) {
+                if(i.id == id) {
                     if(!this.tablaSimbolos(i.id.toString(), '', i.linea.toString(), "Global", i.columna.toString())){
                         let simboloN = new Report(i.id, '', "void",  "Global", i.linea.toString(), i.columna.toString(), "Procedimiento")
                         this.simbolos.push(simboloN)
@@ -83,7 +83,7 @@ export default class Arbol {
                 }
             }
             else if(i instanceof Funcion) {
-                if(i.id.toLocaleLowerCase() == id.toLocaleLowerCase()) {
+                if(i.id == id) {
                     if(!this.tablaSimbolos(i.id.toString(), '', i.linea.toString(), "Global", i.columna.toString())){
                         let simboloN = new Report(i.id, '', i.tipo_dato.getNombreTipo(i.tipo_dato.getTipo()),  "Global", i.linea.toString(), i.columna.toString(), "Funcion")
                         this.simbolos.push(simboloN)
