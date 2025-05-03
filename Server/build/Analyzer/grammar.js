@@ -95,6 +95,9 @@ break;
 case 4: case 5: case 6: case 7: case 8: case 9: case 10: case 11: case 12: case 13: case 14: case 15: case 16: case 17: case 18: case 19: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 32:
 this.$ = $$[$0];
 break;
+case 30:
+ index.lista_errores.push(new Errores.default("Sintactico", "Se encontro \"" + yytext + "\" y esperaba otra cosa",this._$.first_line, this._$.first_column )); this.$ = false
+break;
 case 31:
 
         if ($$[$0] == null || $$[$0] == false) {
@@ -744,7 +747,7 @@ _handle_error:
     return true;
 }};
 
-// Aquí se incluyen las acciones semánticas de JavaScript necesarias.
+const index = require('../controllers/Controllers')
 const Aritmeticas = require('./Expresiones/Aritmeticas')
 const Nativo = require('./Expresiones/Nativo')
 const AccesoLista = require('./Expresiones/AccesoLista')
@@ -753,7 +756,7 @@ const ModificarLista = require('./Expresiones/ModificarLista')
 const Relacionales = require('./Expresiones/Relacionales')
 const FuncionesNativas = require('./Instrucciones/FuncionesNativas')
 const Logicas = require('./Expresiones/Logicas')
-//const Errores = require('../Errors/Errors')
+const Errores = require('./Errors/Errors')
 const Si = require('./Instrucciones/Si')
 const SeleccionCaso = require('./Instrucciones/Seleccion_caso')
 const SeleccionMultiple = require('./Instrucciones/SeleccionMultiple')
@@ -1324,7 +1327,8 @@ case 103:return "IDENTIFICADOR";
 break;
 case 104:
 break;
-case 105: console.log("Error lexico: "+yy_.yytext);
+case 105:console.log('Error lexico: '+yy_.yytext+' | Linea: '+yy_.yylloc.first_line+' | Columna: '+yy_.yylloc.first_column);
+    index.lista_errores.push(new Errores.default("Lexico", "Simbolo \""+yy_.yytext+"\" no pertenece al lenguaje",yy_.yylloc.first_line,yy_.yylloc.first_column ))
 break;
 case 106:return 5;
 break;

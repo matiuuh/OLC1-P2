@@ -86,7 +86,6 @@ class Controller {
             });
         }
     }
-}
 
 
     /*public analizar(req: Request, res: Response) {
@@ -173,4 +172,16 @@ class Controller {
 
 }*/
 
+    public getErrores(req: Request, res:Response) {
+        console.log(lista_errores)
+
+        try {
+            res.json({ "lista_errores": lista_errores })
+        } catch (error) {
+            console.log(error)
+            res.json({message: "Ya no sale"})
+        }
+    }
+
+}
 export const indexController = new Controller()

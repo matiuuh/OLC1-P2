@@ -19,7 +19,10 @@ export default class Declaracion extends Instruccion {
 
     interpretar(arbol: Arbol, tabla: TablaSimbolo) {
         if (this.identificador.length !== this.valor.length) {
-            return new Errors("Semántico", "Cantidad de variables y valores no coincide", this.linea, this.columna);
+            const err = new Errors("Semántico", "Cantidad de variables y valores no coincide", this.linea, this.columna);
+            lista_errores.push(err);
+            //arbol.actualizarConsola(err.obtenerError());
+            return err;
         }
 
         for (let i = 0; i < this.identificador.length; i++) {
@@ -41,8 +44,10 @@ export default class Declaracion extends Instruccion {
         
             //Verificación de tipos
             if (tipoValor !== this.tipo_dato.getTipo()) {
-                return new Errors("Semántico", `Tipo incompatible en variable ${this.identificador[i]}`, this.linea, this.columna);
-                console.log("Tipo incompatible en variable " + this.identificador[i]);
+                const err = new Errors("Semántico", `Tipo incompatible en variable ${this.identificador[i]}`, this.linea, this.columna);
+                lista_errores.push(err);
+                //arbol.actualizarConsola(err.obtenerError());
+                return err;
             }
         
             //Declarar la variable
@@ -50,7 +55,7 @@ export default class Declaracion extends Instruccion {
                 const err = new Errors("Semántico", `La variable ${this.identificador[i]} ya existe`, this.linea, this.columna);
                 console.log("La variable " + this.identificador[i] + " ya existe");
                 lista_errores.push(err);
-                arbol.actualizarConsola(err.obtenerError());
+                //arbol.actualizarConsola(err.obtenerError());
                 return err;
             }
         

@@ -21,6 +21,10 @@ export class Menu extends React.Component {
                                 <Link to="/reporteSimbolos"
                                     class="nav-link active" aria-current="page">Reporte Simbolos</Link>
                             </li>
+                            <li class="nav-item">
+                                <Link to="/reporteAST"
+                                    class="nav-link active" aria-current="page">Reporte AST</Link>
+                            </li>
                         </ul>
                     </div>
                 </div>

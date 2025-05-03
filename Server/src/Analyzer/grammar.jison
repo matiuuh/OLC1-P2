@@ -1,5 +1,5 @@
 %{
-// Aquí se incluyen las acciones semánticas de JavaScript necesarias.
+const index = require('../controllers/Controllers')
 const Aritmeticas = require('./Expresiones/Aritmeticas')
 const Nativo = require('./Expresiones/Nativo')
 const AccesoLista = require('./Expresiones/AccesoLista')
@@ -8,7 +8,7 @@ const ModificarLista = require('./Expresiones/ModificarLista')
 const Relacionales = require('./Expresiones/Relacionales')
 const FuncionesNativas = require('./Instrucciones/FuncionesNativas')
 const Logicas = require('./Expresiones/Logicas')
-//const Errores = require('../Errors/Errors')
+const Errores = require('./Errors/Errors')
 const Si = require('./Instrucciones/Si')
 const SeleccionCaso = require('./Instrucciones/Seleccion_caso')
 const SeleccionMultiple = require('./Instrucciones/SeleccionMultiple')
@@ -205,7 +205,8 @@ const Continuar = require('./Instrucciones/Continuar')
 //ignorar espacios en blanco
 [\ \r\t\f\n]+           {};
 
-.                       { console.log("Error lexico: "+yytext);}
+. {console.log('Error lexico: '+yytext+' | Linea: '+yylloc.first_line+' | Columna: '+yylloc.first_column);
+    index.lista_errores.push(new Errores.default("Lexico", "Simbolo \""+yytext+"\" no pertenece al lenguaje",yylloc.first_line,yylloc.first_column ))}
 //fin de cadena
 <<EOF>>                 return 'EOF';
 
@@ -265,7 +266,7 @@ instruccion : declaraciones                 {$$ = $1;}
             | hacer_redondear               {$$ = $1;}
             | averiguar_tipo                {$$ = $1;}
             | aumentos                      {$$ = $1;}
-            | error
+            | error     { index.lista_errores.push(new Errores.default("Sintactico", "Se encontro \"" + yytext + "\" y esperaba otra cosa",this._$.first_line, this._$.first_column )); $$ = false}
 ;
 
 //**************************DECLARACIONES**************************

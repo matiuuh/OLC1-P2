@@ -11,6 +11,7 @@ class router {
     config(): void {
         this.router.get("/", indexController.prueba)
         this.router.post("/posteando", indexController.pruebaPost)
+        this.router.get('/obtenerErrores', indexController.getErrores)
         this.router.post("/interpretar", indexController.interpretar)
     }
 }

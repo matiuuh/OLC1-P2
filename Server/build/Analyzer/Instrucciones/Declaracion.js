@@ -17,7 +17,10 @@ class Declaracion extends Instruccion_1.Instruccion {
     }
     interpretar(arbol, tabla) {
         if (this.identificador.length !== this.valor.length) {
-            return new Errors_1.default("Semántico", "Cantidad de variables y valores no coincide", this.linea, this.columna);
+            const err = new Errors_1.default("Semántico", "Cantidad de variables y valores no coincide", this.linea, this.columna);
+            Controllers_1.lista_errores.push(err);
+            //arbol.actualizarConsola(err.obtenerError());
+            return err;
         }
         for (let i = 0; i < this.identificador.length; i++) {
             let valEvaluado = this.valor[i].interpretar(arbol, tabla);
@@ -37,15 +40,17 @@ class Declaracion extends Instruccion_1.Instruccion {
             }
             //Verificación de tipos
             if (tipoValor !== this.tipo_dato.getTipo()) {
-                return new Errors_1.default("Semántico", `Tipo incompatible en variable ${this.identificador[i]}`, this.linea, this.columna);
-                console.log("Tipo incompatible en variable " + this.identificador[i]);
+                const err = new Errors_1.default("Semántico", `Tipo incompatible en variable ${this.identificador[i]}`, this.linea, this.columna);
+                Controllers_1.lista_errores.push(err);
+                //arbol.actualizarConsola(err.obtenerError());
+                return err;
             }
             //Declarar la variable
             if (!tabla.setVariable(new Simbolo_1.default(this.tipo_dato, this.identificador[i], valEvaluado))) {
                 const err = new Errors_1.default("Semántico", `La variable ${this.identificador[i]} ya existe`, this.linea, this.columna);
                 console.log("La variable " + this.identificador[i] + " ya existe");
                 Controllers_1.lista_errores.push(err);
-                arbol.actualizarConsola(err.obtenerError());
+                //arbol.actualizarConsola(err.obtenerError());
                 return err;
             }
             //Reporte
