@@ -24,7 +24,6 @@ export class Principal extends React.Component {
             
                 // Almacena en localStorage para que otros componentes lo lean
                 localStorage.setItem("tabla_simbolos", JSON.stringify(data.simbolos));
-                //localStorage.setItem("consola", JSON.stringify(data.consola));
                 localStorage.setItem("lista_errores", JSON.stringify(data.lista_errores));
                 localStorage.setItem("ast", data.ast);
             }).catch((err) => {
@@ -33,48 +32,74 @@ export class Principal extends React.Component {
             })
     }
 
+    cargarArchivo = (event) => {
+        const archivo = event.target.files[0];
+        if (!archivo) return;
+
+        const lector = new FileReader();
+        lector.onload = (e) => {
+            const contenido = e.target.result;
+            this.setState({ editor: contenido });
+        };
+        lector.readAsText(archivo);
+    }
+
     render() {
         return (
             <>
                 <Menu />
-                <br></br>
-                <div className='text-center'>
-                    <div>
-                        <h1>Proyecto 2 - OLC1</h1>
-                    </div>
-                    <br></br>
-                    <div className='container'>
-                        <input type="button" value="Interpretar"
-                            id="btnCargar" className="form-control form-control-lg"
-                            onClick={this.interpretar}
-                        />
-                    </div>
-                    <br></br>
-                    <div class='text-center style={{ height: "90%", width: "90%" }} '>
-                        <div className='container'>
-                            <div className='row'>
-                                <div className='col'>
-                                    <p>Entrada:</p>
-                                    <Editor height="90vh"
+                <div className="bg-dark text-light py-4">
+                    <div className="container text-center">
+                        <h1 className="mb-4">Proyecto 2 - OLC1</h1>
+
+                        {/* Controles */}
+                        <div className="d-flex justify-content-center gap-3 mb-4 flex-wrap">
+                            <input type="file"
+                                accept=".ci"
+                                className="form-control w-auto bg-secondary text-light border-0"
+                                onChange={this.cargarArchivo}
+                            />
+                            <button
+                                onClick={this.interpretar}
+                                className="btn btn-outline-light px-4"
+                            >
+                                Interpretar
+                            </button>
+                        </div>
+
+                        {/* Editores */}
+                        <div className="row">
+                            <div className="col-md-6 mb-3">
+                                <div className="bg-black border border-secondary rounded">
+                                    <div className="px-3 py-2 border-bottom border-secondary">
+                                        <strong>Entrada</strong>
+                                    </div>
+                                    <Editor height="70vh"
                                         defaultLanguage="java"
-                                        defaultValue="" theme="vs-dark"
+                                        theme="vs-dark"
+                                        value={this.state.editor}
                                         onChange={(value) =>
-                                            this.setState({ editor: value })} />
+                                            this.setState({ editor: value || "" })
+                                        }
+                                    />
                                 </div>
-                                <div className='col'>
-                                    <p>Consola:</p>
-                                    <Editor height="90vh"
-                                        defaultLanguage="javascript"
-                                        defaultValue="" theme="vs-dark"
-                                        value={this.state.consola} />
+                            </div>
+                            <div className="col-md-6 mb-3">
+                                <div className="bg-black border border-secondary rounded">
+                                    <div className="px-3 py-2 border-bottom border-secondary">
+                                        <strong>Consola</strong>
+                                    </div>
+                                    <Editor height="70vh"
+                                        defaultLanguage="text"
+                                        theme="vs-dark"
+                                        value={this.state.consola}
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </>
-        )
-
+        );
     }
-
 }
