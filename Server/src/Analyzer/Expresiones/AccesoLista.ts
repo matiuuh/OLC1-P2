@@ -2,6 +2,7 @@ import { Instruccion } from "../Abstracto/Instruccion";
 import Errores from "../Errors/Errors";
 import Arbol from "../Simbolo/Arbol";
 //import Simbolo from "../Simbolo/Simbolo";
+import singleton from "../Simbolo/Singleton";
 import TablaSimbolos from "../Simbolo/TablaSimbolo";
 import Tipo, { tipo_dato } from "../Simbolo/Tipo";
 
@@ -44,4 +45,34 @@ export default class AccesoLista extends Instruccion {
 
         return valorActual;
     }
+
+    nodo(anterior: string): string {
+        const Singleton = singleton.getInstancia();
+        let resultado = "";
+    
+        const nodoAcceso = `n${Singleton.getContador()}`;
+        const nodoId = `n${Singleton.getContador()}`;
+        const nodoPosiciones = `n${Singleton.getContador()}`;
+    
+        resultado += `${nodoAcceso}[label="ACCESO_LISTA"];\n`;
+        resultado += `${anterior} -> ${nodoAcceso};\n`;
+    
+        resultado += `${nodoId}[label="ID: ${this.id}"];\n`;
+        resultado += `${nodoAcceso} -> ${nodoId};\n`;
+    
+        resultado += `${nodoPosiciones}[label="POSICIONES"];\n`;
+        resultado += `${nodoAcceso} -> ${nodoPosiciones};\n`;
+    
+        for (let expr of this.posiciones) {
+            const nodoExpr = `n${Singleton.getContador()}`;
+            resultado += `${nodoExpr}[label="INDEX"];\n`;
+            resultado += `${nodoPosiciones} -> ${nodoExpr};\n`;
+            if (typeof expr.nodo === "function") {
+                resultado += expr.nodo(nodoExpr);
+            }
+        }
+    
+        return resultado;
+    }
+    
 }

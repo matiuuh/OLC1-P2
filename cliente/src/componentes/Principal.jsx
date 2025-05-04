@@ -24,7 +24,9 @@ export class Principal extends React.Component {
             
                 // Almacena en localStorage para que otros componentes lo lean
                 localStorage.setItem("tabla_simbolos", JSON.stringify(data.simbolos));
+                //localStorage.setItem("consola", JSON.stringify(data.consola));
                 localStorage.setItem("lista_errores", JSON.stringify(data.lista_errores));
+                localStorage.setItem("ast", data.ast);
             }).catch((err) => {
                 alert("Algo salió mal")
                 console.log(err)

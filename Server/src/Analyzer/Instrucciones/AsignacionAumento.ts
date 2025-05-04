@@ -1,6 +1,7 @@
 import { Instruccion } from "../Abstracto/Instruccion";
 import Errors from "../Errors/Errors";
 import Arbol from "../Simbolo/Arbol";
+import singleton from "../Simbolo/Singleton";
 import TablaSimbolos from "../Simbolo/TablaSimbolo";
 import Tipo, { tipo_dato } from "../Simbolo/Tipo";
 
@@ -40,4 +41,35 @@ export default class AsignacionAumento extends Instruccion {
 
         return null;
     }
+
+    nodo(anterior: string): string {
+        const Singleton = singleton.getInstancia();
+        let resultado = "";
+    
+        const nodoAsignacion = `n${Singleton.getContador()}`;
+        const nodoId = `n${Singleton.getContador()}`;
+        const nodoIgual = `n${Singleton.getContador()}`;
+        const nodoExp = `n${Singleton.getContador()}`;
+        const nodoPuntoComa = `n${Singleton.getContador()}`;
+    
+        resultado += `${nodoAsignacion}[label="ASIGNACION"];\n`;
+        resultado += `${anterior} -> ${nodoAsignacion};\n`;
+    
+        resultado += `${nodoId}[label="ID: ${this.id}"];\n`;
+        resultado += `${nodoIgual}[label="="];\n`;
+        resultado += `${nodoExp}[label="EXPRESION"];\n`;
+        resultado += `${nodoPuntoComa}[label=";"];\n`;
+    
+        resultado += `${nodoAsignacion} -> ${nodoId};\n`;
+        resultado += `${nodoAsignacion} -> ${nodoIgual};\n`;
+        resultado += `${nodoAsignacion} -> ${nodoExp};\n`;
+        resultado += `${nodoAsignacion} -> ${nodoPuntoComa};\n`;
+    
+        if (typeof this.expresion.nodo === "function") {
+            resultado += this.expresion.nodo(nodoExp);
+        }
+    
+        return resultado;
+    }
+    
 }

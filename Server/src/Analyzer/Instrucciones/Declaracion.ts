@@ -4,6 +4,7 @@ import Errors from "../Errors/Errors";
 import Arbol from "../Simbolo/Arbol";
 import { Report } from "../Simbolo/Report";
 import Simbolo from "../Simbolo/Simbolo";
+import singleton from "../Simbolo/Singleton";
 import TablaSimbolo from "../Simbolo/TablaSimbolo";
 import Tipo, { tipo_dato } from "../Simbolo/Tipo";
 
@@ -79,71 +80,68 @@ export default class Declaracion extends Instruccion {
         }
     }
 
-    /*
     nodo(anterior: string): string {
-        let cont = Cont.getInstancia()
-
-        let resultado = ""
-
-        let nodoD = `n${cont.get()}`
-        let nodoT = `n${cont.get()}`
-        let nodoID = `n${cont.get()}`
-
-        let ids = []
-
-        for(let i= 0; i < this.id.length; i++){
-            ids.push(`n${cont.get()}`)
-
+        let Singleton = singleton.getInstancia();
+        let resultado = "";
+    
+        let nodoD = `n${Singleton.getContador()}`;
+        let nodoT = `n${Singleton.getContador()}`;
+        let nodoID = `n${Singleton.getContador()}`;
+        let nodoI = `n${Singleton.getContador()}`;
+        let nodoV = `n${Singleton.getContador()}`;
+        let nodoPC = `n${Singleton.getContador()}`;
+    
+        // Nodos individuales por cada ID
+        let ids: string[] = [];
+        for (let i = 0; i < this.identificador.length; i++) {
+            ids.push(`n${Singleton.getContador()}`);
         }
-        let nodoI = `n${cont.get()}`
-        let nodoV = `n${cont.get()}`
-        let nodoPC = `n${cont.get()}`
-
-        resultado += `${nodoD}[label="DECLARACION"]\n`
-
-        switch (this.tipoD.getTipo()) {
-            case tipoD.INT:
-                resultado += `${nodoT}[label="int"]\n`
-                break;
-            case tipoD.DOUBLE:
-                resultado += `${nodoT}[label="double"]\n`
-                break;
-            case tipoD.CADENA:
-                resultado += `${nodoT}[label="std::string"]\n`
-                break;
-            case tipoD.CHAR:
-                resultado += `${nodoT}[label="char"]\n`
-                break;
-            case tipoD.BOOL:
-                resultado += `${nodoT}[label="bool"]\n`
-                break;
+    
+        resultado += `${nodoD}[label="DECLARACION"]\n`;
+    
+        // Tipo
+        switch (this.tipo_dato.getTipo()) {
+            case tipo_dato.ENTERO:
+                resultado += `${nodoT}[label="entero"]\n`; break;
+            case tipo_dato.DECIMAL:
+                resultado += `${nodoT}[label="decimal"]\n`; break;
+            case tipo_dato.CADENA:
+                resultado += `${nodoT}[label="cadena"]\n`; break;
+            case tipo_dato.CARACTER:
+                resultado += `${nodoT}[label="caracter"]\n`; break;
+            case tipo_dato.BOOLEANO:
+                resultado += `${nodoT}[label="booleano"]\n`; break;
         }
-
-        resultado += `${nodoID}[label="ID"]\n`
-
-        for(let i= 0; i < this.id.length; i++){
-            resultado += `${ids[i]} [label = "${this.id[i]}"]\n`
+    
+        // ID y conexiones
+        resultado += `${nodoID}[label="ID"]\n`;
+        for (let i = 0; i < this.identificador.length; i++) {
+            resultado += `${ids[i]}[label="${this.identificador[i]}"]\n`;
         }
-
-        resultado += `${nodoI}[label="="]\n`
-        resultado += `${nodoV}[label="EXPRESION"]\n`
-        resultado += `${nodoPC}[label=";"]\n`
-
-        resultado += `${anterior} -> ${nodoD}\n`
-        resultado += `${nodoD} -> ${nodoID}\n`
-        resultado += `${nodoD} -> ${nodoT}\n`
-        
-        for(let i= 0; i < this.id.length; i++){
-            resultado += `${nodoID} -> ${ids[i]}\n`
+    
+        // Estructura de árbol
+        resultado += `${nodoI}[label="="]\n`;
+        resultado += `${nodoV}[label="EXPRESIONES"]\n`;
+        resultado += `${nodoPC}[label=";"]\n`;
+    
+        resultado += `${anterior} -> ${nodoD}\n`;
+        resultado += `${nodoD} -> ${nodoT}\n`;
+        resultado += `${nodoD} -> ${nodoID}\n`;
+        for (let i = 0; i < this.identificador.length; i++) {
+            resultado += `${nodoID} -> ${ids[i]}\n`;
         }
-
-        resultado += `${nodoD} -> ${nodoI}\n`
-        resultado += `${nodoD} -> ${nodoV}\n`
-        resultado += `${nodoD} -> ${nodoPC}\n`
-
-        this.valor.nodo(nodoV)
-
-        return resultado
+        resultado += `${nodoD} -> ${nodoI}\n`;
+        resultado += `${nodoD} -> ${nodoV}\n`;
+        resultado += `${nodoD} -> ${nodoPC}\n`;
+    
+        // Expresiones (valores)
+        for (let i = 0; i < this.valor.length; i++) {
+            let nodoExpr = `n${Singleton.getContador()}`;
+            resultado += `${nodoV} -> ${nodoExpr}\n`;
+            resultado += this.valor[i].nodo(nodoExpr);
+        }
+    
+        return resultado;
     }
-    */
+    
 }

@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import { AST } from './componentes/AST';
 import { Errores } from './componentes/Errores';
-import { Menu } from './componentes/Menu';
 import { Principal } from './componentes/Principal';
 import { Simbolos } from './componentes/Simbolos';
 
@@ -13,9 +13,9 @@ function App() {
         <Route path="/reporteErrores"
           element={<Errores />} />
         <Route path="/reporteSimbolos"
-          element={<><Menu /><Simbolos /></>} />
+          element={<Simbolos />} />
         <Route path="/reporteAST"
-          element={<><Menu /><br></br><h1>Reporte de AST</h1></>} />
+          element={<AST />} />
       </Routes>
     </BrowserRouter>
   );

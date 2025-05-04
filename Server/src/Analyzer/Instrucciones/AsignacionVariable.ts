@@ -1,8 +1,8 @@
 import { Instruccion } from "../Abstracto/Instruccion";
 import Errors from "../Errors/Errors";
 import Arbol from "../Simbolo/Arbol";
-//import Singleton from "../Simbolo/Singleton";
 //import Simbolo from "../Simbolo/Simbolo";
+import singleton from "../Simbolo/Singleton";
 import TablaSimbolo from "../Simbolo/TablaSimbolo";
 import Tipo, { tipo_dato } from "../Simbolo/Tipo";
 
@@ -52,30 +52,47 @@ export default class AsignacionVariable extends Instruccion {
         return null;
     }
 
-    /*nodo(anterior: string): string {
-        let cont = Cont.getInstancia()
-
-        let resultado = ""
-
-        let nodoP = `n${cont.get()}`
-        let nodoV = `n${cont.get()}`
-        let nodoN = `n${cont.get()}`
-        let nodoI = `n${cont.get()}`
-        let nodoA = `n${cont.get()}`
-
-        resultado += `${nodoP}[label="ASIGNACION"]\n`
-        resultado += `${nodoV}[label="ID"]\n`
-        resultado += `${nodoN}[label="${this.id}"]\n`
-        resultado += `${nodoI}[label="="]\n`
-        resultado += `${nodoA}[label="EXPRESION"]\n`
-
-        resultado += `${anterior}->${nodoP}\n`
-        resultado += `${nodoP}->${nodoV}\n`
-        resultado += `${nodoV}->${nodoN}\n`
-        resultado += `${nodoP}->${nodoI}\n`
-        resultado += `${nodoP}->${nodoA}\n`
-
-        resultado += this.expresion.nodo(nodoA)
-        return resultado
-    }*/
+    nodo(anterior: string): string {
+        const Singleton = singleton.getInstancia();
+        let resultado = "";
+    
+        const nodoAsign = `n${Singleton.getContador()}`;
+        const nodoIds = `n${Singleton.getContador()}`;
+        const nodoFlecha = `n${Singleton.getContador()}`;
+        const nodoExprs = `n${Singleton.getContador()}`;
+        const nodoPuntoComa = `n${Singleton.getContador()}`;
+    
+        resultado += `${nodoAsign}[label="ASIGNACION"];\n`;
+        resultado += `${nodoIds}[label="VARIABLES"];\n`;
+        resultado += `${nodoFlecha}[label="->"];\n`;
+        resultado += `${nodoExprs}[label="VALORES"];\n`;
+    
+        resultado += `${anterior} -> ${nodoAsign};\n`;
+        resultado += `${nodoAsign} -> ${nodoIds};\n`;
+        resultado += `${nodoAsign} -> ${nodoFlecha};\n`;
+        resultado += `${nodoAsign} -> ${nodoExprs};\n`;
+        resultado += `${nodoAsign} -> ${nodoPuntoComa};\n`;
+    
+        // IDs (variables)
+        for (let i = 0; i < this.ids.length; i++) {
+            const nodoId = `n${Singleton.getContador()}`;
+            resultado += `${nodoId}[label="${this.ids[i]}"];\n`;
+            resultado += `${nodoIds} -> ${nodoId};\n`;
+        }
+    
+        // Expresiones
+        for (let i = 0; i < this.expresiones.length; i++) {
+            const nodoExpCont = `n${Singleton.getContador()}`;
+            resultado += `${nodoExprs} -> ${nodoExpCont};\n`;
+    
+            if (typeof this.expresiones[i].nodo === "function") {
+                resultado += this.expresiones[i].nodo(nodoExpCont);
+            } else {
+                resultado += `${nodoExpCont}[label="exp"];\n`;
+            }
+        }
+    
+        return resultado;
+    }
+    
 }

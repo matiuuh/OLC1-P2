@@ -1,6 +1,7 @@
 import { Instruccion } from "../Abstracto/Instruccion";
 import Errores from "../Errors/Errors";
 import Arbol from "../Simbolo/Arbol";
+import singleton from "../Simbolo/Singleton";
 import TablaSimbolos from "../Simbolo/TablaSimbolo";
 import Tipo, { tipo_dato } from "../Simbolo/Tipo";
 
@@ -408,23 +409,23 @@ export default class Aritmeticas extends Instruccion {
         }
     }
 
-    /*public nodo(anterior: string): string {
-        let cont = Cont.getInstancia()
+    public nodo(anterior: string): string {
+        let Singleton = singleton.getInstancia()
         let resultado = ""
         if(this.opU != undefined){
-            let nodoN = `N${cont.getContador()}`
-            let nodoExp = `N${cont.getContador()}`
+            let nodoN = `N${Singleton.getContador()}`
+            let nodoExp = `N${Singleton.getContador()}`
             resultado += `${nodoN}[label=\"-\"]\n`
             resultado += `${nodoExp}[label=\"EXPRESION\"]\n`
             resultado += `${anterior}->${nodoN}\n`
             resultado += `${anterior}->${nodoExp}\n`
-            resultado += this.opU?.nodo(nodoExp)
+            //resultado += this.opU?.nodo(nodoExp)
             return resultado
         }
 
-        let nodoE1 = `n${cont.getContador()}`
-        let nodoop = `n${cont.getContador()}`
-        let nodoE2 = `n${cont.getContador()}`
+        let nodoE1 = `n${Singleton.getContador()}`
+        let nodoop = `n${Singleton.getContador()}`
+        let nodoE2 = `n${Singleton.getContador()}`
 
         resultado += `${nodoE1}[label=\"EXPRESION\"]\n`
         resultado += `${nodoop}[label=\"${this.getOperacion(this.operacion)}\"]\n`
@@ -436,7 +437,7 @@ export default class Aritmeticas extends Instruccion {
         resultado += this.valor2?.nodo(nodoE2)
         
         return resultado
-    }*/
+    }
 
     getOperacion(num: any){
         switch (num) {
@@ -457,7 +458,6 @@ export default class Aritmeticas extends Instruccion {
                 
             case 6:
                 return '%'
-                
         }
     }
 }

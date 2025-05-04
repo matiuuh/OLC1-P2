@@ -8,6 +8,7 @@ const Instruccion_1 = require("../Abstracto/Instruccion");
 const Errors_1 = __importDefault(require("../Errors/Errors"));
 const Report_1 = require("../Simbolo/Report");
 const Simbolo_1 = __importDefault(require("../Simbolo/Simbolo"));
+const Singleton_1 = __importDefault(require("../Simbolo/Singleton"));
 const Tipo_1 = require("../Simbolo/Tipo");
 class Declaracion extends Instruccion_1.Instruccion {
     constructor(tipo, linea, columna, id, valor) {
@@ -66,6 +67,65 @@ class Declaracion extends Instruccion_1.Instruccion {
             "variable");
             arbol.simbolos.push(simboloN);
         }
+    }
+    nodo(anterior) {
+        let Singleton = Singleton_1.default.getInstancia();
+        let resultado = "";
+        let nodoD = `n${Singleton.getContador()}`;
+        let nodoT = `n${Singleton.getContador()}`;
+        let nodoID = `n${Singleton.getContador()}`;
+        let nodoI = `n${Singleton.getContador()}`;
+        let nodoV = `n${Singleton.getContador()}`;
+        let nodoPC = `n${Singleton.getContador()}`;
+        // Nodos individuales por cada ID
+        let ids = [];
+        for (let i = 0; i < this.identificador.length; i++) {
+            ids.push(`n${Singleton.getContador()}`);
+        }
+        resultado += `${nodoD}[label="DECLARACION"]\n`;
+        // Tipo
+        switch (this.tipo_dato.getTipo()) {
+            case Tipo_1.tipo_dato.ENTERO:
+                resultado += `${nodoT}[label="entero"]\n`;
+                break;
+            case Tipo_1.tipo_dato.DECIMAL:
+                resultado += `${nodoT}[label="decimal"]\n`;
+                break;
+            case Tipo_1.tipo_dato.CADENA:
+                resultado += `${nodoT}[label="cadena"]\n`;
+                break;
+            case Tipo_1.tipo_dato.CARACTER:
+                resultado += `${nodoT}[label="caracter"]\n`;
+                break;
+            case Tipo_1.tipo_dato.BOOLEANO:
+                resultado += `${nodoT}[label="booleano"]\n`;
+                break;
+        }
+        // ID y conexiones
+        resultado += `${nodoID}[label="ID"]\n`;
+        for (let i = 0; i < this.identificador.length; i++) {
+            resultado += `${ids[i]}[label="${this.identificador[i]}"]\n`;
+        }
+        // Estructura de árbol
+        resultado += `${nodoI}[label="="]\n`;
+        resultado += `${nodoV}[label="EXPRESIONES"]\n`;
+        resultado += `${nodoPC}[label=";"]\n`;
+        resultado += `${anterior} -> ${nodoD}\n`;
+        resultado += `${nodoD} -> ${nodoT}\n`;
+        resultado += `${nodoD} -> ${nodoID}\n`;
+        for (let i = 0; i < this.identificador.length; i++) {
+            resultado += `${nodoID} -> ${ids[i]}\n`;
+        }
+        resultado += `${nodoD} -> ${nodoI}\n`;
+        resultado += `${nodoD} -> ${nodoV}\n`;
+        resultado += `${nodoD} -> ${nodoPC}\n`;
+        // Expresiones (valores)
+        for (let i = 0; i < this.valor.length; i++) {
+            let nodoExpr = `n${Singleton.getContador()}`;
+            resultado += `${nodoV} -> ${nodoExpr}\n`;
+            resultado += this.valor[i].nodo(nodoExpr);
+        }
+        return resultado;
     }
 }
 exports.default = Declaracion;

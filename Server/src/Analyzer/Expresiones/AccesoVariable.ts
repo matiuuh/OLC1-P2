@@ -2,7 +2,7 @@ import { Instruccion } from "../Abstracto/Instruccion";
 import Errores from "../Errors/Errors";
 import Arbol from "../Simbolo/Arbol";
 import Simbolo from "../Simbolo/Simbolo";
-//import Cont from "../Simbolo/Singleton";
+import singleton from "../Simbolo/Singleton";
 
 import TablaSimbolos from "../Simbolo/TablaSimbolo";
 import Tipo, { tipo_dato } from "../Simbolo/Tipo";
@@ -29,12 +29,12 @@ export default class AccesoVariable extends Instruccion {
         return this.id;
     }*/
     
-    /*nodo(anterior: string): string {
-        let cont = Cont.getInstancia()
+    nodo(anterior: string): string {
+        let Singleton = singleton.getInstancia()
         let resultado = ""
 
-        let nodoD = `n${cont.getContador()}`
-        let nodoID = `n${cont.getContador()}`
+        let nodoD = `n${Singleton.getContador()}`
+        let nodoID = `n${Singleton.getContador()}`
         resultado += `${nodoID}[label="${this.id}"]\n`
         resultado += `${nodoD}[label="${this.valor}"]\n`
 
@@ -42,6 +42,6 @@ export default class AccesoVariable extends Instruccion {
         resultado += `${nodoID}->${nodoD}\n`
 
         return resultado
-    }*/
+    }
 
     }

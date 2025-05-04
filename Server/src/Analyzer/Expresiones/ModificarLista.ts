@@ -1,6 +1,7 @@
 import { Instruccion } from "../Abstracto/Instruccion";
 import Errores from "../Errors/Errors";
 import Arbol from "../Simbolo/Arbol";
+import singleton from "../Simbolo/Singleton";
 import TablaSimbolos from "../Simbolo/TablaSimbolo";
 import Tipo, { tipo_dato } from "../Simbolo/Tipo";
 
@@ -89,4 +90,45 @@ export default class ModificarLista extends Instruccion {
         variable.setValor(arreglo);
         return null;
     }
+
+    nodo(anterior: string): string {
+        const Singleton = singleton.getInstancia();
+        let resultado = "";
+    
+        const nodoModificar = `n${Singleton.getContador()}`;
+        const nodoId = `n${Singleton.getContador()}`;
+        const nodoIndices = `n${Singleton.getContador()}`;
+        const nodoValor = `n${Singleton.getContador()}`;
+    
+        // Nodo principal
+        resultado += `${nodoModificar}[label="MODIFICAR_LISTA"];\n`;
+        resultado += `${anterior} -> ${nodoModificar};\n`;
+    
+        // Nodo ID
+        resultado += `${nodoId}[label="ID: ${this.id}"];\n`;
+        resultado += `${nodoModificar} -> ${nodoId};\n`;
+    
+        // Nodo de índices
+        resultado += `${nodoIndices}[label="INDICES"];\n`;
+        resultado += `${nodoModificar} -> ${nodoIndices};\n`;
+    
+        for (let indexExpr of this.indices) {
+            const subNodo = `n${Singleton.getContador()}`;
+            resultado += `${subNodo}[label="INDEX"];\n`;
+            resultado += `${nodoIndices} -> ${subNodo};\n`;
+            if (typeof indexExpr.nodo === "function") {
+                resultado += indexExpr.nodo(subNodo);
+            }
+        }
+    
+        // Nodo nuevo valor
+        resultado += `${nodoValor}[label="NUEVO_VALOR"];\n`;
+        resultado += `${nodoModificar} -> ${nodoValor};\n`;
+        if (typeof this.nuevoValor.nodo === "function") {
+            resultado += this.nuevoValor.nodo(nodoValor);
+        }
+    
+        return resultado;
+    }
+    
 }

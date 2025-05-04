@@ -1,7 +1,7 @@
 import { Instruccion } from "../Abstracto/Instruccion";
 import Errores from "../Errors/Errors";
 import Arbol from "../Simbolo/Arbol";
-//import Cont from "../Simbolo/Singleton";
+import singleton from "../Simbolo/Singleton";
 import TablaSimbolos from "../Simbolo/TablaSimbolo";
 import Tipo, { tipo_dato } from "../Simbolo/Tipo";
 
@@ -101,13 +101,13 @@ export default class Logicas extends Instruccion {
         }
     }
 
-    /*nodo(anterior: string): string {
-        let cont = Cont.getInstancia()
+    nodo(anterior: string): string {
+        let Singleton = singleton.getInstancia()
         let resultado = ""
 
-        let nodoE1 = `n${cont.get()}`
-        let nodoE2 = `n${cont.get()}`
-        let nodoOp = `n${cont.get()}`
+        let nodoE1 = `n${Singleton.getContador()}`
+        let nodoE2 = `n${Singleton.getContador()}`
+        let nodoOp = `n${Singleton.getContador()}`
         
         resultado += `${nodoE1}[label="EXPRESION"]\n`
         resultado += `${nodoE2}[label="EXPRESION"]\n`
@@ -121,7 +121,7 @@ export default class Logicas extends Instruccion {
         resultado += this.condicion2?.nodo(nodoE2)
 
         return resultado
-    }*/
+    }
 
     getLogic(op:any){
         switch (op) {

@@ -1,7 +1,7 @@
 import { Instruccion } from "../Abstracto/Instruccion";
 import Errores from "../Errors/Errors";
 import Arbol from "../Simbolo/Arbol";
-//import Cont from "../Simbolo/Singleton";
+import singleton from "../Simbolo/Singleton";
 //import Simbolo from "../Simbolo/Simbolo";
 import TablaSimbolos from "../Simbolo/TablaSimbolo";
 import Tipo, { tipo_dato } from "../Simbolo/Tipo";
@@ -610,16 +610,12 @@ export default class Relacionales extends Instruccion {
         }
     }
 
-    /*nodo(anterior: string): string {
-        let cont = Cont.getInstancia()
-        // let nodoR = `${cont.get()}`
-        let nodoE1 = `n${cont.get()}`
-        let nodoE2 = `n${cont.get()}`
-        let nodooP = `n${cont.get()}`
-        // let nodoC1 = `${cont.get()}`
-        // let nodoC2 = `${cont.get()}`
-        
-        // let resultado = `n${nodoR}[label="RELACIONAL"]\n`
+    nodo(anterior: string): string {
+        let Singleton = singleton.getInstancia()
+        let nodoE1 = `n${Singleton.getContador()}`
+        let nodoE2 = `n${Singleton.getContador()}`
+        let nodooP = `n${Singleton.getContador()}`
+
         let resultado = ""
         resultado += `${nodoE1}[label="EXPRESION"]\n`
         resultado += `${nodooP}[label="${this.getRelacional(this.relacional)}"]\n`
@@ -631,8 +627,7 @@ export default class Relacionales extends Instruccion {
         resultado += this.condicion2.nodo(nodoE2)
 
         return resultado
-
-    }*/
+    }
 
     getRelacional(op:any){
         switch (op) {

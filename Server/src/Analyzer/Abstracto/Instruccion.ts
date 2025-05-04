@@ -22,5 +22,5 @@ export abstract class Instruccion {
     el codigo
     */
 
-    //abstract nodo(anterior: string): string //recordar descomentar esto y revisar la clase nativo, en general revisar los metodos comentados de la clase de instruccion
+    abstract nodo(anterior: string): string //recordar descomentar esto y revisar la clase nativo, en general revisar los metodos comentados de la clase de instruccion
 }

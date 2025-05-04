@@ -39,6 +39,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Operadores = void 0;
 const Instruccion_1 = require("../Abstracto/Instruccion");
 const Errors_1 = __importDefault(require("../Errors/Errors"));
+const Singleton_1 = __importDefault(require("../Simbolo/Singleton"));
 const Tipo_1 = __importStar(require("../Simbolo/Tipo"));
 class Aritmeticas extends Instruccion_1.Instruccion {
     constructor(operacion, fila, columna, valor1, valor2) {
@@ -423,35 +424,33 @@ class Aritmeticas extends Instruccion_1.Instruccion {
                 return new Errors_1.default('Semantico', 'No se puede hacer ' + tipo1 + " % " + tipo2, this.linea, this.columna);
         }
     }
-    /*public nodo(anterior: string): string {
-        let cont = Cont.getInstancia()
-        let resultado = ""
-        if(this.opU != undefined){
-            let nodoN = `N${cont.getContador()}`
-            let nodoExp = `N${cont.getContador()}`
-            resultado += `${nodoN}[label=\"-\"]\n`
-            resultado += `${nodoExp}[label=\"EXPRESION\"]\n`
-            resultado += `${anterior}->${nodoN}\n`
-            resultado += `${anterior}->${nodoExp}\n`
-            resultado += this.opU?.nodo(nodoExp)
-            return resultado
+    nodo(anterior) {
+        var _a, _b;
+        let Singleton = Singleton_1.default.getInstancia();
+        let resultado = "";
+        if (this.opU != undefined) {
+            let nodoN = `N${Singleton.getContador()}`;
+            let nodoExp = `N${Singleton.getContador()}`;
+            resultado += `${nodoN}[label=\"-\"]\n`;
+            resultado += `${nodoExp}[label=\"EXPRESION\"]\n`;
+            resultado += `${anterior}->${nodoN}\n`;
+            resultado += `${anterior}->${nodoExp}\n`;
+            //resultado += this.opU?.nodo(nodoExp)
+            return resultado;
         }
-
-        let nodoE1 = `n${cont.getContador()}`
-        let nodoop = `n${cont.getContador()}`
-        let nodoE2 = `n${cont.getContador()}`
-
-        resultado += `${nodoE1}[label=\"EXPRESION\"]\n`
-        resultado += `${nodoop}[label=\"${this.getOperacion(this.operacion)}\"]\n`
-        resultado += `${nodoE2}[label=\"EXPRESION\"]\n`
-        resultado += `${anterior}->${nodoE1}\n`
-        resultado += `${anterior}->${nodoop}\n`
-        resultado += `${anterior}->${nodoE2}\n`
-        resultado += this.valor1?.nodo(nodoE1)
-        resultado += this.valor2?.nodo(nodoE2)
-        
-        return resultado
-    }*/
+        let nodoE1 = `n${Singleton.getContador()}`;
+        let nodoop = `n${Singleton.getContador()}`;
+        let nodoE2 = `n${Singleton.getContador()}`;
+        resultado += `${nodoE1}[label=\"EXPRESION\"]\n`;
+        resultado += `${nodoop}[label=\"${this.getOperacion(this.operacion)}\"]\n`;
+        resultado += `${nodoE2}[label=\"EXPRESION\"]\n`;
+        resultado += `${anterior}->${nodoE1}\n`;
+        resultado += `${anterior}->${nodoop}\n`;
+        resultado += `${anterior}->${nodoE2}\n`;
+        resultado += (_a = this.valor1) === null || _a === void 0 ? void 0 : _a.nodo(nodoE1);
+        resultado += (_b = this.valor2) === null || _b === void 0 ? void 0 : _b.nodo(nodoE2);
+        return resultado;
+    }
     getOperacion(num) {
         switch (num) {
             case 0:

@@ -1,0 +1,130 @@
+ingresar nota como decimal
+ingresar a como entero con valor 10
+ingresar d como decimal
+ingresar x como caracter con valor 'y'
+ingresar o como cadena
+
+/*
+No truena con comentarios
+multilinea
+*/
+//ni de una linea
+
+//asignacion 
+nota -> 1.5;
+
+//declaracion con valor
+si a == 10 entonces
+nota -> nota + 0.25
+fin si
+
+//default
+si d > -1 entonces
+nota -> nota + 0.25
+fin si
+
+//reasignacion
+nota -> nota + 0.5
+
+//Secuencias de escape e imprimir
+imprimir d + " \n abajo del decimal - "
+imprimir nl "tabulado del caracter\t" + x 
+/* revisar que la salida sea:
+0.0
+abajo del decimal - tabulado del caracter    y*/
+nota -> nota + 1 + 2
+ 
+//Aritmeticas
+d -> 3.14
+//negacion 
+si -d >= -3.14 entonces
+nota -> nota + 0.5
+fin si
+
+//modulo
+si 6.4 % 3 == 0.4 entonces
+nota -> nota + 0.5
+fin si
+
+//potencia
+si 5 ^ 3.0 == 125.0 entonces
+nota -> nota + 0.5
+fin si
+
+//division 
+si x / 11  == 11 entonces
+nota -> nota + 0.5
+fin si
+
+//multiplicacion
+si '0' * 0.25  == 12 entonces
+nota -> nota + 0.5
+fin si
+
+//resta
+si x - 1  == 'x' entonces
+nota -> nota + 0.5
+fin si
+
+si x - Verdadero == 'x' entonces
+nota -> nota + 0.5
+fin si
+
+//Suma cadena y caracter, cadena y boolean, entero y boolean
+si "hola compi1" == "hola compi" + '1' entonces
+nota -> nota + 0.5
+fin si
+
+si "eso tilin" != "eso tilin" + Falso entonces
+nota -> nota + 0.5
+fin si
+
+si 8 + Falso == 8 entonces
+nota -> nota + 0.5
+fin si
+
+//operadores logicos
+si '9' == "0" || true entonces
+nota -> nota + 1
+fin si
+
+ingresar f como booleano con valor Falso
+
+si f == Falso && Verdadero entonces
+nota -> nota + 1
+fin si
+
+f -> !!!!f
+
+si !f entonces 
+nota -> nota + 1
+fin si
+
+//operadores relacionales
+si f == Falso entonces
+nota -> nota + 0.5
+fin si
+
+si "comparando" != "cadenas" entonces 
+nota -> nota + 0.5
+fin si
+
+si 'ª' <= 166 entonces  // caracter decimal
+nota -> nota + 0.5
+fin si
+
+si 148.8 >= 'æ' entonces // decimal entero
+nota -> nota + 0.25
+fin si
+
+si 0.6800 < 0.68001 entonces  // decimal decimal
+nota -> nota + 0.5
+fin si
+
+si 'ö' > 'æ' entonces // 
+nota -> nota + 0.25
+fin si
+
+
+impirimir "nota del facil: "
+imprimir nota
