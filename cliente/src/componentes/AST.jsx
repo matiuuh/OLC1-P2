@@ -24,10 +24,12 @@ export class AST extends React.Component {
         return (
             <>
                 <Menu />
-                <div className="container">
-                    <h1>Árbol AST</h1>
-                    <div className="border p-3 bg-light" style={{ overflow: "auto" }}>
-                        <Graphviz dot={this.state.dot} options={{ width: "100%", height: 800 }} />
+                <div className="bg-dark text-light py-4">
+                    <div className="container text-center">
+                        <h1 className="mb-4">Reporte AST</h1>
+                        <div className="bg-black border border-secondary rounded p-3" style={{ overflow: "auto" }}>
+                            <Graphviz dot={this.state.dot} options={{ width: "100%", height: 800 }} />
+                        </div>
                     </div>
                 </div>
             </>
