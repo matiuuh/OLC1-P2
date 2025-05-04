@@ -50,7 +50,7 @@ export class Principal extends React.Component {
                 <Menu />
                 <div className="bg-dark text-light py-4">
                     <div className="container text-center">
-                        <h1 className="mb-4">Proyecto 2 - OLC1</h1>
+                        <h1 className="mb-4">SimpliCode</h1>
 
                         {/* Controles */}
                         <div className="d-flex justify-content-center gap-3 mb-4 flex-wrap">
